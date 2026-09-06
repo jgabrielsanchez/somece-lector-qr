@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -12,33 +11,39 @@
 
   <title>Lector QR - SOMECE</title>
 
+  <!-- Librería para lectura QR -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
 
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
+      font-family: Arial, sans-serif;
       background: #f5f5f5;
       text-align: center;
     }
 
     .contenedor {
-      max-width: 600px;
+      max-width: 500px;
       margin: auto;
       background: white;
       padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.15);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
     }
 
     h1 {
       margin-top: 0;
     }
 
+    .subtitulo {
+      margin-bottom: 20px;
+    }
+
     #reader {
       width: 100%;
+      max-width: 400px;
       margin: 20px auto;
     }
 
@@ -46,31 +51,27 @@
       margin-top: 15px;
       padding: 12px;
       border-radius: 8px;
-      background: #e3f2fd;
-    }
-
-    .error {
-      background: #ffebee !important;
-      color: #b71c1c;
+      font-size: 16px;
     }
 
     .exito {
-      background: #e8f5e9 !important;
-      color: #1b5e20;
+      background: #d4edda;
+      color: #155724;
     }
 
-    button {
-      padding: 12px 20px;
-      font-size: 16px;
-      border: 0;
-      border-radius: 8px;
-      cursor: pointer;
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .info {
+      background: #e2e3e5;
+      color: #383d41;
     }
 
   </style>
 
 </head>
-
 
 <body>
 
@@ -78,9 +79,9 @@
 
     <h1>📷 Lector QR</h1>
 
-    <p>
+    <div class="subtitulo">
       SOMECE 2026
-    </p>
+    </div>
 
     <p>
       Apunte la cámara al código QR del Ponente.
@@ -88,7 +89,10 @@
 
     <div id="reader"></div>
 
-    <div id="mensaje">
+    <div
+      id="mensaje"
+      class="info"
+    >
       Preparando cámara...
     </div>
 
@@ -97,33 +101,71 @@
 
   <script>
 
+    // =====================================================
+    // CONFIGURACIÓN
+    // =====================================================
+
+    const URL_WEB_APP =
+      'https://script.google.com/a/macros/somece.org.mx/s/AKfycbzzGKdNI6MD4aj4zOvBxHDinf-_Axlr72rfxd0-S-Bg9wo6Ap04HtVubhtfzazaoAiGrQ/exec';
+
+
+    // =====================================================
+    // VARIABLES
+    // =====================================================
+
     let lectorQr = null;
 
     let qrEnviado = false;
 
 
-    function mostrarMensaje(
-      texto,
-      clase
-    ) {
+    // =====================================================
+    // MOSTRAR MENSAJE
+    // =====================================================
+
+    function mostrarMensaje(texto, clase) {
 
       const mensaje =
-        document.getElementById(
-          'mensaje'
+        document.getElementById('mensaje');
+
+      mensaje.innerHTML = texto;
+
+      mensaje.className = clase || 'info';
+    }
+
+
+    // =====================================================
+    // DETENER CÁMARA
+    // =====================================================
+
+    async function detenerLector() {
+
+      if (!lectorQr) {
+        return;
+      }
+
+      try {
+
+        await lectorQr.stop();
+
+        lectorQr.clear();
+
+      } catch (error) {
+
+        console.log(
+          'No fue posible detener la cámara:',
+          error
         );
 
-      mensaje.textContent =
-        texto;
-
-      mensaje.className =
-        clase || '';
+      }
 
     }
 
 
-    function enviarQr(
-      contenidoQr
-    ) {
+    // =====================================================
+    // ENVIAR QR AL WEB APP
+    // =====================================================
+
+    async function enviarQr(contenidoQr) {
 
       if (qrEnviado) {
         return;
@@ -131,61 +173,45 @@
 
       qrEnviado = true;
 
-
       mostrarMensaje(
-        'QR detectado. Enviando información...',
-        ''
+        'QR detectado.<br>Procesando Ponente...',
+        'info'
       );
 
 
-      if (
-        window.opener &&
-        !window.opener.closed
-      ) {
+      // Detenemos la cámara antes de cambiar de página
 
-        window.opener.postMessage(
-          {
-            tipo: 'qrPonente',
-            contenido: contenidoQr
-          },
-          '*'
-        );
+      await detenerLector();
 
 
-        mostrarMensaje(
-          'QR enviado correctamente.',
-          'exito'
-        );
+      // =================================================
+      // CONSTRUIR URL DEL WEB APP
+      // =================================================
+
+      const url =
+        URL_WEB_APP +
+        '?pagina=registroCongresoQr' +
+        '&qrPonente=' +
+        encodeURIComponent(contenidoQr);
 
 
-        setTimeout(
-          function() {
+      // =================================================
+      // IR AL WEB APP
+      // =================================================
 
-            window.close();
-
-          },
-          800
-        );
-
-
-      } else {
-
-        mostrarMensaje(
-          'No se encontró la ventana de Registro al Congreso.',
-          'error'
-        );
-
-      }
+      window.location.href = url;
 
     }
 
 
+    // =====================================================
+    // INICIAR LECTOR
+    // =====================================================
+
     function iniciarLector() {
 
       lectorQr =
-        new Html5Qrcode(
-          'reader'
-        );
+        new Html5Qrcode('reader');
 
 
       const configuracion = {
@@ -210,9 +236,7 @@
 
         configuracion,
 
-        function(
-          textoDecodificado
-        ) {
+        function(textoDecodificado) {
 
           enviarQr(
             textoDecodificado
@@ -222,38 +246,38 @@
 
         function(errorMessage) {
 
-          // Los errores normales
-          // de búsqueda se ignoran.
+          // Los errores de lectura continua
+          // se ignoran intencionalmente.
 
         }
 
       )
 
-      .then(
-        function() {
+      .then(function() {
 
-          mostrarMensaje(
-            'Cámara activa. Apunte al QR del Ponente.',
-            ''
-          );
+        mostrarMensaje(
+          'Cámara activa.<br>Apunte al QR del Ponente.',
+          'info'
+        );
 
-        }
-      )
+      })
 
-      .catch(
-        function(error) {
+      .catch(function(error) {
 
-          mostrarMensaje(
-            'No fue posible acceder a la cámara: ' +
-            error,
-            'error'
-          );
+        mostrarMensaje(
+          'No fue posible acceder a la cámara.<br><br>' +
+          error,
+          'error'
+        );
 
-        }
-      );
+      });
 
     }
 
+
+    // =====================================================
+    // INICIAR AL CARGAR
+    // =====================================================
 
     window.addEventListener(
       'load',
