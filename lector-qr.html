@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,9 +10,8 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Lector QR - SOMECE</title>
+  <title>Lector QR - SOMECE 2026</title>
 
-  <!-- Librería para lectura QR -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
@@ -30,7 +30,9 @@
       background: white;
       padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.15);
     }
 
     h1 {
@@ -38,13 +40,77 @@
     }
 
     .subtitulo {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      color: #666;
+    }
+
+    .opciones {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .opcion {
+      width: 100%;
+      padding: 15px;
+      font-size: 17px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #1a73e8;
+      color: white;
+    }
+
+    .opcion:hover {
+      opacity: 0.9;
+    }
+
+    .opcion:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .taller-config {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #f1f3f4;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .taller-config label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .taller-config input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .botonTaller {
+      width: 100%;
+      margin-top: 15px;
+      padding: 13px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #188038;
+      color: white;
     }
 
     #reader {
       width: 100%;
       max-width: 400px;
       margin: 20px auto;
+      display: none;
     }
 
     #mensaje {
@@ -69,6 +135,28 @@
       color: #383d41;
     }
 
+    .seleccion {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e8f0fe;
+      color: #174ea6;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .volver {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #6c757d;
+      color: white;
+      display: none;
+    }
+
   </style>
 
 </head>
@@ -83,18 +171,115 @@
       SOMECE 2026
     </div>
 
-    <p>
-      Apunte la cámara al código QR del Ponente.
-    </p>
+
+    <!-- =================================================
+         MENÚ PRINCIPAL
+         ================================================= -->
+
+    <div id="menu">
+
+      <p>
+        Seleccione el tipo de registro:
+      </p>
+
+      <div class="opciones">
+
+        <button
+          class="opcion"
+          onclick="seleccionarCongreso()"
+        >
+          1. Registro al Congreso
+        </button>
+
+        <button
+          class="opcion"
+          onclick="mostrarConfiguracionTaller()"
+        >
+          2. Registro al Taller
+        </button>
+
+        <button
+          class="opcion"
+          onclick="seleccionarConversatorio()"
+        >
+          3. Registro al Conversatorio
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CONFIGURACIÓN DEL TALLER
+         ================================================= -->
+
+    <div
+      id="tallerConfig"
+      class="taller-config"
+    >
+
+      <label for="idTaller">
+        ID del Taller
+      </label>
+
+      <input
+        type="text"
+        id="idTaller"
+        placeholder="Ejemplo: 3"
+        autocomplete="off"
+      >
+
+      <button
+        class="botonTaller"
+        onclick="iniciarRegistroTaller()"
+      >
+        Iniciar registro del Taller
+      </button>
+
+    </div>
+
+
+    <!-- =================================================
+         TALLER SELECCIONADO
+         ================================================= -->
+
+    <div
+      id="seleccion"
+      class="seleccion"
+    ></div>
+
+
+    <!-- =================================================
+         LECTOR
+         ================================================= -->
 
     <div id="reader"></div>
+
+
+    <!-- =================================================
+         MENSAJE
+         ================================================= -->
 
     <div
       id="mensaje"
       class="info"
     >
-      Preparando cámara...
+      Seleccione una opción para comenzar.
     </div>
+
+
+    <!-- =================================================
+         VOLVER
+         ================================================= -->
+
+    <button
+      id="btnVolver"
+      class="volver"
+      onclick="volverAlMenu()"
+    >
+      Volver al menú
+    </button>
 
   </div>
 
@@ -117,19 +302,278 @@
 
     let qrEnviado = false;
 
+    let tipoRegistro = '';
+
+    let idTallerSeleccionado = '';
+
 
     // =====================================================
     // MOSTRAR MENSAJE
     // =====================================================
 
-    function mostrarMensaje(texto, clase) {
+    function mostrarMensaje(
+      texto,
+      clase
+    ) {
 
       const mensaje =
-        document.getElementById('mensaje');
+        document.getElementById(
+          'mensaje'
+        );
 
-      mensaje.innerHTML = texto;
+      mensaje.innerHTML =
+        texto;
 
-      mensaje.className = clase || 'info';
+      mensaje.className =
+        clase || 'info';
+
+    }
+
+
+    // =====================================================
+    // REGISTRO AL CONGRESO
+    // =====================================================
+
+    function seleccionarCongreso() {
+
+      tipoRegistro =
+        'Regcongreso';
+
+      idTallerSeleccionado =
+        '';
+
+      document
+        .getElementById(
+          'menu'
+        )
+        .style.display =
+        'none';
+
+      document
+        .getElementById(
+          'tallerConfig'
+        )
+        .style.display =
+        'none';
+
+      document
+        .getElementById(
+          'seleccion'
+        )
+        .style.display =
+        'none';
+
+      document
+        .getElementById(
+          'btnVolver'
+        )
+        .style.display =
+        'block';
+
+      mostrarMensaje(
+        'Registro al Congreso.<br><br>' +
+        'Apunte la cámara al QR del Ponente.',
+        'info'
+      );
+
+      iniciarLector();
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR CONFIGURACIÓN TALLER
+    // =====================================================
+
+    function mostrarConfiguracionTaller() {
+
+      document
+        .getElementById(
+          'tallerConfig'
+        )
+        .style.display =
+        'block';
+
+      document
+        .getElementById(
+          'idTaller'
+        )
+        .focus();
+
+      mostrarMensaje(
+        'Ingrese el ID del Taller que desea registrar.',
+        'info'
+      );
+
+    }
+
+
+    // =====================================================
+    // INICIAR REGISTRO TALLER
+    // =====================================================
+
+    function iniciarRegistroTaller() {
+
+      const idTaller =
+        document
+          .getElementById(
+            'idTaller'
+          )
+          .value
+          .trim();
+
+
+      if (!idTaller) {
+
+        mostrarMensaje(
+          'Debe ingresar el ID del Taller.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      mostrarMensaje(
+        'Validando Taller...',
+        'info'
+      );
+
+
+      google.script.run
+
+        .withSuccessHandler(
+          function(respuesta) {
+
+            if (
+              !respuesta ||
+              !respuesta.ok
+            ) {
+
+              mostrarMensaje(
+                respuesta &&
+                respuesta.mensaje
+                  ? respuesta.mensaje
+                  : 'El Taller no es válido.',
+                'error'
+              );
+
+              return;
+
+            }
+
+
+            tipoRegistro =
+              'Regtaller';
+
+            idTallerSeleccionado =
+              String(
+                respuesta.idTaller
+              ).trim();
+
+
+            document
+              .getElementById(
+                'menu'
+              )
+              .style.display =
+              'none';
+
+
+            document
+              .getElementById(
+                'tallerConfig'
+              )
+              .style.display =
+              'none';
+
+
+            const seleccion =
+              document.getElementById(
+                'seleccion'
+              );
+
+
+            seleccion.innerHTML =
+              '<strong>Registro al Taller</strong>' +
+              '<br><br>' +
+              'ID Taller: ' +
+              respuesta.idTaller +
+              '<br>' +
+              'Taller: ' +
+              respuesta.NomTaller;
+
+
+            seleccion.style.display =
+              'block';
+
+
+            document
+              .getElementById(
+                'btnVolver'
+              )
+              .style.display =
+              'block';
+
+
+            mostrarMensaje(
+              'Taller seleccionado.<br><br>' +
+              'Apunte la cámara al QR del Ponente.',
+              'info'
+            );
+
+
+            iniciarLector();
+
+          }
+        )
+
+        .withFailureHandler(
+          function(error) {
+
+            mostrarMensaje(
+              error &&
+              error.message
+                ? error.message
+                : 'No fue posible validar el Taller.',
+              'error'
+            );
+
+          }
+        )
+
+        .validarTallerParaRegistro(
+          idTaller
+        );
+
+    }
+
+
+    // =====================================================
+    // REGISTRO CONVERSATORIO
+    // =====================================================
+
+    function seleccionarConversatorio() {
+
+      tipoRegistro =
+        'RegConversatorio';
+
+      document
+        .getElementById(
+          'tallerConfig'
+        )
+        .style.display =
+        'none';
+
+      mostrarMensaje(
+        '<strong>Registro al Conversatorio</strong>' +
+        '<br><br>' +
+        'Esta función estará disponible ' +
+        'en una fase posterior de desarrollo.',
+        'info'
+      );
+
     }
 
 
@@ -158,14 +602,18 @@
 
       }
 
+      lectorQr = null;
+
     }
 
 
     // =====================================================
-    // ENVIAR QR AL WEB APP
+    // ENVIAR QR
     // =====================================================
 
-    async function enviarQr(contenidoQr) {
+    async function enviarQr(
+      contenidoQr
+    ) {
 
       if (qrEnviado) {
         return;
@@ -173,33 +621,88 @@
 
       qrEnviado = true;
 
+
       mostrarMensaje(
         'QR detectado.<br>Procesando Ponente...',
         'info'
       );
 
 
-      // Detenemos la cámara antes de cambiar de página
-
       await detenerLector();
 
 
+      let url = '';
+
+
       // =================================================
-      // CONSTRUIR URL DEL WEB APP
+      // CONGRESO
       // =================================================
 
-      const url =
-        URL_WEB_APP +
-        '?pagina=Regcongreso' +
-        '&qrPonente=' +
-        encodeURIComponent(contenidoQr);
+      if (
+        tipoRegistro ===
+        'Regcongreso'
+      ) {
+
+        url =
+          URL_WEB_APP +
+          '?pagina=Regcongreso' +
+          '&qrPonente=' +
+          encodeURIComponent(
+            contenidoQr
+          );
+
+      }
+
+
+      // =================================================
+      // TALLER
+      // =================================================
+
+      else if (
+        tipoRegistro ===
+        'Regtaller'
+      ) {
+
+        url =
+          URL_WEB_APP +
+          '?pagina=Regtaller' +
+          '&idTaller=' +
+          encodeURIComponent(
+            idTallerSeleccionado
+          ) +
+          '&qrPonente=' +
+          encodeURIComponent(
+            contenidoQr
+          );
+
+      }
+
+
+      // =================================================
+      // CONVERSATORIO
+      // =================================================
+
+      else {
+
+        mostrarMensaje(
+          'El Registro al Conversatorio ' +
+          'todavía está en desarrollo.',
+          'info'
+        );
+
+        qrEnviado = false;
+
+        return;
+
+      }
 
 
       // =================================================
       // IR AL WEB APP
       // =================================================
 
-      window.location.href = url;
+      window.location.href =
+        url;
 
     }
 
@@ -210,8 +713,21 @@
 
     function iniciarLector() {
 
+      qrEnviado = false;
+
+
+      document
+        .getElementById(
+          'reader'
+        )
+        .style.display =
+        'block';
+
+
       lectorQr =
-        new Html5Qrcode('reader');
+        new Html5Qrcode(
+          'reader'
+        );
 
 
       const configuracion = {
@@ -231,12 +747,15 @@
       lectorQr.start(
 
         {
-          facingMode: 'environment'
+          facingMode:
+            'environment'
         },
 
         configuracion,
 
-        function(textoDecodificado) {
+        function(
+          textoDecodificado
+        ) {
 
           enviarQr(
             textoDecodificado
@@ -244,49 +763,150 @@
 
         },
 
-        function(errorMessage) {
+        function(
+          errorMessage
+        ) {
 
-          // Los errores de lectura continua
-          // se ignoran intencionalmente.
+          // Los errores de lectura
+          // continua se ignoran.
 
         }
 
       )
 
-      .then(function() {
+      .then(
+        function() {
 
-        mostrarMensaje(
-          'Cámara activa.<br>Apunte al QR del Ponente.',
-          'info'
-        );
+          mostrarMensaje(
+            tipoRegistro ===
+              'Regtaller'
 
-      })
+              ? 'Cámara activa.<br>' +
+                'Apunte al QR del Ponente.'
 
-      .catch(function(error) {
+              : 'Cámara activa.<br>' +
+                'Apunte al QR del Ponente.',
+            'info'
+          );
 
-        mostrarMensaje(
-          'No fue posible acceder a la cámara.<br><br>' +
-          error,
-          'error'
-        );
+        }
+      )
 
-      });
+      .catch(
+        function(error) {
+
+          mostrarMensaje(
+            'No fue posible acceder a la cámara.<br><br>' +
+            error,
+            'error'
+          );
+
+        }
+      );
 
     }
 
 
     // =====================================================
-    // INICIAR AL CARGAR
+    // VOLVER AL MENÚ
     // =====================================================
 
-    window.addEventListener(
-      'load',
-      function() {
+    async function volverAlMenu() {
 
-        iniciarLector();
+      await detenerLector();
 
-      }
-    );
+
+      tipoRegistro =
+        '';
+
+      idTallerSeleccionado =
+        '';
+
+      qrEnviado =
+        false;
+
+
+      document
+        .getElementById(
+          'menu'
+        )
+        .style.display =
+        'block';
+
+
+      document
+        .getElementById(
+          'tallerConfig'
+        )
+        .style.display =
+        'none';
+
+
+      document
+        .getElementById(
+          'seleccion'
+        )
+        .style.display =
+        'none';
+
+
+      document
+        .getElementById(
+          'reader'
+        )
+        .style.display =
+        'none';
+
+
+      document
+        .getElementById(
+          'btnVolver'
+        )
+        .style.display =
+        'none';
+
+
+      document
+        .getElementById(
+          'idTaller'
+        )
+        .value =
+        '';
+
+
+      mostrarMensaje(
+        'Seleccione una opción para comenzar.',
+        'info'
+      );
+
+    }
+
+
+    // =====================================================
+    // ENTER PARA TALLER
+    // =====================================================
+
+    document
+      .getElementById(
+        'idTaller'
+      )
+      .addEventListener(
+        'keydown',
+        function(event) {
+
+          if (
+            event.key ===
+            'Enter'
+          ) {
+
+            event.preventDefault();
+
+            iniciarRegistroTaller();
+
+          }
+
+        }
+      );
 
   </script>
 
