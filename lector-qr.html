@@ -12,6 +12,7 @@
 
   <title>Lector QR - SOMECE 2026</title>
 
+  <!-- Librería para lectura QR -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
@@ -28,7 +29,7 @@
       max-width: 500px;
       margin: auto;
       background: white;
-      padding: 20px;
+      padding: 25px;
       border-radius: 12px;
       box-shadow:
         0 2px 10px
@@ -44,10 +45,11 @@
       color: #666;
     }
 
-    .opciones {
+    .menu {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-top: 20px;
     }
 
     .opcion {
@@ -65,52 +67,56 @@
       opacity: 0.9;
     }
 
-    .opcion:disabled {
+    .secundario {
+      background: #5f6368;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      background: white;
+    }
+
+    .botonContinuar {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      font-size: 17px;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      background: #1a73e8;
+      color: white;
+    }
+
+    .botonContinuar:disabled {
       background: #999;
       cursor: not-allowed;
     }
 
-    .taller-config {
-      display: none;
+    .tallerSeleccionado {
       margin-top: 20px;
       padding: 15px;
-      background: #f1f3f4;
       border-radius: 8px;
+      background: #e8f0fe;
+      color: #174ea6;
       text-align: left;
     }
 
-    .taller-config label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
-
-    .taller-config input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .botonTaller {
-      width: 100%;
-      margin-top: 15px;
-      padding: 13px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #188038;
-      color: white;
-    }
-
-    #reader {
-      width: 100%;
-      max-width: 400px;
-      margin: 20px auto;
-      display: none;
+    #lectorQR {
+      margin-top: 20px;
     }
 
     #mensaje {
@@ -135,25 +141,7 @@
       color: #383d41;
     }
 
-    .seleccion {
-      margin-top: 20px;
-      padding: 15px;
-      background: #e8f0fe;
-      color: #174ea6;
-      border-radius: 8px;
-      display: none;
-    }
-
-    .volver {
-      width: 100%;
-      margin-top: 15px;
-      padding: 12px;
-      font-size: 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #6c757d;
-      color: white;
+    .oculto {
       display: none;
     }
 
@@ -161,28 +149,29 @@
 
 </head>
 
+
 <body>
 
   <div class="contenedor">
 
-    <h1>📷 Lector QR</h1>
+    <h1>SOMECE 2026</h1>
 
     <div class="subtitulo">
-      SOMECE 2026
+      Lector QR
     </div>
 
 
-    <!-- =================================================
+    <!-- =====================================================
          MENÚ PRINCIPAL
-         ================================================= -->
+         ===================================================== -->
 
-    <div id="menu">
+    <div id="menuPrincipal">
 
       <p>
         Seleccione el tipo de registro:
       </p>
 
-      <div class="opciones">
+      <div class="menu">
 
         <button
           class="opcion"
@@ -193,7 +182,7 @@
 
         <button
           class="opcion"
-          onclick="mostrarConfiguracionTaller()"
+          onclick="seleccionarTaller()"
         >
           2. Registro al Taller
         </button>
@@ -210,76 +199,119 @@
     </div>
 
 
-    <!-- =================================================
-         CONFIGURACIÓN DEL TALLER
-         ================================================= -->
+    <!-- =====================================================
+         SECCIÓN REGISTRO TALLER
+         ===================================================== -->
 
     <div
-      id="tallerConfig"
-      class="taller-config"
+      id="seccionTaller"
+      class="oculto"
     >
 
-      <label for="idTaller">
-        ID del Taller
+      <h2>
+        Registro al Taller
+      </h2>
+
+      <p>
+        Seleccione el Taller al que se registrará
+        la asistencia.
+      </p>
+
+
+      <label for="selectTaller">
+
+        Taller:
+
       </label>
 
-      <input
-        type="text"
-        id="idTaller"
-        placeholder="Ejemplo: 3"
-        autocomplete="off"
+
+      <select
+        id="selectTaller"
       >
 
+        <option value="">
+          Cargando Talleres...
+        </option>
+
+      </select>
+
+
       <button
-        class="botonTaller"
-        onclick="iniciarRegistroTaller()"
+        id="btnContinuarTaller"
+        class="botonContinuar"
+        onclick="continuarRegistroTaller()"
+        disabled
       >
-        Iniciar registro del Taller
+
+        Continuar
+
+      </button>
+
+
+      <div
+        id="tallerSeleccionado"
+        class="tallerSeleccionado oculto"
+      ></div>
+
+
+      <button
+        class="opcion secundario"
+        onclick="volverMenu()"
+      >
+
+        Regresar al menú
+
       </button>
 
     </div>
 
 
-    <!-- =================================================
-         TALLER SELECCIONADO
-         ================================================= -->
+    <!-- =====================================================
+         SECCIÓN LECTOR QR
+         ===================================================== -->
 
     <div
-      id="seleccion"
-      class="seleccion"
-    ></div>
-
-
-    <!-- =================================================
-         LECTOR
-         ================================================= -->
-
-    <div id="reader"></div>
-
-
-    <!-- =================================================
-         MENSAJE
-         ================================================= -->
-
-    <div
-      id="mensaje"
-      class="info"
+      id="seccionLector"
+      class="oculto"
     >
-      Seleccione una opción para comenzar.
+
+      <h2 id="tituloRegistro">
+        Lector QR
+      </h2>
+
+
+      <div
+        id="informacionTaller"
+        class="tallerSeleccionado oculto"
+      ></div>
+
+
+      <p>
+        Apunte la cámara al código QR del Ponente.
+      </p>
+
+
+      <div id="lectorQR"></div>
+
+
+      <div
+        id="mensaje"
+        class="info"
+      >
+        Preparando cámara...
+      </div>
+
+
+      <button
+        class="opcion secundario"
+        onclick="volverMenu()"
+      >
+
+        Cancelar / Regresar
+
+      </button>
+
     </div>
-
-
-    <!-- =================================================
-         VOLVER
-         ================================================= -->
-
-    <button
-      id="btnVolver"
-      class="volver"
-      onclick="volverAlMenu()"
-    >
-      Volver al menú
-    </button>
 
   </div>
 
@@ -306,6 +338,336 @@
 
     let idTallerSeleccionado = '';
 
+    let nombreTallerSeleccionado = '';
+
+
+    // =====================================================
+    // MOSTRAR / OCULTAR SECCIONES
+    // =====================================================
+
+    function mostrarSeccion(id) {
+
+      document
+        .getElementById('menuPrincipal')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionTaller')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionLector')
+        .classList.add('oculto');
+
+
+      document
+        .getElementById(id)
+        .classList.remove('oculto');
+
+    }
+
+
+    // =====================================================
+    // REGISTRO AL CONGRESO
+    // =====================================================
+
+    function seleccionarCongreso() {
+
+      tipoRegistro =
+        'Regcongreso';
+
+      idTallerSeleccionado = '';
+
+      nombreTallerSeleccionado = '';
+
+      iniciarRegistroCongreso();
+
+    }
+
+
+    function iniciarRegistroCongreso() {
+
+      mostrarSeccion(
+        'seccionLector'
+      );
+
+      document
+        .getElementById('tituloRegistro')
+        .textContent =
+        'Registro al Congreso';
+
+      document
+        .getElementById('informacionTaller')
+        .classList.add('oculto');
+
+      iniciarLector();
+
+    }
+
+
+    // =====================================================
+    // REGISTRO AL TALLER
+    // =====================================================
+
+    function seleccionarTaller() {
+
+      tipoRegistro =
+        'RegTaller';
+
+      idTallerSeleccionado = '';
+
+      nombreTallerSeleccionado = '';
+
+      mostrarSeccion(
+        'seccionTaller'
+      );
+
+      cargarTalleres();
+
+    }
+
+
+    // =====================================================
+    // CARGAR TALLERES DESDE APPS SCRIPT
+    // =====================================================
+
+    function cargarTalleres() {
+
+      const select =
+        document.getElementById(
+          'selectTaller'
+        );
+
+      const boton =
+        document.getElementById(
+          'btnContinuarTaller'
+        );
+
+      select.innerHTML =
+        '<option value="">Cargando Talleres...</option>';
+
+      boton.disabled = true;
+
+
+      const nombreCallback =
+        'recibirTalleres_' +
+        Date.now();
+
+
+      window[nombreCallback] =
+        function(talleres) {
+
+          delete window[nombreCallback];
+
+
+          select.innerHTML =
+            '<option value="">Seleccione un Taller...</option>';
+
+
+          if (
+            !Array.isArray(talleres) ||
+            talleres.length === 0
+          ) {
+
+            select.innerHTML =
+              '<option value="">No hay Talleres disponibles</option>';
+
+            return;
+
+          }
+
+
+          talleres.forEach(
+            function(taller) {
+
+              const opcion =
+                document.createElement(
+                  'option'
+                );
+
+              opcion.value =
+                taller.idTaller;
+
+              opcion.textContent =
+                taller.NomTaller;
+
+              opcion.dataset.nombre =
+                taller.NomTaller;
+
+              select.appendChild(
+                opcion
+              );
+
+            }
+          );
+
+
+          select.onchange =
+            function() {
+
+              boton.disabled =
+                !select.value;
+
+            };
+
+        };
+
+
+      const script =
+        document.createElement(
+          'script'
+        );
+
+
+      script.src =
+        URL_WEB_APP +
+        '?pagina=listaTalleresQR' +
+        '&callback=' +
+        nombreCallback;
+
+
+      script.onerror =
+        function() {
+
+          delete window[nombreCallback];
+
+          select.innerHTML =
+            '<option value="">Error al cargar los Talleres</option>';
+
+          boton.disabled = true;
+
+        };
+
+
+      document
+        .body
+        .appendChild(script);
+
+    }
+
+
+    // =====================================================
+    // CONTINUAR CON EL TALLER SELECCIONADO
+    // =====================================================
+
+    function continuarRegistroTaller() {
+
+      const select =
+        document.getElementById(
+          'selectTaller'
+        );
+
+      const opcion =
+        select.options[
+          select.selectedIndex
+        ];
+
+
+      if (!select.value) {
+
+        return;
+
+      }
+
+
+      idTallerSeleccionado =
+        String(
+          select.value
+        ).trim();
+
+
+      nombreTallerSeleccionado =
+        String(
+          opcion.dataset.nombre ||
+          opcion.textContent ||
+          ''
+        ).trim();
+
+
+      const informacion =
+        document.getElementById(
+          'informacionTaller'
+        );
+
+
+      informacion.innerHTML =
+        '<strong>Taller seleccionado</strong>' +
+        '<br><br>' +
+        'ID Taller: ' +
+        idTallerSeleccionado +
+        '<br>' +
+        'Taller: ' +
+        nombreTallerSeleccionado;
+
+
+      informacion.classList.remove(
+        'oculto'
+      );
+
+
+      mostrarSeccion(
+        'seccionLector'
+      );
+
+
+      document
+        .getElementById('tituloRegistro')
+        .textContent =
+        'Registro al Taller';
+
+
+      iniciarLector();
+
+    }
+
+
+    // =====================================================
+    // REGISTRO CONVERSATORIO
+    // =====================================================
+
+    function seleccionarConversatorio() {
+
+      tipoRegistro =
+        'RegConversatorio';
+
+      mostrarSeccion(
+        'seccionLector'
+      );
+
+
+      document
+        .getElementById('tituloRegistro')
+        .textContent =
+        'Registro al Conversatorio';
+
+
+      document
+        .getElementById('informacionTaller')
+        .innerHTML =
+        '<strong>Registro al Conversatorio</strong>' +
+        '<br><br>' +
+        'Esta opción será desarrollada posteriormente.';
+
+
+      document
+        .getElementById('informacionTaller')
+        .classList.remove(
+          'oculto'
+        );
+
+
+      document
+        .getElementById('lectorQR')
+        .innerHTML = '';
+
+
+      mostrarMensaje(
+        'Esta función será desarrollada en una fase posterior.',
+        'info'
+      );
+
+    }
+
 
     // =====================================================
     // MOSTRAR MENSAJE
@@ -331,254 +693,7 @@
 
 
     // =====================================================
-    // REGISTRO AL CONGRESO
-    // =====================================================
-
-    function seleccionarCongreso() {
-
-      tipoRegistro =
-        'Regcongreso';
-
-      idTallerSeleccionado =
-        '';
-
-      document
-        .getElementById(
-          'menu'
-        )
-        .style.display =
-        'none';
-
-      document
-        .getElementById(
-          'tallerConfig'
-        )
-        .style.display =
-        'none';
-
-      document
-        .getElementById(
-          'seleccion'
-        )
-        .style.display =
-        'none';
-
-      document
-        .getElementById(
-          'btnVolver'
-        )
-        .style.display =
-        'block';
-
-      mostrarMensaje(
-        'Registro al Congreso.<br><br>' +
-        'Apunte la cámara al QR del Ponente.',
-        'info'
-      );
-
-      iniciarLector();
-
-    }
-
-
-    // =====================================================
-    // MOSTRAR CONFIGURACIÓN TALLER
-    // =====================================================
-
-    function mostrarConfiguracionTaller() {
-
-      document
-        .getElementById(
-          'tallerConfig'
-        )
-        .style.display =
-        'block';
-
-      document
-        .getElementById(
-          'idTaller'
-        )
-        .focus();
-
-      mostrarMensaje(
-        'Ingrese el ID del Taller que desea registrar.',
-        'info'
-      );
-
-    }
-
-
-    // =====================================================
-    // INICIAR REGISTRO TALLER
-    // =====================================================
-
-    function iniciarRegistroTaller() {
-
-      const idTaller =
-        document
-          .getElementById(
-            'idTaller'
-          )
-          .value
-          .trim();
-
-
-      if (!idTaller) {
-
-        mostrarMensaje(
-          'Debe ingresar el ID del Taller.',
-          'error'
-        );
-
-        return;
-
-      }
-
-
-      mostrarMensaje(
-        'Validando Taller...',
-        'info'
-      );
-
-
-      google.script.run
-
-        .withSuccessHandler(
-          function(respuesta) {
-
-            if (
-              !respuesta ||
-              !respuesta.ok
-            ) {
-
-              mostrarMensaje(
-                respuesta &&
-                respuesta.mensaje
-                  ? respuesta.mensaje
-                  : 'El Taller no es válido.',
-                'error'
-              );
-
-              return;
-
-            }
-
-
-            tipoRegistro =
-              'Regtaller';
-
-            idTallerSeleccionado =
-              String(
-                respuesta.idTaller
-              ).trim();
-
-
-            document
-              .getElementById(
-                'menu'
-              )
-              .style.display =
-              'none';
-
-
-            document
-              .getElementById(
-                'tallerConfig'
-              )
-              .style.display =
-              'none';
-
-
-            const seleccion =
-              document.getElementById(
-                'seleccion'
-              );
-
-
-            seleccion.innerHTML =
-              '<strong>Registro al Taller</strong>' +
-              '<br><br>' +
-              'ID Taller: ' +
-              respuesta.idTaller +
-              '<br>' +
-              'Taller: ' +
-              respuesta.NomTaller;
-
-
-            seleccion.style.display =
-              'block';
-
-
-            document
-              .getElementById(
-                'btnVolver'
-              )
-              .style.display =
-              'block';
-
-
-            mostrarMensaje(
-              'Taller seleccionado.<br><br>' +
-              'Apunte la cámara al QR del Ponente.',
-              'info'
-            );
-
-
-            iniciarLector();
-
-          }
-        )
-
-        .withFailureHandler(
-          function(error) {
-
-            mostrarMensaje(
-              error &&
-              error.message
-                ? error.message
-                : 'No fue posible validar el Taller.',
-              'error'
-            );
-
-          }
-        )
-
-        .validarTallerParaRegistro(
-          idTaller
-        );
-
-    }
-
-
-    // =====================================================
-    // REGISTRO CONVERSATORIO
-    // =====================================================
-
-    function seleccionarConversatorio() {
-
-      tipoRegistro =
-        'RegConversatorio';
-
-      document
-        .getElementById(
-          'tallerConfig'
-        )
-        .style.display =
-        'none';
-
-      mostrarMensaje(
-        '<strong>Registro al Conversatorio</strong>' +
-        '<br><br>' +
-        'Esta función estará disponible ' +
-        'en una fase posterior de desarrollo.',
-        'info'
-      );
-
-    }
-
-
-    // =====================================================
-    // DETENER CÁMARA
+    // DETENER LECTOR
     // =====================================================
 
     async function detenerLector() {
@@ -587,11 +702,14 @@
         return;
       }
 
+
       try {
 
         await lectorQr.stop();
 
         lectorQr.clear();
+
+        lectorQr = null;
 
       } catch (error) {
 
@@ -601,8 +719,6 @@
         );
 
       }
-
-      lectorQr = null;
 
     }
 
@@ -616,8 +732,11 @@
     ) {
 
       if (qrEnviado) {
+
         return;
+
       }
+
 
       qrEnviado = true;
 
@@ -631,11 +750,8 @@
       await detenerLector();
 
 
-      let url = '';
-
-
       // =================================================
-      // CONGRESO
+      // REGISTRO AL CONGRESO
       // =================================================
 
       if (
@@ -643,7 +759,7 @@
         'Regcongreso'
       ) {
 
-        url =
+        const url =
           URL_WEB_APP +
           '?pagina=Regcongreso' +
           '&qrPonente=' +
@@ -651,21 +767,27 @@
             contenidoQr
           );
 
+
+        window.location.href =
+          url;
+
+        return;
+
       }
 
 
       // =================================================
-      // TALLER
+      // REGISTRO AL TALLER
       // =================================================
 
-      else if (
+      if (
         tipoRegistro ===
-        'Regtaller'
+        'RegTaller'
       ) {
 
-        url =
+        const url =
           URL_WEB_APP +
-          '?pagina=Regtaller' +
+          '?pagina=RegTaller' +
           '&idTaller=' +
           encodeURIComponent(
             idTallerSeleccionado
@@ -675,22 +797,9 @@
             contenidoQr
           );
 
-      }
 
-
-      // =================================================
-      // CONVERSATORIO
-      // =================================================
-
-      else {
-
-        mostrarMensaje(
-          'El Registro al Conversatorio ' +
-          'todavía está en desarrollo.',
-          'info'
-        );
-
-        qrEnviado = false;
+        window.location.href =
+          url;
 
         return;
 
@@ -698,17 +807,26 @@
 
 
       // =================================================
-      // IR AL WEB APP
+      // CONVERSATORIO
       // =================================================
 
-      window.location.href =
-        url;
+      if (
+        tipoRegistro ===
+        'RegConversatorio'
+      ) {
+
+        mostrarMensaje(
+          'El registro al Conversatorio será desarrollado posteriormente.',
+          'info'
+        );
+
+      }
 
     }
 
 
     // =====================================================
-    // INICIAR LECTOR
+    // INICIAR LECTOR QR
     // =====================================================
 
     function iniciarLector() {
@@ -716,17 +834,19 @@
       qrEnviado = false;
 
 
-      document
-        .getElementById(
-          'reader'
-        )
-        .style.display =
-        'block';
+      const contenedor =
+        document.getElementById(
+          'lectorQR'
+        );
+
+
+      contenedor.innerHTML =
+        '';
 
 
       lectorQr =
         new Html5Qrcode(
-          'reader'
+          'lectorQR'
         );
 
 
@@ -767,8 +887,8 @@
           errorMessage
         ) {
 
-          // Los errores de lectura
-          // continua se ignoran.
+          // Los errores continuos
+          // de lectura se ignoran.
 
         }
 
@@ -778,14 +898,7 @@
         function() {
 
           mostrarMensaje(
-            tipoRegistro ===
-              'Regtaller'
-
-              ? 'Cámara activa.<br>' +
-                'Apunte al QR del Ponente.'
-
-              : 'Cámara activa.<br>' +
-                'Apunte al QR del Ponente.',
+            'Cámara activa.<br>Apunte al QR del Ponente.',
             'info'
           );
 
@@ -808,105 +921,38 @@
 
 
     // =====================================================
-    // VOLVER AL MENÚ
+    // REGRESAR AL MENÚ
     // =====================================================
 
-    async function volverAlMenu() {
+    async function volverMenu() {
 
       await detenerLector();
 
 
-      tipoRegistro =
-        '';
+      tipoRegistro = '';
 
-      idTallerSeleccionado =
-        '';
+      idTallerSeleccionado = '';
 
-      qrEnviado =
-        false;
+      nombreTallerSeleccionado = '';
 
-
-      document
-        .getElementById(
-          'menu'
-        )
-        .style.display =
-        'block';
+      qrEnviado = false;
 
 
       document
-        .getElementById(
-          'tallerConfig'
-        )
-        .style.display =
-        'none';
+        .getElementById('lectorQR')
+        .innerHTML = '';
 
 
       document
-        .getElementById(
-          'seleccion'
-        )
-        .style.display =
-        'none';
+        .getElementById('informacionTaller')
+        .classList.add('oculto');
 
 
-      document
-        .getElementById(
-          'reader'
-        )
-        .style.display =
-        'none';
-
-
-      document
-        .getElementById(
-          'btnVolver'
-        )
-        .style.display =
-        'none';
-
-
-      document
-        .getElementById(
-          'idTaller'
-        )
-        .value =
-        '';
-
-
-      mostrarMensaje(
-        'Seleccione una opción para comenzar.',
-        'info'
+      mostrarSeccion(
+        'menuPrincipal'
       );
 
     }
-
-
-    // =====================================================
-    // ENTER PARA TALLER
-    // =====================================================
-
-    document
-      .getElementById(
-        'idTaller'
-      )
-      .addEventListener(
-        'keydown',
-        function(event) {
-
-          if (
-            event.key ===
-            'Enter'
-          ) {
-
-            event.preventDefault();
-
-            iniciarRegistroTaller();
-
-          }
-
-        }
-      );
 
   </script>
 
