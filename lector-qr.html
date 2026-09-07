@@ -264,6 +264,66 @@
       </button>
 
     </div>
+<!-- =====================================================
+         SECCIÓN REGISTRO TALLER
+  ===================================================== -->
+
+    <div
+      id="seccionConversatorio"
+      class="oculto"
+    >
+
+    <h2>
+      Registro al Conversatorio
+    </h2>
+
+    <p>
+      Seleccione el Conversatorio al que se registrará
+      la asistencia.
+    </p>
+
+    <label for="selectConversatorio">
+
+    Conversatorio:
+
+    </label>
+
+    <select
+      id="selectConversatorio"
+    >
+
+      <option value="">
+        Cargando Conversatorios...
+      </option>
+
+    </select>
+
+    <button
+      id="btnContinuarConversatorio"
+      class="botonContinuar"
+      onclick="continuarRegistroConversatorio()"
+      disabled
+    >
+
+      Continuar
+
+    </button>
+
+    <div
+      id="conversatorioSeleccionado"
+      class="tallerSeleccionado oculto"
+    ></div>
+
+    <button
+      class="opcion secundario"
+      onclick="volverMenu()"
+    >
+
+      Regresar al menú
+
+    </button>
+
+    </div>
 
 
     <!-- =====================================================
@@ -627,47 +687,16 @@
 
     function seleccionarConversatorio() {
 
-      tipoRegistro =
-        'RegConversatorio';
+  tipoRegistro =
+    'RegConversatorio';
 
-      mostrarSeccion(
-        'seccionLector'
-      );
+  mostrarSeccion(
+    'seccionConversatorio'
+  );
 
+  cargarConversatorios();
 
-      document
-        .getElementById('tituloRegistro')
-        .textContent =
-        'Registro al Conversatorio';
-
-
-      document
-        .getElementById('informacionTaller')
-        .innerHTML =
-        '<strong>Registro al Conversatorio</strong>' +
-        '<br><br>' +
-        'Esta opción será desarrollada posteriormente.';
-
-
-      document
-        .getElementById('informacionTaller')
-        .classList.remove(
-          'oculto'
-        );
-
-
-      document
-        .getElementById('lectorQR')
-        .innerHTML = '';
-
-
-      mostrarMensaje(
-        'Esta función será desarrollada en una fase posterior.',
-        'info'
-      );
-
-    }
-
+}
 
     // =====================================================
     // MOSTRAR MENSAJE
