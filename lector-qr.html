@@ -1052,8 +1052,61 @@ window.addEventListener(
 
     regresarACamaraTaller();
 
+    regresarACamaraCongreso();
+
   }
 );
+
+function regresarACamaraCongreso() {
+
+  const parametros =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const modo =
+    parametros.get('modo');
+
+  if (
+    modo !== 'Regcongreso'
+  ) {
+    return;
+  }
+
+  tipoRegistro =
+    'Regcongreso';
+
+  idTallerSeleccionado =
+    '';
+
+  nombreTallerSeleccionado =
+    '';
+
+  const informacion =
+    document.getElementById(
+      'informacionTaller'
+    );
+
+  informacion.innerHTML =
+    '';
+
+  informacion.classList.add(
+    'oculto'
+  );
+
+  mostrarSeccion(
+    'seccionLector'
+  );
+
+  document
+    .getElementById(
+      'tituloRegistro'
+    )
+    .textContent =
+    'Registro al Congreso';
+
+  iniciarLector();
+}
     
 </script>
 
