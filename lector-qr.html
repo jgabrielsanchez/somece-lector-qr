@@ -954,7 +954,7 @@
 
     }
 
-    // =====================================================
+// =====================================================
 // REGRESAR DIRECTAMENTE A LA CÁMARA DEL TALLER
 // =====================================================
 
@@ -974,26 +974,41 @@ function regresarACamaraTaller() {
   const nombreTaller =
     parametros.get('nombreTaller') || '';
 
+
+  // Si no viene del botón Aceptar,
+  // no hacemos nada.
+
   if (
     modo !== 'RegTaller' ||
     !idTaller
   ) {
+
     return;
+
   }
+
 
   tipoRegistro =
     'RegTaller';
 
+
   idTallerSeleccionado =
-    String(idTaller).trim();
+    String(
+      idTaller
+    ).trim();
+
 
   nombreTallerSeleccionado =
-    String(nombreTaller).trim();
+    String(
+      nombreTaller
+    ).trim();
+
 
   const informacion =
     document.getElementById(
       'informacionTaller'
     );
+
 
   informacion.innerHTML =
     '<strong>Taller seleccionado</strong>' +
@@ -1004,13 +1019,16 @@ function regresarACamaraTaller() {
     'Taller: ' +
     nombreTallerSeleccionado;
 
+
   informacion.classList.remove(
     'oculto'
   );
 
+
   mostrarSeccion(
     'seccionLector'
   );
+
 
   document
     .getElementById(
@@ -1019,9 +1037,11 @@ function regresarACamaraTaller() {
     .textContent =
     'Registro al Taller';
 
-  iniciarLector();
-}
 
+  iniciarLector();
+
+}
+    
 // =====================================================
 // INICIAR AUTOMÁTICAMENTE LA CÁMARA SI VIENE DE ACEPTAR
 // =====================================================
