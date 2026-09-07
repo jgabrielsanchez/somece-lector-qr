@@ -954,6 +954,87 @@
 
     }
 
+    // =====================================================
+// REGRESAR DIRECTAMENTE A LA CÁMARA DEL TALLER
+// =====================================================
+
+function regresarACamaraTaller() {
+
+  const parametros =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const modo =
+    parametros.get('modo');
+
+  const idTaller =
+    parametros.get('idTaller');
+
+  const nombreTaller =
+    parametros.get('nombreTaller') || '';
+
+  if (
+    modo !== 'RegTaller' ||
+    !idTaller
+  ) {
+    return;
+  }
+
+  tipoRegistro =
+    'RegTaller';
+
+  idTallerSeleccionado =
+    String(idTaller).trim();
+
+  nombreTallerSeleccionado =
+    String(nombreTaller).trim();
+
+  const informacion =
+    document.getElementById(
+      'informacionTaller'
+    );
+
+  informacion.innerHTML =
+    '<strong>Taller seleccionado</strong>' +
+    '<br><br>' +
+    'ID Taller: ' +
+    idTallerSeleccionado +
+    '<br>' +
+    'Taller: ' +
+    nombreTallerSeleccionado;
+
+  informacion.classList.remove(
+    'oculto'
+  );
+
+  mostrarSeccion(
+    'seccionLector'
+  );
+
+  document
+    .getElementById(
+      'tituloRegistro'
+    )
+    .textContent =
+    'Registro al Taller';
+
+  iniciarLector();
+}
+
+// =====================================================
+// INICIAR AUTOMÁTICAMENTE LA CÁMARA SI VIENE DE ACEPTAR
+// =====================================================
+
+window.addEventListener(
+  'load',
+  function() {
+
+    regresarACamaraTaller();
+
+  }
+);
+
   </script>
 
 </body>
