@@ -605,6 +605,116 @@
 
     }
 
+   // =====================================================
+    // CARGAR CONVERSATORIOS DESDE APPS SCRIPT
+    // =====================================================
+
+    function cargarConversatorios() {
+
+  const select =
+    document.getElementById(
+      'selectConversatorio'
+    );
+
+  const boton =
+    document.getElementById(
+      'btnContinuarConversatorio'
+    );
+
+  select.innerHTML =
+    '<option value="">Cargando Conversatorios...</option>';
+
+  boton.disabled = true;
+
+  const nombreCallback =
+    'recibirConversatorios_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(conversatorios) {
+
+      delete window[nombreCallback];
+
+      select.innerHTML =
+        '<option value="">Seleccione un Conversatorio...</option>';
+
+      if (
+        !Array.isArray(conversatorios) ||
+        conversatorios.length === 0
+      ) {
+
+        select.innerHTML =
+          '<option value="">No hay Conversatorios disponibles</option>';
+
+        return;
+
+      }
+
+      conversatorios.forEach(
+        function(conversatorio) {
+
+          const opcion =
+            document.createElement(
+              'option'
+            );
+
+          opcion.value =
+            conversatorio.idConversatorio;
+
+          opcion.textContent =
+            'Conversatorio ' +
+            conversatorio.idConversatorio +
+            ' - ' +
+            conversatorio.Ponente;
+
+          opcion.dataset.nombre =
+            conversatorio.Ponente;
+
+          select.appendChild(
+            opcion
+          );
+
+        }
+      );
+
+      select.onchange =
+        function() {
+
+          boton.disabled =
+            !select.value;
+
+        };
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=listaConversatoriosQR' +
+    '&callback=' +
+    nombreCallback;
+
+  script.onerror =
+    function() {
+
+      delete window[nombreCallback];
+
+      select.innerHTML =
+        '<option value="">Error al cargar los Conversatorios</option>';
+
+      boton.disabled = true;
+
+    };
+
+  document
+    .body
+    .appendChild(script);
+
+}
 
     // =====================================================
     // CONTINUAR CON EL TALLER SELECCIONADO
