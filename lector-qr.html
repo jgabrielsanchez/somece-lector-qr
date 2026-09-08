@@ -739,11 +739,18 @@
   if (!select.value) {
     return;
   }
+  // ==========================================
+  // GUARDAR ID DEL CONVERSATORIO
+  // ==========================================
 
   idConversatorioSeleccionado =
     String(
       select.value
     ).trim();
+
+  // ==========================================
+  // GUARDAR ID DEL CONVERSATORIO
+  // ==========================================
 
   nombreConversatorioSeleccionado =
     String(
@@ -751,6 +758,10 @@
       opcion.textContent ||
       ''
     ).trim();
+
+  // ==========================================
+  // GUARDAR ID DEL CONVERSATORIO
+  // ==========================================
 
   const informacion =
     document.getElementById(
@@ -770,14 +781,26 @@
     'oculto'
   );
 
+  // ==========================================
+  // MOSTRAR LECTOR QR
+  // ==========================================
+
   mostrarSeccion(
     'seccionLector'
   );
+
+  // ==========================================
+  // MOSTRAR LECTOR QR
+  // ==========================================
 
   document
     .getElementById('tituloRegistro')
     .textContent =
     'Registro al Conversatorio';
+
+  // ==========================================
+  // INICIAR LECTOR
+  // ==========================================
 
   iniciarLector();
 
@@ -1011,29 +1034,36 @@
 
       }
 
+// ==========================================
+// REGISTRO AL CONVERSATORIO
+// ==========================================
 
-      // =================================================
-      // CONVERSATORIO
-      // =================================================
+  if (tipoRegistro === 'RegConversatorio') {
 
-      if (
-        tipoRegistro ===
-        'RegConversatorio'
-      ) {
+    const url =
+      URL_WEB_APP +
+      '?pagina=RegConversatorio' +
+      '&idConversatorio=' +
+      encodeURIComponent(
+        idConversatorioSeleccionado
+      ) +
+      '&qrPonente=' +
+      encodeURIComponent(
+        qrPonente
+      );
 
-        mostrarMensaje(
-          'El registro al Conversatorio será desarrollado posteriormente.',
-          'info'
-        );
+    window.location.href = url;
 
-      }
+    return;
 
-    }
+  }      
+
+  }
 
 
-    // =====================================================
-    // INICIAR LECTOR QR
-    // =====================================================
+// =====================================================
+// INICIAR LECTOR QR
+// =====================================================
 
     function iniciarLector() {
 
