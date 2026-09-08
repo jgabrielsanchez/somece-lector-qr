@@ -1034,32 +1034,48 @@
 
       }
 
-// ==========================================
+// =================================================
 // REGISTRO AL CONVERSATORIO
-// ==========================================
+// =================================================
 
-  if (tipoRegistro === 'RegConversatorio') {
+if (
+  tipoRegistro ===
+  'RegConversatorio'
+) {
 
-    const url =
-      URL_WEB_APP +
-      '?pagina=RegConversatorio' +
-      '&idConversatorio=' +
-      encodeURIComponent(
-        idConversatorioSeleccionado
-      ) +
-      '&qrPonente=' +
-      encodeURIComponent(
-        qrPonente
-      );
+  if (
+    !idConversatorioSeleccionado
+  ) {
 
-    window.location.href = url;
+    mostrarMensaje(
+      'Primero debe seleccionar un Conversatorio.',
+      'error'
+    );
+
+    qrEnviado = false;
 
     return;
 
-  }      
-
   }
 
+  const url =
+    URL_WEB_APP +
+    '?pagina=RegConversatorio' +
+    '&idConversatorio=' +
+    encodeURIComponent(
+      idConversatorioSeleccionado
+    ) +
+    '&qrPonente=' +
+    encodeURIComponent(
+      contenidoQr
+    );
+
+  window.location.href =
+    url;
+
+  return;
+
+}
 
 // =====================================================
 // INICIAR LECTOR QR
