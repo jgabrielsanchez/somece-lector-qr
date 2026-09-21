@@ -628,6 +628,8 @@
 
         regresarACamaraCongreso();
 
+        regresarACamaraConversatorio();
+
         return;
       }
 
@@ -1656,7 +1658,85 @@ function regresarACamaraCongreso() {
 
   iniciarLector();
 }
-    
+
+  // =====================================================
+// REGRESAR DIRECTAMENTE A LA CÁMARA DEL CONVERSATORIO
+// =====================================================
+
+function regresarACamaraConversatorio() {
+
+  const parametros =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const modo =
+    parametros.get('modo');
+
+  const idConversatorio =
+    parametros.get('idConversatorio');
+
+  const nombreConversatorio =
+    parametros.get('nombreConversatorio') || '';
+
+  // Si no viene del botón Aceptar
+  // de un Conversatorio, no hacemos nada.
+
+  if (
+    modo !== 'RegConversatorio' ||
+    !idConversatorio
+  ) {
+
+    return;
+
+  }
+
+  tipoRegistro =
+    'RegConversatorio';
+
+  idConversatorioSeleccionado =
+    String(
+      idConversatorio
+    ).trim();
+
+  nombreConversatorioSeleccionado =
+    String(
+      nombreConversatorio
+    ).trim();
+
+  const informacion =
+    document.getElementById(
+      'informacionTaller'
+    );
+
+  informacion.innerHTML =
+    '<strong>Conversatorio seleccionado</strong>' +
+    '<br><br>' +
+    'ID Conversatorio: ' +
+    idConversatorioSeleccionado +
+    '<br>' +
+    'Conversatorio: ' +
+    nombreConversatorioSeleccionado;
+
+  informacion.classList.remove(
+    'oculto'
+  );
+
+  mostrarSeccion(
+    'seccionLector'
+  );
+
+  document
+    .getElementById(
+      'tituloRegistro'
+    )
+    .textContent =
+    'Registro al Conversatorio';
+
+  iniciarLector();
+
+}
+
 </script>
 
 </body>
