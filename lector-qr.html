@@ -160,12 +160,65 @@
       Lector QR
     </div>
 
+<!-- =====================================================
+  INICIO DE SESIÓN
+    ===================================================== -->
+
+    <div id="seccionLogin">
+
+      <h2>
+        Inicio de sesión
+      </h2>
+
+      <p>
+        Ingrese sus credenciales para utilizar el lector QR.
+      </p>
+
+      <label for="usuarioLogin">
+        Usuario:
+      </label>
+
+      <input
+        type="text"
+        id="usuarioLogin"
+        autocomplete="username"
+      >
+
+      <label for="contrasenaLogin">
+        Contraseña:
+      </label>
+
+      <input
+        type="password"
+        id="contrasenaLogin"
+        autocomplete="current-password"
+      >
+
+      <button
+        id="btnIniciarSesion"
+        class="botonContinuar"
+        type="button"
+        onclick="iniciarSesionLector()"
+      >
+        Iniciar sesión
+      </button>
+
+      <div
+        id="mensajeLogin"
+        class="oculto"
+      ></div>
+
+    </div>
+
 
     <!-- =====================================================
          MENÚ PRINCIPAL
          ===================================================== -->
 
-    <div id="menuPrincipal">
+    <div
+      id="menuPrincipal"
+      class="oculto"
+    >
 
       <p>
         Seleccione el tipo de registro:
@@ -404,6 +457,239 @@
 
     let nombreConversatorioSeleccionado = '';
 
+    let tokenSesion =
+      sessionStorage.getItem(
+        'someceTokenSesion'
+      ) || '';
+
+  function iniciarSesionLector() {
+
+  const usuario =
+    document
+      .getElementById('usuarioLogin')
+      .value
+      .trim();
+
+  const contrasena =
+    document
+      .getElementById('contrasenaLogin')
+      .value;
+
+  const mensaje =
+    document
+      .getElementById('mensajeLogin');
+
+  const boton =
+    document
+      .getElementById('btnIniciarSesion');
+
+  if (!usuario || !contrasena) {
+
+    mensaje.textContent =
+      'Ingrese usuario y contraseña.';
+
+    mensaje.className =
+      'error';
+
+    return;
+  }
+
+  boton.disabled = true;
+
+  mensaje.textContent =
+    'Iniciando sesión...';
+
+  mensaje.className =
+    'info';
+
+  const nombreCallback =
+    'loginLector_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[nombreCallback];
+
+      boton.disabled = false;
+
+      if (
+        !resultado ||
+        !resultado.ok ||
+        !resultado.token
+      ) {
+
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible iniciar sesión.';
+
+        mensaje.className =
+          'error';
+
+        return;
+      }
+
+      tokenSesion =
+        resultado.token;
+
+      sessionStorage.setItem(
+        'someceTokenSesion',
+        tokenSesion
+      );
+
+      document
+        .getElementById('seccionLogin')
+        .classList.add('oculto');
+
+      document
+        .getElementById('menuPrincipal')
+        .classList.remove('oculto');
+
+      mensaje.textContent = '';
+
+      mensaje.className =
+        'oculto';
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=loginLector' +
+    '&usuario=' +
+    encodeURIComponent(usuario) +
+    '&contrasena=' +
+    encodeURIComponent(contrasena) +
+    '&callback=' +
+    encodeURIComponent(nombreCallback);
+
+  script.onerror =
+    function() {
+
+      delete window[nombreCallback];
+
+      boton.disabled = false;
+
+      mensaje.textContent =
+        'No fue posible conectar con el servidor.';
+
+      mensaje.className =
+        'error';
+
+    };
+
+  document
+    .body
+    .appendChild(script);
+
+}
+
+  // =====================================================
+  // VALIDAR SESION GUARDADA
+  // =====================================================
+
+  function validarSesionGuardada() {
+
+  if (!tokenSesion) {
+
+    return;
+
+  }
+
+  const nombreCallback =
+    'validarSesionLector_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[nombreCallback];
+
+      if (
+        resultado &&
+        resultado.ok
+      ) {
+
+        document
+          .getElementById('seccionLogin')
+          .classList.add('oculto');
+
+        document
+          .getElementById('menuPrincipal')
+          .classList.remove('oculto');
+
+        regresarACamaraTaller();
+
+        regresarACamaraCongreso();
+
+        return;
+      }
+
+      tokenSesion = '';
+
+      sessionStorage.removeItem(
+        'someceTokenSesion'
+      );
+
+      document
+        .getElementById('seccionLogin')
+        .classList.remove('oculto');
+
+      document
+        .getElementById('menuPrincipal')
+        .classList.add('oculto');
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=validarSesionLector' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[nombreCallback];
+
+      tokenSesion = '';
+
+      sessionStorage.removeItem(
+        'someceTokenSesion'
+      );
+
+      document
+        .getElementById('seccionLogin')
+        .classList.remove('oculto');
+
+      document
+        .getElementById('menuPrincipal')
+        .classList.add('oculto');
+
+    };
+
+  document
+    .body
+    .appendChild(script);
+
+}
 
     // =====================================================
     // MOSTRAR / OCULTAR SECCIONES
@@ -993,8 +1279,12 @@
           '?pagina=Regcongreso' +
           '&qrPonente=' +
           encodeURIComponent(
-            contenidoQr
-          );
+          contenidoQr
+        ) +
+  '&token=' +
+  encodeURIComponent(
+    tokenSesion
+  );
 
 
         window.location.href =
@@ -1019,12 +1309,16 @@
           '?pagina=RegTaller' +
           '&idTaller=' +
           encodeURIComponent(
-            idTallerSeleccionado
-          ) +
-          '&qrPonente=' +
-          encodeURIComponent(
-            contenidoQr
-          );
+          idTallerSeleccionado
+        ) +
+        '&qrPonente=' +
+        encodeURIComponent(
+          contenidoQr
+        ) +
+        '&token=' +
+        encodeURIComponent(
+          tokenSesion
+        );
 
 
         window.location.href =
@@ -1064,11 +1358,15 @@ if (
     '&idConversatorio=' +
     encodeURIComponent(
       idConversatorioSeleccionado
-    ) +
-    '&qrPonente=' +
-    encodeURIComponent(
-      contenidoQr
-    );
+  ) +
+  '&qrPonente=' +
+  encodeURIComponent(
+    contenidoQr
+  ) +
+  '&token=' +
+  encodeURIComponent(
+    tokenSesion
+  );
 
   window.location.href =
     url;
@@ -1303,9 +1601,7 @@ window.addEventListener(
   'load',
   function() {
 
-    regresarACamaraTaller();
-
-    regresarACamaraCongreso();
+    validarSesionGuardada();
 
   }
 );
