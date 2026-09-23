@@ -1337,8 +1337,108 @@ function guardarUsuarioAdmin() {
   );
 
   if (idUsuario) {
-    return;
-  }
+
+  const nombreCallback =
+    'actualizarUsuarioAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[nombreCallback];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible actualizar el usuario.';
+
+        mensaje.classList.remove(
+          'oculto'
+        );
+
+        return;
+      }
+
+      mensaje.textContent =
+        resultado.mensaje ||
+        'Usuario actualizado correctamente.';
+
+      mensaje.classList.remove(
+        'oculto'
+      );
+
+      setTimeout(
+        function() {
+
+          administrarUsuarios();
+
+        },
+        800
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=actualizarUsuarioWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idUsuario=' +
+    encodeURIComponent(
+      idUsuario
+    ) +
+    '&usuario=' +
+    encodeURIComponent(
+      usuario
+    ) +
+    '&rol=' +
+    encodeURIComponent(
+      rol
+    ) +
+    '&contrasena=' +
+    encodeURIComponent(
+      contrasena
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[nombreCallback];
+
+      mensaje.textContent =
+        'No fue posible conectar con el servidor.';
+
+      mensaje.classList.remove(
+        'oculto'
+      );
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+  return;
+}
 
   const nombreCallback =
     'crearUsuarioAdmin_' +
