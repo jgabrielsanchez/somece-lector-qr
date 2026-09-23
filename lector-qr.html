@@ -1185,6 +1185,99 @@
 
 }
 
+  function eliminarUsuarioAdmin(
+  idUsuario
+) {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const confirmar =
+    confirm(
+      '¿Está seguro de eliminar este usuario?'
+    );
+
+  if (!confirmar) {
+    return;
+  }
+
+  const nombreCallback =
+    'eliminarUsuarioAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[nombreCallback];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        alert(
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible eliminar el usuario.'
+        );
+
+        return;
+      }
+
+      alert(
+        resultado.mensaje ||
+        'Usuario eliminado correctamente.'
+      );
+
+      cargarUsuarios();
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=eliminarUsuarioWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idUsuario=' +
+    encodeURIComponent(
+      idUsuario
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[nombreCallback];
+
+      alert(
+        'No fue posible conectar con el servidor.'
+      );
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
   function nuevoUsuario() {
 
   if (
