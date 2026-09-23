@@ -247,10 +247,98 @@
           3. Registro al Conversatorio
         </button>
 
+        <button
+          id="btnAdministracion"
+          class="opcion oculto"
+          onclick="abrirAdministracion()"
+        >
+          Administración
+        </button>
+
       </div>
 
     </div>
 
+    <!-- =====================================================
+     SECCIÓN ADMINISTRACIÓN
+     ===================================================== -->
+
+    <div
+      id="seccionAdministracion"
+      class="oculto"
+    >
+
+      <h2>
+        Administración
+      </h2>
+
+      <p>
+        Seleccione el catálogo que desea administrar:
+      </p>
+
+      <div class="menu">
+
+        <button
+          class="opcion"
+          onclick="administrarUsuarios()"
+        >
+          Usuarios
+        </button>
+
+          <button
+            class="opcion"
+            onclick="administrarPonentes()"
+          >
+          Ponentes
+        </button>
+
+      </div>
+
+      <button
+        class="opcion secundario"
+        onclick="volverMenu()"
+      >
+        Regresar al menú
+      </button>
+
+    </div>
+
+    <!-- =====================================================
+     ADMINISTRACIÓN DE USUARIOS
+     ===================================================== -->
+
+<div
+  id="seccionUsuarios"
+  class="oculto"
+>
+
+  <h2>
+    Usuarios
+  </h2>
+
+  <p>
+    Administración de usuarios del sistema.
+  </p>
+
+  <div id="listaUsuarios"></div>
+
+  <button
+    class="botonContinuar"
+    type="button"
+    onclick="nuevoUsuario()"
+  >
+    Nuevo Usuario
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="abrirAdministracion()"
+  >
+    Regresar a Administración
+  </button>
+
+</div>
 
     <!-- =====================================================
          SECCIÓN REGISTRO TALLER
@@ -462,6 +550,11 @@
         'someceTokenSesion'
       ) || '';
 
+    let rolSesion =
+      sessionStorage.getItem(
+        'someceRolSesion'
+      ) || '';
+
   function iniciarSesionLector() {
 
   const usuario =
@@ -539,6 +632,16 @@
         tokenSesion
       );
 
+      rolSesion =
+        resultado.rol || '';
+
+      sessionStorage.setItem(
+        'someceRolSesion',
+      rolSesion
+      );
+
+      actualizarMenuPorRol();
+
       document
         .getElementById('seccionLogin')
         .classList.add('oculto');
@@ -591,6 +694,42 @@
 }
 
   // =====================================================
+  // ACTUALIZA MENU POR ROL
+  // =====================================================
+
+  function actualizarMenuPorRol() {
+
+  const botonAdministracion =
+    document.getElementById(
+      'btnAdministracion'
+    );
+
+  if (!botonAdministracion) {
+    return;
+  }
+
+  if (
+    rolSesion ===
+    'Administrador'
+  ) {
+
+    botonAdministracion
+      .classList.remove(
+        'oculto'
+      );
+
+  } else {
+
+    botonAdministracion
+      .classList.add(
+        'oculto'
+      );
+
+  }
+
+}
+
+  // =====================================================
   // VALIDAR SESION GUARDADA
   // =====================================================
 
@@ -616,6 +755,16 @@
         resultado.ok
       ) {
 
+        rolSesion =
+          resultado.rol || '';
+
+        sessionStorage.setItem(
+          'someceRolSesion',
+        rolSesion
+      );
+
+        actualizarMenuPorRol();
+
         document
           .getElementById('seccionLogin')
           .classList.add('oculto');
@@ -637,6 +786,12 @@
 
       sessionStorage.removeItem(
         'someceTokenSesion'
+      );
+
+      rolSesion = '';
+
+      sessionStorage.removeItem(
+        'someceRolSesion'
       );
 
       document
@@ -693,6 +848,110 @@
 
 }
 
+  // =====================================================
+  // ABRIR ROL ADMINISTRADOR
+  // =====================================================
+
+  function abrirAdministracion() {
+
+    if (
+      rolSesion !==
+      'Administrador'
+    ) {
+      return;
+    }
+
+      mostrarSeccion(
+        'seccionAdministracion'
+    );
+
+  }
+
+    function administrarUsuarios() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  mostrarSeccion(
+    'seccionUsuarios'
+  );
+
+  cargarUsuarios();
+
+}
+
+
+
+  function cargarUsuarios() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const contenedor =
+    document.getElementById(
+      'listaUsuarios'
+    );
+
+  contenedor.innerHTML =
+    'Cargando usuarios...';
+
+  const nombreCallback =
+    'recibirUsuarios_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[nombreCallback];
+
+      console.log(
+        'Resultado Usuarios:',
+        resultado
+    );
+
+  };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarUsuariosWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[nombreCallback];
+
+      contenedor.innerHTML =
+        'No fue posible cargar los usuarios.';
+
+    };
+
+  document
+    .body
+    .appendChild(script);
+
+}
+
     // =====================================================
     // MOSTRAR / OCULTAR SECCIONES
     // =====================================================
@@ -711,6 +970,13 @@
         .getElementById('seccionLector')
         .classList.add('oculto');
 
+      document
+        .getElementById('seccionAdministracion')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionUsuarios')
+        .classList.add('oculto');
 
       document
         .getElementById(id)
