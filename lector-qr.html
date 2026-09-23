@@ -966,8 +966,6 @@
 
 }
 
-
-
   function cargarUsuarios() {
 
   if (
@@ -997,96 +995,95 @@
       console.log(
         'Resultado Usuarios:',
         resultado
-    );
-
-  };
-
-  if (
-    !Array.isArray(resultado)
-  ) {
-
-    contenedor.innerHTML =
-      resultado &&
-      resultado.mensaje
-        ? resultado.mensaje
-        : 'No fue posible cargar los usuarios.';
-
-    return;
-    }
-
-contenedor.innerHTML = '';
-
-  resultado.forEach(
-    function(usuario) {
-
-      const elemento =
-        document.createElement(
-          'div'
-        );
-
-      elemento.className =
-        'usuarioAdmin';
-
-      elemento.textContent =
-        usuario.usuario +
-        ' — ' +
-        usuario.rol;
-
-      const botonEditar =
-  document.createElement(
-    'button'
-  );
-
-botonEditar.type =
-  'button';
-
-botonEditar.textContent =
-  'Editar';
-
-botonEditar.onclick =
-  function() {
-
-    editarUsuario(
-      usuario
-    );
-
-  };
-
-elemento.appendChild(
-  botonEditar
-);
-
-
-const botonEliminar =
-  document.createElement(
-    'button'
-  );
-
-botonEliminar.type =
-  'button';
-
-botonEliminar.textContent =
-  'Eliminar';
-
-botonEliminar.onclick =
-  function() {
-
-    eliminarUsuarioAdmin(
-      usuario.idUsuario
-    );
-
-  };
-
-elemento.appendChild(
-  botonEliminar
-);
-
-      contenedor.appendChild(
-        elemento
       );
 
-    }
-  );
+      if (
+        !Array.isArray(resultado)
+      ) {
+
+        contenedor.innerHTML =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible cargar los usuarios.';
+
+        return;
+      }
+
+      contenedor.innerHTML = '';
+
+      resultado.forEach(
+        function(usuario) {
+
+          const elemento =
+            document.createElement(
+              'div'
+            );
+
+          elemento.className =
+            'usuarioAdmin';
+
+          elemento.textContent =
+            usuario.usuario +
+            ' — ' +
+            usuario.rol;
+
+          const botonEditar =
+            document.createElement(
+              'button'
+            );
+
+          botonEditar.type =
+            'button';
+
+          botonEditar.textContent =
+            'Editar';
+
+          botonEditar.onclick =
+            function() {
+
+              editarUsuario(
+                usuario
+              );
+
+            };
+
+          elemento.appendChild(
+            botonEditar
+          );
+
+          const botonEliminar =
+            document.createElement(
+              'button'
+            );
+
+          botonEliminar.type =
+            'button';
+
+          botonEliminar.textContent =
+            'Eliminar';
+
+          botonEliminar.onclick =
+            function() {
+
+              eliminarUsuarioAdmin(
+                usuario.idUsuario
+              );
+
+            };
+
+          elemento.appendChild(
+            botonEliminar
+          );
+
+          contenedor.appendChild(
+            elemento
+          );
+
+        }
+      );
+
+    };
 
   const script =
     document.createElement(
@@ -1117,10 +1114,12 @@ elemento.appendChild(
 
   document
     .body
-    .appendChild(script);
+    .appendChild(
+      script
+    );
 
 }
-
+ 
   function editarUsuario(
   usuario
 ) {
