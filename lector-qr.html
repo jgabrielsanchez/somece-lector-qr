@@ -1107,6 +1107,33 @@
             datos
           );
 
+          const botonQr =
+            document.createElement(
+            'button'
+          );
+
+          botonQr.type =
+            'button';
+
+          botonQr.className =
+            'opcion secundario';
+
+          botonQr.textContent =
+            'Ver QR';
+
+          botonQr.onclick =
+            function() {
+
+              verQrPonente(
+              ponente
+            );
+
+        };
+
+        fila.appendChild(
+          botonQr
+        );
+
           contenedor.appendChild(
             fila
           );
@@ -1150,6 +1177,29 @@
     .appendChild(
       script
     );
+
+}
+
+  function verQrPonente(
+  ponente
+) {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  console.log(
+    'Ponente seleccionado:',
+    ponente
+  );
+
+  console.log(
+    'qrPonente:',
+    ponente.qrPonente
+  );
 
 }
 
