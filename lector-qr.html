@@ -340,6 +340,88 @@
 
 </div>
 
+  <!-- =====================================================
+     FORMULARIO DE USUARIO
+     ===================================================== -->
+
+<div
+  id="seccionFormularioUsuario"
+  class="oculto"
+>
+
+  <h2 id="tituloFormularioUsuario">
+    Usuario
+  </h2>
+
+  <input
+    id="idUsuarioFormulario"
+    type="hidden"
+  >
+
+  <label for="usuarioFormulario">
+    Usuario
+  </label>
+
+  <input
+    id="usuarioFormulario"
+    type="text"
+    autocomplete="off"
+  >
+
+  <label for="rolUsuarioFormulario">
+    Rol
+  </label>
+
+  <select id="rolUsuarioFormulario">
+
+    <option value="">
+      Seleccione un rol...
+    </option>
+
+    <option value="Administrador">
+      Administrador
+    </option>
+
+    <option value="Gestor">
+      Gestor
+    </option>
+
+  </select>
+
+  <label for="contrasenaUsuarioFormulario">
+    Contraseña
+  </label>
+
+  <input
+    id="contrasenaUsuarioFormulario"
+    type="password"
+    autocomplete="new-password"
+  >
+
+  <div
+    id="mensajeFormularioUsuario"
+    class="oculto"
+  ></div>
+
+  <button
+    id="btnGuardarUsuario"
+    class="botonContinuar"
+    type="button"
+    onclick="guardarUsuarioAdmin()"
+  >
+    Guardar
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="administrarUsuarios()"
+  >
+    Cancelar
+  </button>
+
+</div>
+
     <!-- =====================================================
          SECCIÓN REGISTRO TALLER
          ===================================================== -->
@@ -919,6 +1001,93 @@
 
   };
 
+  if (
+    !Array.isArray(resultado)
+  ) {
+
+    contenedor.innerHTML =
+      resultado &&
+      resultado.mensaje
+        ? resultado.mensaje
+        : 'No fue posible cargar los usuarios.';
+
+    return;
+    }
+
+contenedor.innerHTML = '';
+
+  resultado.forEach(
+    function(usuario) {
+
+      const elemento =
+        document.createElement(
+          'div'
+        );
+
+      elemento.className =
+        'usuarioAdmin';
+
+      elemento.textContent =
+        usuario.usuario +
+        ' — ' +
+        usuario.rol;
+
+      const botonEditar =
+  document.createElement(
+    'button'
+  );
+
+botonEditar.type =
+  'button';
+
+botonEditar.textContent =
+  'Editar';
+
+botonEditar.onclick =
+  function() {
+
+    editarUsuario(
+      usuario
+    );
+
+  };
+
+elemento.appendChild(
+  botonEditar
+);
+
+
+const botonEliminar =
+  document.createElement(
+    'button'
+  );
+
+botonEliminar.type =
+  'button';
+
+botonEliminar.textContent =
+  'Eliminar';
+
+botonEliminar.onclick =
+  function() {
+
+    eliminarUsuarioAdmin(
+      usuario.idUsuario
+    );
+
+  };
+
+elemento.appendChild(
+  botonEliminar
+);
+
+      contenedor.appendChild(
+        elemento
+      );
+
+    }
+  );
+
   const script =
     document.createElement(
       'script'
@@ -952,6 +1121,326 @@
 
 }
 
+  function editarUsuario(
+  usuario
+) {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idUsuarioFormulario'
+    )
+    .value =
+      usuario.idUsuario;
+
+  document
+    .getElementById(
+      'usuarioFormulario'
+    )
+    .value =
+      usuario.usuario;
+
+  document
+    .getElementById(
+      'rolUsuarioFormulario'
+    )
+    .value =
+      usuario.rol;
+
+  document
+    .getElementById(
+      'contrasenaUsuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tituloFormularioUsuario'
+    )
+    .textContent =
+      'Editar Usuario';
+
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
+    )
+    .textContent = '';
+
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
+    )
+    .classList.add(
+      'oculto'
+    );
+
+  mostrarSeccion(
+    'seccionFormularioUsuario'
+  );
+
+}
+
+  function nuevoUsuario() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idUsuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'usuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'rolUsuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'contrasenaUsuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tituloFormularioUsuario'
+    )
+    .textContent =
+      'Nuevo Usuario';
+
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
+    )
+    .textContent = '';
+
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
+    )
+    .classList.add(
+      'oculto'
+    );
+
+  mostrarSeccion(
+    'seccionFormularioUsuario'
+  );
+
+}
+
+  function guardarUsuarioAdmin() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+  const idUsuario =
+  document
+    .getElementById(
+      'idUsuarioFormulario'
+    )
+    .value
+    .trim();
+
+const usuario =
+  document
+    .getElementById(
+      'usuarioFormulario'
+    )
+    .value
+    .trim();
+
+const rol =
+  document
+    .getElementById(
+      'rolUsuarioFormulario'
+    )
+    .value
+    .trim();
+
+const contrasena =
+  document
+    .getElementById(
+      'contrasenaUsuarioFormulario'
+    )
+    .value;
+
+const mensaje =
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
+    );
+
+
+if (!usuario) {
+
+  mensaje.textContent =
+    'Ingrese el nombre de usuario.';
+
+  mensaje.classList.remove(
+    'oculto'
+  );
+
+  return;
+}
+
+
+if (!rol) {
+
+  mensaje.textContent =
+    'Seleccione un rol.';
+
+  mensaje.classList.remove(
+    'oculto'
+  );
+
+  return;
+}
+
+
+if (
+  !idUsuario &&
+  !contrasena
+) {
+
+  mensaje.textContent =
+    'Ingrese la contraseña del nuevo usuario.';
+
+  mensaje.classList.remove(
+    'oculto'
+  );
+
+  if (idUsuario) {
+  return;
+}
+
+const nombreCallback =
+  'crearUsuarioAdmin_' +
+  Date.now();
+
+window[nombreCallback] =
+  function(resultado) {
+
+    delete window[nombreCallback];
+
+    if (
+      !resultado ||
+      !resultado.ok
+    ) {
+
+      mensaje.textContent =
+        resultado &&
+        resultado.mensaje
+          ? resultado.mensaje
+          : 'No fue posible crear el usuario.';
+
+      mensaje.classList.remove(
+        'oculto'
+      );
+
+      return;
+    }
+
+    mensaje.textContent =
+      resultado.mensaje ||
+      'Usuario creado correctamente.';
+
+    mensaje.classList.remove(
+      'oculto'
+    );
+
+    setTimeout(
+      function() {
+
+        administrarUsuarios();
+
+      },
+        800
+    );
+
+  };
+
+const script =
+  document.createElement(
+    'script'
+  );
+
+script.src =
+  URL_WEB_APP +
+  '?pagina=crearUsuarioWeb' +
+  '&token=' +
+  encodeURIComponent(
+    tokenSesion
+  ) +
+  '&usuario=' +
+  encodeURIComponent(
+    usuario
+  ) +
+  '&rol=' +
+  encodeURIComponent(
+    rol
+  ) +
+  '&contrasena=' +
+  encodeURIComponent(
+    contrasena
+  ) +
+  '&callback=' +
+  encodeURIComponent(
+    nombreCallback
+  );
+
+script.onerror =
+  function() {
+
+    delete window[nombreCallback];
+
+    mensaje.textContent =
+      'No fue posible conectar con el servidor.';
+
+    mensaje.classList.remove(
+      'oculto'
+    );
+
+  };
+
+document
+  .body
+  .appendChild(
+    script
+  );
+
+  return;
+}
+
+
+mensaje.textContent = '';
+
+mensaje.classList.add(
+  'oculto'
+);
+
+}
+
     // =====================================================
     // MOSTRAR / OCULTAR SECCIONES
     // =====================================================
@@ -977,6 +1466,14 @@
       document
         .getElementById('seccionUsuarios')
         .classList.add('oculto');
+
+      document
+        .getElementById(
+          'seccionFormularioUsuario'
+      )
+      .classList.add(
+        'oculto'
+      );
 
       document
         .getElementById(id)
