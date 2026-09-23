@@ -1286,6 +1286,17 @@ const contrasena =
     )
     .value;
 
+console.log(
+  'Datos guardar usuario:',
+  {
+    idUsuario: idUsuario,
+    usuario: usuario,
+    rol: rol,
+    tieneContrasena:
+      contrasena.length > 0
+  }
+);
+
 const mensaje =
   document
     .getElementById(
