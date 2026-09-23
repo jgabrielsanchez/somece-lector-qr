@@ -1016,6 +1016,141 @@
     'seccionPonentes'
   );
 
+  cargarPonentes();
+
+}
+
+  function cargarPonentes() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const contenedor =
+    document.getElementById(
+      'listaPonentes'
+    );
+
+  contenedor.innerHTML =
+    '<p>Cargando Ponentes...</p>';
+
+  const nombreCallback =
+    'cargarPonentes_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      contenedor.innerHTML =
+        '';
+
+      if (
+        !Array.isArray(
+          resultado
+        )
+      ) {
+
+        contenedor.innerHTML =
+          '<p>' +
+          (
+            resultado &&
+            resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar los Ponentes.'
+          ) +
+          '</p>';
+
+        return;
+      }
+
+      if (
+        resultado.length === 0
+      ) {
+
+        contenedor.innerHTML =
+          '<p>No hay Ponentes registrados.</p>';
+
+        return;
+      }
+
+      resultado.forEach(
+        function(ponente) {
+
+          const fila =
+            document.createElement(
+              'div'
+            );
+
+          fila.className =
+            'itemAdministracion';
+
+          const datos =
+            document.createElement(
+              'div'
+            );
+
+          datos.textContent =
+            ponente.idPonente +
+            ' — ' +
+            ponente.NomPonente +
+            ' — ' +
+            ponente.TipoPonente;
+
+          fila.appendChild(
+            datos
+          );
+
+          contenedor.appendChild(
+            fila
+          );
+
+        }
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarPonentesWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      contenedor.innerHTML =
+        '<p>No fue posible conectar con el servidor.</p>';
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
 }
 
   function cargarUsuarios() {
