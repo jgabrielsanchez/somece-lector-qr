@@ -1185,7 +1185,67 @@
 
 }
 
-  function eliminarUsuarioAdmin(
+  function nuevoUsuario() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idUsuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'usuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'rolUsuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'contrasenaUsuarioFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tituloFormularioUsuario'
+    )
+    .textContent =
+      'Nuevo Usuario';
+
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
+    )
+    .textContent = '';
+
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
+    )
+    .classList.add(
+      'oculto'
+    );
+
+  mostrarSeccion(
+    'seccionFormularioUsuario'
+  );
+
+}
+
+function eliminarUsuarioAdmin(
   idUsuario
 ) {
 
@@ -1275,66 +1335,6 @@
     .appendChild(
       script
     );
-
-}
-
-  function nuevoUsuario() {
-
-  if (
-    rolSesion !==
-    'Administrador'
-  ) {
-    return;
-  }
-
-  document
-    .getElementById(
-      'idUsuarioFormulario'
-    )
-    .value = '';
-
-  document
-    .getElementById(
-      'usuarioFormulario'
-    )
-    .value = '';
-
-  document
-    .getElementById(
-      'rolUsuarioFormulario'
-    )
-    .value = '';
-
-  document
-    .getElementById(
-      'contrasenaUsuarioFormulario'
-    )
-    .value = '';
-
-  document
-    .getElementById(
-      'tituloFormularioUsuario'
-    )
-    .textContent =
-      'Nuevo Usuario';
-
-  document
-    .getElementById(
-      'mensajeFormularioUsuario'
-    )
-    .textContent = '';
-
-  document
-    .getElementById(
-      'mensajeFormularioUsuario'
-    )
-    .classList.add(
-      'oculto'
-    );
-
-  mostrarSeccion(
-    'seccionFormularioUsuario'
-  );
 
 }
 
