@@ -341,6 +341,43 @@
 </div>
 
   <!-- =====================================================
+     ADMINISTRACIÓN DE PONENTES
+     ===================================================== -->
+
+<div
+  id="seccionPonentes"
+  class="oculto"
+>
+
+  <h2>
+    Ponentes
+  </h2>
+
+  <p>
+    Administración de Ponentes del Congreso.
+  </p>
+
+  <div id="listaPonentes"></div>
+
+  <button
+    class="botonContinuar"
+    type="button"
+    onclick="nuevoPonente()"
+  >
+    Nuevo Ponente
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="abrirAdministracion()"
+  >
+    Regresar a Administración
+  </button>
+
+</div>
+
+  <!-- =====================================================
      FORMULARIO DE USUARIO
      ===================================================== -->
 
@@ -963,6 +1000,21 @@
   );
 
   cargarUsuarios();
+
+}
+
+  function administrarPonentes() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  mostrarSeccion(
+    'seccionPonentes'
+  );
 
 }
 
@@ -1655,6 +1707,14 @@ function guardarUsuarioAdmin() {
       document
         .getElementById('seccionUsuarios')
         .classList.add('oculto');
+
+      document
+        .getElementById(
+        'seccionPonentes'
+        )
+        .classList.add(
+          'oculto'
+      );
 
       document
         .getElementById(
