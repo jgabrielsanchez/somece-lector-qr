@@ -1246,194 +1246,214 @@
 }
 
   function guardarUsuarioAdmin() {
-
+  console.log(
+    'Entró a guardarUsuarioAdmin'
+  );
   if (
     rolSesion !==
     'Administrador'
   ) {
     return;
   }
-
   const idUsuario =
-    document
-      .getElementById(
-        'idUsuarioFormulario'
-      )
-      .value
-      .trim();
+  document
+    .getElementById(
+      'idUsuarioFormulario'
+    )
+    .value
+    .trim();
 
-  const usuario =
-    document
-      .getElementById(
-        'usuarioFormulario'
-      )
-      .value
-      .trim();
+const usuario =
+  document
+    .getElementById(
+      'usuarioFormulario'
+    )
+    .value
+    .trim();
 
-  const rol =
-    document
-      .getElementById(
-        'rolUsuarioFormulario'
-      )
-      .value
-      .trim();
+const rol =
+  document
+    .getElementById(
+      'rolUsuarioFormulario'
+    )
+    .value
+    .trim();
 
-  const contrasena =
-    document
-      .getElementById(
-        'contrasenaUsuarioFormulario'
-      )
-      .value;
+const contrasena =
+  document
+    .getElementById(
+      'contrasenaUsuarioFormulario'
+    )
+    .value;
 
-  const mensaje =
-    document
-      .getElementById(
-        'mensajeFormularioUsuario'
-      );
+console.log(
+  'Datos guardar usuario:',
+  {
+    idUsuario: idUsuario,
+    usuario: usuario,
+    rol: rol,
+    tieneContrasena:
+      contrasena.length > 0
+  }
+);
 
-  if (!usuario) {
-
-    mensaje.textContent =
-      'Ingrese el nombre de usuario.';
-
-    mensaje.classList.remove(
-      'oculto'
+const mensaje =
+  document
+    .getElementById(
+      'mensajeFormularioUsuario'
     );
 
-    return;
-  }
 
-  if (!rol) {
+if (!usuario) {
 
-    mensaje.textContent =
-      'Seleccione un rol.';
+  mensaje.textContent =
+    'Ingrese el nombre de usuario.';
 
-    mensaje.classList.remove(
-      'oculto'
-    );
+  mensaje.classList.remove(
+    'oculto'
+  );
 
-    return;
-  }
+  return;
+}
 
-  if (
-    !idUsuario &&
-    !contrasena
-  ) {
 
-    mensaje.textContent =
-      'Ingrese la contraseña del nuevo usuario.';
+if (!rol) {
 
-    mensaje.classList.remove(
-      'oculto'
-    );
+  mensaje.textContent =
+    'Seleccione un rol.';
 
-    return;
-  }
+  mensaje.classList.remove(
+    'oculto'
+  );
 
-  mensaje.textContent = '';
+  return;
+}
 
-  mensaje.classList.add(
+
+if (
+  !idUsuario &&
+  !contrasena
+) {
+
+  mensaje.textContent =
+    'Ingrese la contraseña del nuevo usuario.';
+
+  mensaje.classList.remove(
     'oculto'
   );
 
   if (idUsuario) {
-    return;
-  }
+  return;
+}
 
-  const nombreCallback =
-    'crearUsuarioAdmin_' +
-    Date.now();
+const nombreCallback =
+  'crearUsuarioAdmin_' +
+  Date.now();
 
-  window[nombreCallback] =
-    function(resultado) {
+window[nombreCallback] =
+  function(resultado) {
 
-      delete window[nombreCallback];
+    delete window[nombreCallback];
 
-      if (
-        !resultado ||
-        !resultado.ok
-      ) {
-
-        mensaje.textContent =
-          resultado &&
-          resultado.mensaje
-            ? resultado.mensaje
-            : 'No fue posible crear el usuario.';
-
-        mensaje.classList.remove(
-          'oculto'
-        );
-
-        return;
-      }
+    if (
+      !resultado ||
+      !resultado.ok
+    ) {
 
       mensaje.textContent =
-        resultado.mensaje ||
-        'Usuario creado correctamente.';
+        resultado &&
+        resultado.mensaje
+          ? resultado.mensaje
+          : 'No fue posible crear el usuario.';
 
       mensaje.classList.remove(
         'oculto'
       );
 
-      setTimeout(
-        function() {
+      return;
+    }
 
-          administrarUsuarios();
+    mensaje.textContent =
+      resultado.mensaje ||
+      'Usuario creado correctamente.';
 
-        },
+    mensaje.classList.remove(
+      'oculto'
+    );
+
+    setTimeout(
+      function() {
+
+        administrarUsuarios();
+
+      },
         800
-      );
-
-    };
-
-  const script =
-    document.createElement(
-      'script'
     );
 
-  script.src =
-    URL_WEB_APP +
-    '?pagina=crearUsuarioWeb' +
-    '&token=' +
-    encodeURIComponent(
-      tokenSesion
-    ) +
-    '&usuario=' +
-    encodeURIComponent(
-      usuario
-    ) +
-    '&rol=' +
-    encodeURIComponent(
-      rol
-    ) +
-    '&contrasena=' +
-    encodeURIComponent(
-      contrasena
-    ) +
-    '&callback=' +
-    encodeURIComponent(
-      nombreCallback
+  };
+
+const script =
+  document.createElement(
+    'script'
+  );
+
+script.src =
+  URL_WEB_APP +
+  '?pagina=crearUsuarioWeb' +
+  '&token=' +
+  encodeURIComponent(
+    tokenSesion
+  ) +
+  '&usuario=' +
+  encodeURIComponent(
+    usuario
+  ) +
+  '&rol=' +
+  encodeURIComponent(
+    rol
+  ) +
+  '&contrasena=' +
+  encodeURIComponent(
+    contrasena
+  ) +
+  '&callback=' +
+  encodeURIComponent(
+    nombreCallback
+  );
+
+script.onerror =
+  function() {
+
+    delete window[nombreCallback];
+
+    mensaje.textContent =
+      'No fue posible conectar con el servidor.';
+
+    mensaje.classList.remove(
+      'oculto'
     );
 
-  script.onerror =
-    function() {
+  };
 
-      delete window[nombreCallback];
+  console.log(
+  'Enviando solicitud crearUsuarioWeb'
+  );
 
-      mensaje.textContent =
-        'No fue posible conectar con el servidor.';
+document
+  .body
+  .appendChild(
+    script
+  );
 
-      mensaje.classList.remove(
-        'oculto'
-      );
+  return;
+}
 
-    };
 
-  document
-    .body
-    .appendChild(
-      script
-    );
+mensaje.textContent = '';
+
+mensaje.classList.add(
+  'oculto'
+);
 
 }
 
