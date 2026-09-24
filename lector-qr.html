@@ -1222,14 +1222,54 @@
     return;
   }
 
-  console.log(
-    'Ponente seleccionado:',
-    ponente
+  const contenidoQr =
+    String(
+      ponente.qrPonente || ''
+    ).trim();
+
+  if (!contenidoQr) {
+
+    alert(
+      'Este Ponente todavía no tiene QR generado.'
+    );
+
+    return;
+  }
+
+  document
+    .getElementById(
+      'nombreQrPonente'
+    )
+    .textContent =
+      ponente.NomPonente || '';
+
+  const contenedorQr =
+    document.getElementById(
+      'graficoQrPonente'
+    );
+
+  contenedorQr.innerHTML =
+    '';
+
+  mostrarSeccion(
+    'seccionQrPonente'
   );
 
-  console.log(
-    'qrPonente:',
-    ponente.qrPonente
+  new QRCode(
+    contenedorQr,
+    {
+      text:
+        contenidoQr,
+
+      width:
+        256,
+
+      height:
+        256,
+
+      correctLevel:
+        QRCode.CorrectLevel.L
+    }
   );
 
 }
