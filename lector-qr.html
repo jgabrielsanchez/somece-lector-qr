@@ -1228,6 +1228,195 @@
 
 }
 
+  function guardarPonenteAdmin() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const idPonente =
+    document
+      .getElementById(
+        'idPonenteFormulario'
+      )
+      .value
+      .trim();
+
+  const NomPonente =
+    document
+      .getElementById(
+        'nomPonenteFormulario'
+      )
+      .value
+      .trim();
+
+  const CorreoPonente =
+    document
+      .getElementById(
+        'correoPonenteFormulario'
+      )
+      .value
+      .trim();
+
+  const institucion =
+    document
+      .getElementById(
+        'institucionPonenteFormulario'
+      )
+      .value
+      .trim();
+
+  const TipoPonente =
+    document
+      .getElementById(
+        'tipoPonenteFormulario'
+      )
+      .value
+      .trim();
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioPonente'
+    );
+
+  mensaje.textContent =
+    '';
+
+  mensaje.classList.add(
+    'oculto'
+  );
+
+
+  if (
+    !idPonente ||
+    !NomPonente ||
+    !CorreoPonente ||
+    !institucion ||
+    !TipoPonente
+  ) {
+
+    mensaje.textContent =
+      'Complete todos los campos.';
+
+    mensaje.classList.remove(
+      'oculto'
+    );
+
+    return;
+  }
+
+
+  const nombreCallback =
+    'actualizarPonenteAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      mensaje.textContent =
+        resultado &&
+        resultado.mensaje
+          ? resultado.mensaje
+          : (
+              resultado &&
+              resultado.ok
+                ? 'Ponente actualizado correctamente.'
+                : 'No fue posible actualizar el Ponente.'
+            );
+
+      mensaje.classList.remove(
+        'oculto'
+      );
+
+
+      if (
+        resultado &&
+        resultado.ok
+      ) {
+
+        setTimeout(
+          function() {
+
+            administrarPonentes();
+
+          },
+          800
+        );
+
+      }
+
+    };
+
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=actualizarPonenteWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idPonente=' +
+    encodeURIComponent(
+      idPonente
+    ) +
+    '&NomPonente=' +
+    encodeURIComponent(
+      NomPonente
+    ) +
+    '&CorreoPonente=' +
+    encodeURIComponent(
+      CorreoPonente
+    ) +
+    '&Institucion-Universidad=' +
+    encodeURIComponent(
+      institucion
+    ) +
+    '&TipoPonente=' +
+    encodeURIComponent(
+      TipoPonente
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      mensaje.textContent =
+        'No fue posible conectar con el servidor.';
+
+      mensaje.classList.remove(
+        'oculto'
+      );
+
+    };
+
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
   function cargarPonentes() {
 
   if (
