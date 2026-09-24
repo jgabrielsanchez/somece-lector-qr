@@ -1699,6 +1699,33 @@
             botonEditar
           );
 
+          const botonEliminar =
+            document.createElement(
+              'button'
+          );
+
+          botonEliminar.type =
+            'button';
+
+          botonEliminar.className =
+            'opcion secundario';
+
+          botonEliminar.textContent =
+            'Eliminar';
+
+          botonEliminar.onclick =
+            function() {
+
+              eliminarPonenteAdmin(
+                ponente.idPonente
+            );
+
+          };
+
+          fila.appendChild(
+            botonEliminar
+          );
+
           const botonQr =
             document.createElement(
             'button'
@@ -1763,6 +1790,105 @@
         '<p>No fue posible conectar con el servidor.</p>';
 
     };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
+  function eliminarPonenteAdmin(
+  idPonente
+) {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const confirmar =
+    confirm(
+      '¿Está seguro de eliminar este Ponente?'
+    );
+
+  if (!confirmar) {
+    return;
+  }
+
+  const nombreCallback =
+    'eliminarPonenteAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        alert(
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible eliminar el Ponente.'
+        );
+
+        return;
+      }
+
+      alert(
+        resultado.mensaje ||
+        'Ponente eliminado correctamente.'
+      );
+
+      cargarPonentes();
+
+    };
+
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=eliminarPonenteWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idPonente=' +
+    encodeURIComponent(
+      idPonente
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      alert(
+        'No fue posible conectar con el servidor.'
+      );
+
+    };
+
 
   document
     .body
