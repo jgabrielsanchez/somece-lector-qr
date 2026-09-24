@@ -378,6 +378,110 @@
 </div>
 
   <!-- =====================================================
+     FORMULARIO DE PONENTE
+     ===================================================== -->
+
+<div
+  id="seccionFormularioPonente"
+  class="oculto"
+>
+
+  <h2 id="tituloFormularioPonente">
+    Ponente
+  </h2>
+
+  <input
+    id="idPonenteFormulario"
+    type="hidden"
+  >
+
+  <label for="nomPonenteFormulario">
+    Nombre
+  </label>
+
+  <input
+    id="nomPonenteFormulario"
+    type="text"
+    autocomplete="off"
+  >
+
+  <label for="correoPonenteFormulario">
+    Correo
+  </label>
+
+  <input
+    id="correoPonenteFormulario"
+    type="email"
+    autocomplete="off"
+  >
+
+  <label for="institucionPonenteFormulario">
+    Institución / Universidad
+  </label>
+
+  <input
+    id="institucionPonenteFormulario"
+    type="text"
+    autocomplete="off"
+  >
+
+  <label for="tipoPonenteFormulario">
+    Tipo de Ponente
+  </label>
+
+  <select id="tipoPonenteFormulario">
+
+    <option value="">
+      Seleccione un tipo...
+    </option>
+
+    <option value="Ponente">
+      Ponente
+    </option>
+
+    <option value="Tallerista">
+      Tallerista
+    </option>
+
+    <option value="Moderador">
+      Moderador
+    </option>
+
+    <option value="Cartel">
+      Cartel
+    </option>
+
+    <option value="Asistente">
+      Asistente
+    </option>
+
+  </select>
+
+  <div
+    id="mensajeFormularioPonente"
+    class="oculto"
+  ></div>
+
+  <button
+    id="btnGuardarPonente"
+    class="botonContinuar"
+    type="button"
+    onclick="guardarPonenteAdmin()"
+  >
+    Guardar
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="administrarPonentes()"
+  >
+    Cancelar
+  </button>
+
+</div>
+
+  <!-- =====================================================
      QR DEL PONENTE
      ===================================================== -->
 
@@ -1051,6 +1155,79 @@
 
 }
 
+  function editarPonente(
+  ponente
+) {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idPonenteFormulario'
+    )
+    .value =
+      ponente.idPonente || '';
+
+  document
+    .getElementById(
+      'nomPonenteFormulario'
+    )
+    .value =
+      ponente.NomPonente || '';
+
+  document
+    .getElementById(
+      'correoPonenteFormulario'
+    )
+    .value =
+      ponente.CorreoPonente || '';
+
+  document
+    .getElementById(
+      'institucionPonenteFormulario'
+    )
+    .value =
+      ponente[
+        'Institucion-Universidad'
+      ] || '';
+
+  document
+    .getElementById(
+      'tipoPonenteFormulario'
+    )
+    .value =
+      ponente.TipoPonente || '';
+
+  document
+    .getElementById(
+      'tituloFormularioPonente'
+    )
+    .textContent =
+      'Editar Ponente';
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioPonente'
+    );
+
+  mensaje.textContent =
+    '';
+
+  mensaje.classList.add(
+    'oculto'
+  );
+
+  mostrarSeccion(
+    'seccionFormularioPonente'
+  );
+
+}
+
   function cargarPonentes() {
 
   if (
@@ -1136,6 +1313,33 @@
 
           fila.appendChild(
             datos
+          );
+
+          const botonEditar =
+            document.createElement(
+            'button'
+          );
+
+          botonEditar.type =
+            'button';
+
+          botonEditar.className =
+            'opcion secundario';
+
+          botonEditar.textContent =
+            'Editar';
+
+          botonEditar.onclick =
+            function() {
+
+              editarPonente(
+                ponente
+            );
+
+            };
+
+          fila.appendChild(
+            botonEditar
           );
 
           const botonQr =
@@ -1980,6 +2184,14 @@ function guardarUsuarioAdmin() {
         )
         .classList.add(
           'oculto'
+      );
+
+      document
+        .getElementById(
+        'seccionFormularioPonente'
+      )
+      .classList.add(
+        'oculto'
       );
 
       document
