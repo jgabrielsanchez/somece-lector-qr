@@ -1228,6 +1228,69 @@
 
 }
 
+  function nuevoPonente() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idPonenteFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'nomPonenteFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'correoPonenteFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'institucionPonenteFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tipoPonenteFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tituloFormularioPonente'
+    )
+    .textContent =
+      'Nuevo Ponente';
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioPonente'
+    );
+
+  mensaje.textContent = '';
+
+  mensaje.classList.add(
+    'oculto'
+  );
+
+  mostrarSeccion(
+    'seccionFormularioPonente'
+  );
+
+}
+
   function guardarPonenteAdmin() {
 
   if (
@@ -1291,23 +1354,128 @@
 
 
   if (
-    !idPonente ||
     !NomPonente ||
     !CorreoPonente ||
     !institucion ||
     !TipoPonente
   ) {
 
-    mensaje.textContent =
-      'Complete todos los campos.';
+  mensaje.textContent =
+    'Complete todos los campos.';
 
-    mensaje.classList.remove(
-      'oculto'
-    );
+  mensaje.classList.remove(
+    'oculto'
+  );
+
+  return;
+}
+
+  if (!idPonente) {
+
+    const nombreCallbackCrear =
+      'crearPonenteAdmin_' +
+      Date.now();
+
+    window[nombreCallbackCrear] =
+      function(resultado) {
+
+        delete window[
+          nombreCallbackCrear
+        ];
+
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : (
+              resultado &&
+              resultado.ok
+                ? 'Ponente creado correctamente.'
+                : 'No fue posible crear el Ponente.'
+            );
+
+        mensaje.classList.remove(
+          'oculto'
+        );
+
+        if (
+          resultado &&
+          resultado.ok
+        ) {
+
+          setTimeout(
+            function() {
+
+              administrarPonentes();
+
+            },
+            800
+          );
+
+        }
+
+      };
+
+
+    const scriptCrear =
+      document.createElement(
+        'script'
+      );
+
+    scriptCrear.src =
+      URL_WEB_APP +
+      '?pagina=crearPonenteWeb' +
+      '&token=' +
+      encodeURIComponent(
+        tokenSesion
+      ) +
+      '&NomPonente=' +
+        encodeURIComponent(
+          NomPonente
+      ) +
+      '&CorreoPonente=' +
+      encodeURIComponent(
+        CorreoPonente
+      ) +
+      '&Institucion-Universidad=' +
+        encodeURIComponent(
+        institucion
+      ) +
+      '&TipoPonente=' +
+        encodeURIComponent(
+          TipoPonente
+      ) +
+      '&callback=' +
+        encodeURIComponent(
+        nombreCallbackCrear
+      );
+
+      scriptCrear.onerror =
+        function() {
+
+        delete window[
+          nombreCallbackCrear
+        ];
+
+          mensaje.textContent =
+            'No fue posible conectar con el servidor.';
+
+          mensaje.classList.remove(
+            'oculto'
+        );
+
+      };
+
+
+      document
+        .body
+        .appendChild(
+        scriptCrear
+      );
 
     return;
-  }
 
+  }
 
   const nombreCallback =
     'actualizarPonenteAdmin_' +
