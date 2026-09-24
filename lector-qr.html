@@ -15,6 +15,11 @@
   <!-- Librería para lectura QR -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
+  <!-- Librería para generar QR gráfico -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+  ></script>
+
   <style>
 
     body {
@@ -481,7 +486,8 @@
 
 </div>
 
-  <!-- =====================================================
+
+<!-- =====================================================
      QR DEL PONENTE
      ===================================================== -->
 
@@ -494,13 +500,9 @@
     QR del Ponente
   </h2>
 
-  <p
-    id="nombreQrPonente"
-  ></p>
+  <p id="nombreQrPonente"></p>
 
-  <div
-    id="graficoQrPonente"
-  ></div>
+  <div id="graficoQrPonente"></div>
 
   <button
     class="opcion secundario"
@@ -1155,6 +1157,274 @@
 
 }
 
+  function cargarPonentes() {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const contenedor =
+    document.getElementById(
+      'listaPonentes'
+    );
+
+  contenedor.innerHTML =
+    '<p>Cargando Ponentes...</p>';
+
+  const nombreCallback =
+    'cargarPonentes_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      contenedor.innerHTML = '';
+
+      if (
+        !Array.isArray(
+          resultado
+        )
+      ) {
+
+        contenedor.innerHTML =
+          '<p>' +
+          (
+            resultado &&
+            resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar los Ponentes.'
+          ) +
+          '</p>';
+
+        return;
+      }
+
+      if (
+        resultado.length === 0
+      ) {
+
+        contenedor.innerHTML =
+          '<p>No hay Ponentes registrados.</p>';
+
+        return;
+      }
+
+      resultado.forEach(
+        function(ponente) {
+
+          const fila =
+            document.createElement(
+              'div'
+            );
+
+          fila.className =
+            'itemAdministracion';
+
+          const datos =
+            document.createElement(
+              'div'
+            );
+
+          datos.textContent =
+            ponente.idPonente +
+            ' — ' +
+            ponente.NomPonente +
+            ' — ' +
+            ponente.TipoPonente;
+
+          fila.appendChild(
+            datos
+          );
+
+
+          // =============================================
+          // EDITAR
+          // =============================================
+
+          const botonEditar =
+            document.createElement(
+              'button'
+            );
+
+          botonEditar.type =
+            'button';
+
+          botonEditar.textContent =
+            'Editar';
+
+          botonEditar.onclick =
+            function() {
+
+              editarPonente(
+                ponente
+              );
+
+            };
+
+          fila.appendChild(
+            botonEditar
+          );
+
+
+          // =============================================
+          // VER QR
+          // =============================================
+
+          const botonQr =
+            document.createElement(
+              'button'
+            );
+
+          botonQr.type =
+            'button';
+
+          botonQr.className =
+            'opcion secundario';
+
+          botonQr.textContent =
+            'Ver QR';
+
+          botonQr.onclick =
+            function() {
+
+              verQrPonente(
+                ponente
+              );
+
+            };
+
+          fila.appendChild(
+            botonQr
+          );
+
+
+          contenedor.appendChild(
+            fila
+          );
+
+        }
+      );
+
+    };
+
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarPonentesWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      contenedor.innerHTML =
+        '<p>No fue posible conectar con el servidor.</p>';
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
+
+function verQrPonente(
+  ponente
+) {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const contenidoQr =
+    String(
+      ponente.qrPonente || ''
+    ).trim();
+
+  if (!contenidoQr) {
+
+    alert(
+      'Este Ponente todavía no tiene QR generado.'
+    );
+
+    return;
+  }
+
+  document
+    .getElementById(
+      'nombreQrPonente'
+    )
+    .textContent =
+      ponente.NomPonente || '';
+
+  const contenedorQr =
+    document.getElementById(
+      'graficoQrPonente'
+    );
+
+  contenedorQr.innerHTML = '';
+
+  mostrarSeccion(
+    'seccionQrPonente'
+  );
+
+  new QRCode(
+    contenedorQr,
+    {
+      text:
+        JSON.stringify(
+          {
+            tipo:
+              'qrPonente',
+
+            idPonente:
+              String(
+                ponente.idPonente
+              )
+          }
+        ),
+
+      width:
+        256,
+
+      height:
+        256,
+
+      correctLevel:
+        QRCode.CorrectLevel.L
+    }
+  );
+
+}
+
   function editarPonente(
   ponente
 ) {
@@ -1215,8 +1485,7 @@
       'mensajeFormularioPonente'
     );
 
-  mensaje.textContent =
-    '';
+  mensaje.textContent = '';
 
   mensaje.classList.add(
     'oculto'
@@ -1228,7 +1497,8 @@
 
 }
 
-  function nuevoPonente() {
+
+function nuevoPonente() {
 
   if (
     rolSesion !==
@@ -1345,14 +1615,6 @@
       'mensajeFormularioPonente'
     );
 
-  mensaje.textContent =
-    '';
-
-  mensaje.classList.add(
-    'oculto'
-  );
-
-
   if (
     !NomPonente ||
     !CorreoPonente ||
@@ -1360,126 +1622,35 @@
     !TipoPonente
   ) {
 
+    mensaje.textContent =
+      'Complete todos los campos.';
+
+    mensaje.classList.remove(
+      'oculto'
+    );
+
+    return;
+  }
+
   mensaje.textContent =
-    'Complete todos los campos.';
+    'Guardando...';
 
   mensaje.classList.remove(
     'oculto'
   );
 
-  return;
-}
 
-  if (!idPonente) {
-
-    const nombreCallbackCrear =
-      'crearPonenteAdmin_' +
-      Date.now();
-
-    window[nombreCallbackCrear] =
-      function(resultado) {
-
-        delete window[
-          nombreCallbackCrear
-        ];
-
-        mensaje.textContent =
-          resultado &&
-          resultado.mensaje
-            ? resultado.mensaje
-            : (
-              resultado &&
-              resultado.ok
-                ? 'Ponente creado correctamente.'
-                : 'No fue posible crear el Ponente.'
-            );
-
-        mensaje.classList.remove(
-          'oculto'
-        );
-
-        if (
-          resultado &&
-          resultado.ok
-        ) {
-
-          setTimeout(
-            function() {
-
-              administrarPonentes();
-
-            },
-            800
-          );
-
-        }
-
-      };
-
-
-    const scriptCrear =
-      document.createElement(
-        'script'
-      );
-
-    scriptCrear.src =
-      URL_WEB_APP +
-      '?pagina=crearPonenteWeb' +
-      '&token=' +
-      encodeURIComponent(
-        tokenSesion
-      ) +
-      '&NomPonente=' +
-        encodeURIComponent(
-          NomPonente
-      ) +
-      '&CorreoPonente=' +
-      encodeURIComponent(
-        CorreoPonente
-      ) +
-      '&Institucion-Universidad=' +
-        encodeURIComponent(
-        institucion
-      ) +
-      '&TipoPonente=' +
-        encodeURIComponent(
-          TipoPonente
-      ) +
-      '&callback=' +
-        encodeURIComponent(
-        nombreCallbackCrear
-      );
-
-      scriptCrear.onerror =
-        function() {
-
-        delete window[
-          nombreCallbackCrear
-        ];
-
-          mensaje.textContent =
-            'No fue posible conectar con el servidor.';
-
-          mensaje.classList.remove(
-            'oculto'
-        );
-
-      };
-
-
-      document
-        .body
-        .appendChild(
-        scriptCrear
-      );
-
-    return;
-
-  }
+  const esActualizacion =
+    Boolean(idPonente);
 
   const nombreCallback =
-    'actualizarPonenteAdmin_' +
+    (
+      esActualizacion
+        ? 'actualizarPonenteAdmin_'
+        : 'crearPonenteAdmin_'
+    ) +
     Date.now();
+
 
   window[nombreCallback] =
     function(resultado) {
@@ -1488,37 +1659,36 @@
         nombreCallback
       ];
 
-      mensaje.textContent =
-        resultado &&
-        resultado.mensaje
-          ? resultado.mensaje
-          : (
-              resultado &&
-              resultado.ok
-                ? 'Ponente actualizado correctamente.'
-                : 'No fue posible actualizar el Ponente.'
-            );
-
-      mensaje.classList.remove(
-        'oculto'
-      );
-
-
       if (
-        resultado &&
-        resultado.ok
+        !resultado ||
+        !resultado.ok
       ) {
 
-        setTimeout(
-          function() {
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible guardar el Ponente.';
 
-            administrarPonentes();
+        return;
+      }
 
-          },
-          800
+      mensaje.textContent =
+        resultado.mensaje ||
+        (
+          esActualizacion
+            ? 'Ponente actualizado correctamente.'
+            : 'Ponente creado correctamente.'
         );
 
-      }
+      setTimeout(
+        function() {
+
+          administrarPonentes();
+
+        },
+        800
+      );
 
     };
 
@@ -1528,37 +1698,61 @@
       'script'
     );
 
-  script.src =
+
+  let url =
     URL_WEB_APP +
-    '?pagina=actualizarPonenteWeb' +
+    '?pagina=' +
+    (
+      esActualizacion
+        ? 'actualizarPonenteWeb'
+        : 'crearPonenteWeb'
+    ) +
     '&token=' +
     encodeURIComponent(
       tokenSesion
-    ) +
-    '&idPonente=' +
-    encodeURIComponent(
-      idPonente
-    ) +
+    );
+
+
+  if (esActualizacion) {
+
+    url +=
+      '&idPonente=' +
+      encodeURIComponent(
+        idPonente
+      );
+
+  }
+
+
+  url +=
     '&NomPonente=' +
     encodeURIComponent(
       NomPonente
     ) +
+
     '&CorreoPonente=' +
     encodeURIComponent(
       CorreoPonente
     ) +
+
     '&Institucion-Universidad=' +
     encodeURIComponent(
       institucion
     ) +
+
     '&TipoPonente=' +
     encodeURIComponent(
       TipoPonente
     ) +
+
     '&callback=' +
     encodeURIComponent(
       nombreCallback
     );
+
+
+  script.src = url;
+
 
   script.onerror =
     function() {
@@ -1582,392 +1776,6 @@
     .appendChild(
       script
     );
-
-}
-
-  function cargarPonentes() {
-
-  if (
-    rolSesion !==
-    'Administrador'
-  ) {
-    return;
-  }
-
-  const contenedor =
-    document.getElementById(
-      'listaPonentes'
-    );
-
-  contenedor.innerHTML =
-    '<p>Cargando Ponentes...</p>';
-
-  const nombreCallback =
-    'cargarPonentes_' +
-    Date.now();
-
-  window[nombreCallback] =
-    function(resultado) {
-
-      delete window[
-        nombreCallback
-      ];
-
-      contenedor.innerHTML =
-        '';
-
-      if (
-        !Array.isArray(
-          resultado
-        )
-      ) {
-
-        contenedor.innerHTML =
-          '<p>' +
-          (
-            resultado &&
-            resultado.mensaje
-              ? resultado.mensaje
-              : 'No fue posible cargar los Ponentes.'
-          ) +
-          '</p>';
-
-        return;
-      }
-
-      if (
-        resultado.length === 0
-      ) {
-
-        contenedor.innerHTML =
-          '<p>No hay Ponentes registrados.</p>';
-
-        return;
-      }
-
-      resultado.forEach(
-        function(ponente) {
-
-          const fila =
-            document.createElement(
-              'div'
-            );
-
-          fila.className =
-            'itemAdministracion';
-
-          const datos =
-            document.createElement(
-              'div'
-            );
-
-          datos.textContent =
-            ponente.idPonente +
-            ' — ' +
-            ponente.NomPonente +
-            ' — ' +
-            ponente.TipoPonente;
-
-          fila.appendChild(
-            datos
-          );
-
-          const botonEditar =
-            document.createElement(
-            'button'
-          );
-
-          botonEditar.type =
-            'button';
-
-          botonEditar.className =
-            'opcion secundario';
-
-          botonEditar.textContent =
-            'Editar';
-
-          botonEditar.onclick =
-            function() {
-
-              editarPonente(
-                ponente
-            );
-
-            };
-
-          fila.appendChild(
-            botonEditar
-          );
-
-          const botonEliminar =
-            document.createElement(
-              'button'
-          );
-
-          botonEliminar.type =
-            'button';
-
-          botonEliminar.className =
-            'opcion secundario';
-
-          botonEliminar.textContent =
-            'Eliminar';
-
-          botonEliminar.onclick =
-            function() {
-
-              eliminarPonenteAdmin(
-                ponente.idPonente
-            );
-
-          };
-
-          fila.appendChild(
-            botonEliminar
-          );
-
-          const botonQr =
-            document.createElement(
-            'button'
-          );
-
-          botonQr.type =
-            'button';
-
-          botonQr.className =
-            'opcion secundario';
-
-          botonQr.textContent =
-            'Ver QR';
-
-          botonQr.onclick =
-            function() {
-
-              verQrPonente(
-              ponente
-            );
-
-        };
-
-        fila.appendChild(
-          botonQr
-        );
-
-          contenedor.appendChild(
-            fila
-          );
-
-        }
-      );
-
-    };
-
-  const script =
-    document.createElement(
-      'script'
-    );
-
-  script.src =
-    URL_WEB_APP +
-    '?pagina=buscarPonentesWeb' +
-    '&token=' +
-    encodeURIComponent(
-      tokenSesion
-    ) +
-    '&callback=' +
-    encodeURIComponent(
-      nombreCallback
-    );
-
-  script.onerror =
-    function() {
-
-      delete window[
-        nombreCallback
-      ];
-
-      contenedor.innerHTML =
-        '<p>No fue posible conectar con el servidor.</p>';
-
-    };
-
-  document
-    .body
-    .appendChild(
-      script
-    );
-
-}
-
-  function eliminarPonenteAdmin(
-  idPonente
-) {
-
-  if (
-    rolSesion !==
-    'Administrador'
-  ) {
-    return;
-  }
-
-  const confirmar =
-    confirm(
-      '¿Está seguro de eliminar este Ponente?'
-    );
-
-  if (!confirmar) {
-    return;
-  }
-
-  const nombreCallback =
-    'eliminarPonenteAdmin_' +
-    Date.now();
-
-  window[nombreCallback] =
-    function(resultado) {
-
-      delete window[
-        nombreCallback
-      ];
-
-      if (
-        !resultado ||
-        !resultado.ok
-      ) {
-
-        alert(
-          resultado &&
-          resultado.mensaje
-            ? resultado.mensaje
-            : 'No fue posible eliminar el Ponente.'
-        );
-
-        return;
-      }
-
-      alert(
-        resultado.mensaje ||
-        'Ponente eliminado correctamente.'
-      );
-
-      cargarPonentes();
-
-    };
-
-
-  const script =
-    document.createElement(
-      'script'
-    );
-
-  script.src =
-    URL_WEB_APP +
-    '?pagina=eliminarPonenteWeb' +
-    '&token=' +
-    encodeURIComponent(
-      tokenSesion
-    ) +
-    '&idPonente=' +
-    encodeURIComponent(
-      idPonente
-    ) +
-    '&callback=' +
-    encodeURIComponent(
-      nombreCallback
-    );
-
-  script.onerror =
-    function() {
-
-      delete window[
-        nombreCallback
-      ];
-
-      alert(
-        'No fue posible conectar con el servidor.'
-      );
-
-    };
-
-
-  document
-    .body
-    .appendChild(
-      script
-    );
-
-}
-
-  function verQrPonente(
-  ponente
-) {
-
-  if (
-    rolSesion !==
-    'Administrador'
-  ) {
-    return;
-  }
-
-  const contenidoQr =
-    String(
-      ponente.qrPonente || ''
-    ).trim();
-
-  if (!contenidoQr) {
-
-    alert(
-      'Este Ponente todavía no tiene QR generado.'
-    );
-
-    return;
-  }
-
-  document
-    .getElementById(
-      'nombreQrPonente'
-    )
-    .textContent =
-      ponente.NomPonente || '';
-
-  const contenedorQr =
-    document.getElementById(
-      'graficoQrPonente'
-    );
-
-  contenedorQr.innerHTML =
-    '';
-
-  mostrarSeccion(
-    'seccionQrPonente'
-  );
-
-  new QRCode(
-    contenedorQr,
-    {
-      text:
-        JSON.stringify(
-        {
-          tipo:
-            'qrPonente',
-
-          idPonente:
-            String(
-              ponente.idPonente
-          )
-        }
-      ),
-
-      width:
-        256,
-
-      height:
-        256,
-
-      correctLevel:
-        QRCode.CorrectLevel.L
-    }
-  );
 
 }
 
@@ -2671,6 +2479,14 @@ function guardarUsuarioAdmin() {
 
       document
         .getElementById(
+          'seccionFormularioUsuario'
+      )
+      .classList.add(
+        'oculto'
+      );
+
+      document
+        .getElementById(
         'seccionFormularioPonente'
       )
       .classList.add(
@@ -2679,20 +2495,12 @@ function guardarUsuarioAdmin() {
 
       document
         .getElementById(
-        'seccionQrPonente'
+          'seccionQrPonente'
       )
       .classList.add(
         'oculto'
       );
-
-      document
-        .getElementById(
-          'seccionFormularioUsuario'
-      )
-      .classList.add(
-        'oculto'
-      );
-
+      
       document
         .getElementById(id)
         .classList.remove('oculto');
@@ -3719,10 +3527,6 @@ function regresarACamaraConversatorio() {
 }
 
 </script>
-
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
-  ></script>
 
 </body>
 
