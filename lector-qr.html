@@ -150,6 +150,24 @@
       display: none;
     }
 
+    .botonEditarPonente {
+      background: #1976d2;
+      color: white;
+      border: none;
+    }
+
+    .botonQrPonente {
+      background: #2e7d32;
+      color: white;
+      border: none;
+    }
+
+    .botonEliminarPonente {
+      background: #c62828;
+      color: white;
+      border: none;
+    }
+
   </style>
 
 </head>
@@ -1257,7 +1275,7 @@
             'button';
 
           botonEditar.className =
-            'opcion secundario';
+            'opcion botonEditarPonente';
 
           botonEditar.textContent =
             'Editar';
@@ -1289,7 +1307,7 @@
             'button';
 
           botonQr.className =
-            'opcion secundario';
+            'opcion botonQrPonente';
 
           botonQr.textContent =
             'Ver QR';
@@ -1303,42 +1321,41 @@
 
             };
 
-// =============================================
-// ELIMINAR
-// =============================================
+          // =============================================
+          // ELIMINAR
+          // =============================================
 
-const botonEliminar =
-  document.createElement(
-    'button'
-  );
+          const botonEliminar =
+            document.createElement(
+              'button'
+            );
 
-botonEliminar.type =
-  'button';
+          botonEliminar.type =
+            'button';
 
-botonEliminar.className =
-  'opcion secundario';
+          botonEliminar.className =
+            'opcion botonEliminarPonente';
 
-botonEliminar.textContent =
-  'Eliminar';
+          botonEliminar.textContent =
+            'Eliminar';
 
-botonEliminar.onclick =
-  function() {
+          botonEliminar.onclick =
+            function() {
 
-    eliminarPonenteAdmin(
-      ponente
-    );
+              eliminarPonenteAdmin(
+                ponente
+              );
 
-  };
-
-fila.appendChild(
-  botonEliminar
-);
+            };
 
           fila.appendChild(
             botonQr
           );
 
-
+          fila.appendChild(
+            botonEliminar
+          );
+          
           contenedor.appendChild(
             fila
           );
