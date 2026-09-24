@@ -378,6 +378,37 @@
 </div>
 
   <!-- =====================================================
+     QR DEL PONENTE
+     ===================================================== -->
+
+<div
+  id="seccionQrPonente"
+  class="oculto"
+>
+
+  <h2>
+    QR del Ponente
+  </h2>
+
+  <p
+    id="nombreQrPonente"
+  ></p>
+
+  <div
+    id="graficoQrPonente"
+  ></div>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="administrarPonentes()"
+  >
+    Regresar a Ponentes
+  </button>
+
+</div>
+
+  <!-- =====================================================
      FORMULARIO DE USUARIO
      ===================================================== -->
 
@@ -1899,6 +1930,14 @@ function guardarUsuarioAdmin() {
         )
         .classList.add(
           'oculto'
+      );
+
+      document
+        .getElementById(
+        'seccionQrPonente'
+      )
+      .classList.add(
+        'oculto'
       );
 
       document
