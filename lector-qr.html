@@ -1259,8 +1259,17 @@
     contenedorQr,
     {
       text:
-        'PONENTE:' +
-        ponente.idPonente,
+        JSON.stringify(
+        {
+          tipo:
+            'qrPonente',
+
+          idPonente:
+            String(
+              ponente.idPonente
+          )
+        }
+      ),
 
       width:
         256,
