@@ -157,13 +157,13 @@
     }
 
     .botonQrPonente {
-      background: #2e7d32;
+      background: #00aa9e;
       color: white;
       border: none;
     }
 
     .botonEliminarPonente {
-      background: #c62828;
+      background: #f96302;
       color: white;
       border: none;
     }
@@ -1355,7 +1355,7 @@
           fila.appendChild(
             botonEliminar
           );
-          
+
           contenedor.appendChild(
             fila
           );
@@ -1447,32 +1447,38 @@ function verQrPonente(
     'seccionQrPonente'
   );
 
-  new QRCode(
-    contenedorQr,
-    {
-      text:
-        JSON.stringify(
-          {
-            tipo:
-              'qrPonente',
+      try {
 
-            idPonente:
-              String(
-                ponente.idPonente
-              )
-          }
-        ),
+      new QRCode(
+        contenedorQr,
+        {
+          text:
+            contenidoQr,
 
-      width:
-        256,
+          width:
+            256,
 
-      height:
-        256,
+          height:
+            256,
 
-      correctLevel:
-        QRCode.CorrectLevel.L
+          correctLevel:
+            QRCode.CorrectLevel.L
+        }
+      );
+
+    } catch (error) {
+
+      console.error(
+        'Error al generar QR del Ponente:',
+        error
+      );
+
+      contenedorQr.innerHTML =
+        '<p class="error">' +
+        'No fue posible generar el QR gráfico.' +
+        '</p>';
+
     }
-  );
 
 }
 
