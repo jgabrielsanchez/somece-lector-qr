@@ -1,1 +1,1013 @@
+<!DOCTYPE html>
+<html lang="es">
 
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Ponente - SOMECE 2026</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    .contenedor {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .encabezado {
+      background: white;
+      padding: 24px 20px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .encabezado h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+    }
+
+    .encabezado .evento {
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+      margin-bottom: 16px;
+    }
+
+    .tarjeta h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 21px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    .nombrePonente {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .dato {
+      margin: 8px 0;
+      line-height: 1.5;
+      overflow-wrap: break-word;
+    }
+
+    .elemento {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      line-height: 1.5;
+    }
+
+    .elemento:last-child {
+      border-bottom: none;
+    }
+
+    .vacio {
+      color: #777;
+      font-style: italic;
+    }
+
+    .cargando,
+    .error {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .error {
+      color: #b00020;
+    }
+
+    .botonVideo {
+      display: block;
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      background: #d32f2f;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 10px;
+      }
+
+      .encabezado {
+        padding: 20px 14px;
+      }
+
+      .tarjeta {
+        padding: 18px 14px;
+      }
+
+      .encabezado h1 {
+        font-size: 25px;
+      }
+
+      .nombrePonente {
+        font-size: 23px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="contenedor">
+
+    <div class="encabezado">
+
+      <h1>SOMECE 2026</h1>
+
+      <div class="evento">
+        Información del Ponente
+      </div>
+
+    </div>
+
+
+    <div
+      id="estado"
+      class="cargando"
+    >
+      Cargando información...
+    </div>
+
+
+    <div
+      id="contenido"
+      style="display:none;"
+    >
+
+      <div class="tarjeta">
+
+        <div
+          id="nombrePonente"
+          class="nombrePonente"
+        ></div>
+
+        <div
+          id="datosPonente"
+        ></div>
+
+        <a
+          id="botonVideo"
+          class="botonVideo"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display:none;"
+        >
+          Ver video en YouTube
+        </a>
+
+      </div>
+
+
+      <div
+        id="seccionTalleres"
+        class="tarjeta"
+      >
+
+        <h2>Talleres</h2>
+
+        <div id="listaTalleres"></div>
+
+      </div>
+
+
+      <div
+        id="seccionTrabajos"
+        class="tarjeta"
+      >
+
+        <h2>Trabajos</h2>
+
+        <div id="listaTrabajos"></div>
+
+      </div>
+
+
+      <div
+        id="seccionConversatorios"
+        class="tarjeta"
+      >
+
+        <h2>Conversatorios</h2>
+
+        <div id="listaConversatorios"></div>
+
+      </div>
+
+
+      <div
+        id="seccionRegistros"
+        class="tarjeta"
+      >
+
+        <h2>Registros de asistencia</h2>
+
+        <div id="listaRegistros"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const URL_WEB_APP =
+      'https://script.google.com/a/macros/somece.org.mx/s/AKfycbzdBvqNmIBe6XMsKq3OfWwTGQQUruiNJbAr-8-9QI1XutTRrkCzFhvvAWAa55-OQmsrDA/exec';
+
+
+    // =====================================================
+    // ESCAPAR TEXTO PARA MOSTRARLO EN HTML
+    // =====================================================
+
+    function escaparHtml(
+      valor
+    ) {
+
+      return String(
+        valor == null
+          ? ''
+          : valor
+      )
+        .replace(
+          /&/g,
+          '&amp;'
+        )
+        .replace(
+          /</g,
+          '&lt;'
+        )
+        .replace(
+          />/g,
+          '&gt;'
+        )
+        .replace(
+          /"/g,
+          '&quot;'
+        )
+        .replace(
+          /'/g,
+          '&#039;'
+        );
+
+    }
+
+
+    // =====================================================
+    // OBTENER idPonente DE LA URL
+    // =====================================================
+
+    function obtenerIdPonente() {
+
+      const parametros =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      return String(
+        parametros.get(
+          'idPonente'
+        ) || ''
+      ).trim();
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR ERROR
+    // =====================================================
+
+    function mostrarError(
+      mensaje
+    ) {
+
+      const estado =
+        document.getElementById(
+          'estado'
+        );
+
+      estado.className =
+        'error';
+
+      estado.textContent =
+        mensaje;
+
+      document
+        .getElementById(
+          'contenido'
+        )
+        .style.display =
+          'none';
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR LISTA VACÍA
+    // =====================================================
+
+    function htmlVacio(
+      mensaje
+    ) {
+
+      return (
+        '<div class="vacio">' +
+        escaparHtml(
+          mensaje
+        ) +
+        '</div>'
+      );
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR DATOS DEL PONENTE
+    // =====================================================
+
+    function mostrarPonente(
+      datos
+    ) {
+
+      const ponente =
+        datos.Ponente || {};
+
+
+      document
+        .getElementById(
+          'nombrePonente'
+        )
+        .textContent =
+          ponente.NomPonente || '';
+
+
+      let html = '';
+
+
+      if (ponente.idPonente) {
+
+        html +=
+          '<div class="dato">' +
+          '<strong>ID Ponente:</strong> ' +
+          escaparHtml(
+            ponente.idPonente
+          ) +
+          '</div>';
+
+      }
+
+
+      if (ponente.CorreoPonente) {
+
+        html +=
+          '<div class="dato">' +
+          '<strong>Correo:</strong> ' +
+          escaparHtml(
+            ponente.CorreoPonente
+          ) +
+          '</div>';
+
+      }
+
+
+      if (
+        ponente[
+          'Institucion-Universidad'
+        ]
+      ) {
+
+        html +=
+          '<div class="dato">' +
+          '<strong>Institución / Universidad:</strong> ' +
+          escaparHtml(
+            ponente[
+              'Institucion-Universidad'
+            ]
+          ) +
+          '</div>';
+
+      }
+
+
+      if (ponente.TipoPonente) {
+
+        html +=
+          '<div class="dato">' +
+          '<strong>Tipo de Ponente:</strong> ' +
+          escaparHtml(
+            ponente.TipoPonente
+          ) +
+          '</div>';
+
+      }
+
+
+      document
+        .getElementById(
+          'datosPonente'
+        )
+        .innerHTML =
+          html;
+
+
+      const video =
+        String(
+          ponente.VideoYoutube || ''
+        ).trim();
+
+      const botonVideo =
+        document.getElementById(
+          'botonVideo'
+        );
+
+
+      if (
+        video &&
+        (
+          video.indexOf(
+            'https://'
+          ) === 0 ||
+          video.indexOf(
+            'http://'
+          ) === 0
+        )
+      ) {
+
+        botonVideo.href =
+          video;
+
+        botonVideo.style.display =
+          'block';
+
+      } else {
+
+        botonVideo.style.display =
+          'none';
+
+      }
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR TALLERES
+    // =====================================================
+
+    function mostrarTalleres(
+      talleres
+    ) {
+
+      const contenedor =
+        document.getElementById(
+          'listaTalleres'
+        );
+
+
+      if (
+        !Array.isArray(
+          talleres
+        ) ||
+        talleres.length === 0
+      ) {
+
+        contenedor.innerHTML =
+          htmlVacio(
+            'No hay Talleres registrados.'
+          );
+
+        return;
+
+      }
+
+
+      contenedor.innerHTML =
+        talleres
+          .map(
+            function(taller) {
+
+              return (
+                '<div class="elemento">' +
+
+                '<strong>' +
+                escaparHtml(
+                  taller.NomTaller ||
+                  taller.nombreTaller ||
+                  ''
+                ) +
+                '</strong>' +
+
+                (
+                  taller.Fecha
+                    ? '<div>Fecha: ' +
+                      escaparHtml(
+                        taller.Fecha
+                      ) +
+                      '</div>'
+                    : ''
+                ) +
+
+                (
+                  taller.Hora
+                    ? '<div>Hora: ' +
+                      escaparHtml(
+                        taller.Hora
+                      ) +
+                      '</div>'
+                    : ''
+                ) +
+
+                (
+                  taller.Modalidad
+                    ? '<div>Modalidad: ' +
+                      escaparHtml(
+                        taller.Modalidad
+                      ) +
+                      '</div>'
+                    : ''
+                ) +
+
+                '</div>'
+              );
+
+            }
+          )
+          .join('');
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR TRABAJOS
+    // =====================================================
+
+    function mostrarTrabajos(
+      trabajos
+    ) {
+
+      const contenedor =
+        document.getElementById(
+          'listaTrabajos'
+        );
+
+
+      if (
+        !Array.isArray(
+          trabajos
+        ) ||
+        trabajos.length === 0
+      ) {
+
+        contenedor.innerHTML =
+          htmlVacio(
+            'No hay Trabajos registrados.'
+          );
+
+        return;
+
+      }
+
+
+      contenedor.innerHTML =
+        trabajos
+          .map(
+            function(trabajo) {
+
+              const nombre =
+                trabajo.NomTrabajo ||
+                trabajo.nombreTrabajo ||
+                trabajo.TituloTrabajo ||
+                '';
+
+              return (
+                '<div class="elemento">' +
+                '<strong>' +
+                escaparHtml(
+                  nombre
+                ) +
+                '</strong>' +
+                '</div>'
+              );
+
+            }
+          )
+          .join('');
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR CONVERSATORIOS
+    // =====================================================
+
+    function mostrarConversatorios(
+      relaciones
+    ) {
+
+      const contenedor =
+        document.getElementById(
+          'listaConversatorios'
+        );
+
+
+      if (
+        !Array.isArray(
+          relaciones
+        ) ||
+        relaciones.length === 0
+      ) {
+
+        contenedor.innerHTML =
+          htmlVacio(
+            'No hay Conversatorios relacionados.'
+          );
+
+        return;
+
+      }
+
+
+      contenedor.innerHTML =
+        relaciones
+          .map(
+            function(relacion) {
+
+              const conversatorio =
+                relacion.Conversatorio ||
+                relacion.conversatorio ||
+                relacion;
+
+              const nombre =
+                conversatorio.NomConversatorio ||
+                conversatorio.nombreConversatorio ||
+                '';
+
+              const trabajo =
+                relacion.Trabajo ||
+                relacion.trabajo ||
+                {};
+
+              const nombreTrabajo =
+                trabajo.NomTrabajo ||
+                trabajo.nombreTrabajo ||
+                '';
+
+              return (
+                '<div class="elemento">' +
+
+                (
+                  nombre
+                    ? '<strong>' +
+                      escaparHtml(
+                        nombre
+                      ) +
+                      '</strong>'
+                    : '<strong>Conversatorio</strong>'
+                ) +
+
+                (
+                  nombreTrabajo
+                    ? '<div>Trabajo: ' +
+                      escaparHtml(
+                        nombreTrabajo
+                      ) +
+                      '</div>'
+                    : ''
+                ) +
+
+                '</div>'
+              );
+
+            }
+          )
+          .join('');
+
+    }
+
+
+    // =====================================================
+    // MOSTRAR REGISTROS
+    // =====================================================
+
+    function mostrarRegistros(
+      datos
+    ) {
+
+      const contenedor =
+        document.getElementById(
+          'listaRegistros'
+        );
+
+      let html = '';
+
+
+      const congresos =
+        Array.isArray(
+          datos.RegCongreso
+        )
+          ? datos.RegCongreso
+          : [];
+
+
+      const talleres =
+        Array.isArray(
+          datos.RegTalleres
+        )
+          ? datos.RegTalleres
+          : [];
+
+
+      const conversatorios =
+        Array.isArray(
+          datos.RegConversatorio
+        )
+          ? datos.RegConversatorio
+          : [];
+
+
+      congresos.forEach(
+        function(registro) {
+
+          html +=
+            '<div class="elemento">' +
+            '<strong>Congreso</strong>' +
+
+            (
+              registro.Fecha
+                ? '<div>Fecha: ' +
+                  escaparHtml(
+                    registro.Fecha
+                  ) +
+                  '</div>'
+                : ''
+            ) +
+
+            (
+              registro.Hora
+                ? '<div>Hora: ' +
+                  escaparHtml(
+                    registro.Hora
+                  ) +
+                  '</div>'
+                : ''
+            ) +
+
+            '</div>';
+
+        }
+      );
+
+
+      talleres.forEach(
+        function(registro) {
+
+          const taller =
+            registro.Taller || {};
+
+          html +=
+            '<div class="elemento">' +
+            '<strong>Asistencia a Taller</strong>' +
+
+            (
+              taller.NomTaller
+                ? '<div>' +
+                  escaparHtml(
+                    taller.NomTaller
+                  ) +
+                  '</div>'
+                : ''
+            ) +
+
+            '</div>';
+
+        }
+      );
+
+
+      conversatorios.forEach(
+        function(registro) {
+
+          const conversatorio =
+            registro.Conversatorio ||
+            {};
+
+          html +=
+            '<div class="elemento">' +
+            '<strong>Asistencia a Conversatorio</strong>' +
+
+            (
+              conversatorio.NomConversatorio
+                ? '<div>' +
+                  escaparHtml(
+                    conversatorio.NomConversatorio
+                  ) +
+                  '</div>'
+                : ''
+            ) +
+
+            '</div>';
+
+        }
+      );
+
+
+      if (!html) {
+
+        html =
+          htmlVacio(
+            'No hay registros de asistencia.'
+          );
+
+      }
+
+
+      contenedor.innerHTML =
+        html;
+
+    }
+
+
+    // =====================================================
+    // RECIBIR RESPUESTA DEL WEB APP
+    // =====================================================
+
+    function recibirPonentePublico(
+      respuesta
+    ) {
+
+      if (
+        !respuesta ||
+        respuesta.ok !== true ||
+        !respuesta.datos
+      ) {
+
+        mostrarError(
+          respuesta &&
+          respuesta.mensaje
+            ? respuesta.mensaje
+            : 'No fue posible obtener la información del Ponente.'
+        );
+
+        return;
+
+      }
+
+
+      const datos =
+        respuesta.datos;
+
+
+      mostrarPonente(
+        datos
+      );
+
+      mostrarTalleres(
+        datos.Talleres
+      );
+
+      mostrarTrabajos(
+        datos.Trabajos
+      );
+
+      mostrarConversatorios(
+        datos.ConversatorioTrabajos
+      );
+
+      mostrarRegistros(
+        datos
+      );
+
+
+      document
+        .getElementById(
+          'estado'
+        )
+        .style.display =
+          'none';
+
+
+      document
+        .getElementById(
+          'contenido'
+        )
+        .style.display =
+          'block';
+
+    }
+
+
+    // =====================================================
+    // CARGAR DATOS MEDIANTE JSONP
+    // =====================================================
+
+    function cargarPonente() {
+
+      const idPonente =
+        obtenerIdPonente();
+
+
+      if (!idPonente) {
+
+        mostrarError(
+          'No se recibió el idPonente.'
+        );
+
+        return;
+
+      }
+
+
+      const script =
+        document.createElement(
+          'script'
+        );
+
+
+      script.src =
+        URL_WEB_APP +
+        '?pagina=ponentePublico' +
+        '&idPonente=' +
+        encodeURIComponent(
+          idPonente
+        ) +
+        '&callback=' +
+        encodeURIComponent(
+          'recibirPonentePublico'
+        );
+
+
+      script.onerror =
+        function() {
+
+          mostrarError(
+            'No fue posible conectar con SOMECE.'
+          );
+
+        };
+
+
+      document.body.appendChild(
+        script
+      );
+
+    }
+
+
+    // =====================================================
+    // INICIAR
+    // =====================================================
+
+    cargarPonente();
+
+  </script>
+
+</body>
+
+</html>
