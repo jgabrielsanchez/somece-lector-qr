@@ -480,6 +480,16 @@
 
   </select>
 
+  <label for="videoYoutubeFormulario">
+    Video YouTube
+  </label>
+
+  <input
+    type="url"
+    id="videoYoutubeFormulario"
+    placeholder="https://www.youtube.com/watch?v=..."
+  >
+
   <div
     id="mensajeFormularioPonente"
     class="oculto"
@@ -1415,19 +1425,35 @@ function verQrPonente(
     return;
   }
 
-  const contenidoQr =
+  const idPonente =
     String(
-      ponente.qrPonente || ''
+      ponente.idPonente || ''
     ).trim();
 
-  if (!contenidoQr) {
+  if (!idPonente) {
 
     alert(
-      'Este Ponente todavía no tiene QR generado.'
+      'No se encontró el ID del Ponente.'
     );
 
     return;
   }
+
+
+  // =====================================================
+  // URL PÚBLICA DEL PONENTE
+  // Esta URL es el contenido del QR gráfico.
+  // qrPonente conserva su JSON completo en Google Sheets.
+  // =====================================================
+
+  const urlPublica =
+    'https://jgabrielsanchez.github.io/' +
+    'somece-lector-qr/ponente.html' +
+    '?idPonente=' +
+    encodeURIComponent(
+      idPonente
+    );
+
 
   document
     .getElementById(
@@ -1436,6 +1462,7 @@ function verQrPonente(
     .textContent =
       ponente.NomPonente || '';
 
+
   const contenedorQr =
     document.getElementById(
       'graficoQrPonente'
@@ -1443,42 +1470,44 @@ function verQrPonente(
 
   contenedorQr.innerHTML = '';
 
+
   mostrarSeccion(
     'seccionQrPonente'
   );
 
-      try {
 
-      new QRCode(
-        contenedorQr,
-        {
-          text:
-            contenidoQr,
+  try {
 
-          width:
-            256,
+    new QRCode(
+      contenedorQr,
+      {
+        text:
+          urlPublica,
 
-          height:
-            256,
+        width:
+          256,
 
-          correctLevel:
-            QRCode.CorrectLevel.L
-        }
-      );
+        height:
+          256,
 
-    } catch (error) {
+        correctLevel:
+          QRCode.CorrectLevel.L
+      }
+    );
 
-      console.error(
-        'Error al generar QR del Ponente:',
-        error
-      );
+  } catch (error) {
 
-      contenedorQr.innerHTML =
-        '<p class="error">' +
-        'No fue posible generar el QR gráfico.' +
-        '</p>';
+    console.error(
+      'Error al generar QR del Ponente:',
+      error
+    );
 
-    }
+    contenedorQr.innerHTML =
+      '<p class="error">' +
+      'No fue posible generar el QR gráfico.' +
+      '</p>';
+
+  }
 
 }
 
@@ -1529,6 +1558,13 @@ function verQrPonente(
     )
     .value =
       ponente.TipoPonente || '';
+
+  document
+    .getElementById(
+      'videoYoutubeFormulario'
+  )
+    .value =
+      ponente.VideoYoutube || '';
 
   document
     .getElementById(
@@ -1591,6 +1627,12 @@ function nuevoPonente() {
   document
     .getElementById(
       'tipoPonenteFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'videoYoutubeFormulario'
     )
     .value = '';
 
@@ -1663,6 +1705,14 @@ function nuevoPonente() {
     document
       .getElementById(
         'tipoPonenteFormulario'
+      )
+      .value
+      .trim();
+
+  const VideoYoutube =
+    document
+      .getElementById(
+        'videoYoutubeFormulario'
       )
       .value
       .trim();
@@ -1800,6 +1850,12 @@ function nuevoPonente() {
     '&TipoPonente=' +
     encodeURIComponent(
       TipoPonente
+    ) +
+
+    +
+    '&VideoYoutube=' +
+    encodeURIComponent(
+      VideoYoutube
     ) +
 
     '&callback=' +
