@@ -162,6 +162,12 @@
       border: none;
     }
 
+    .botonEnviarQrPonente {
+      background: #7b1fa2;
+      color: white;
+      border: none;
+    }
+
     .botonEliminarPonente {
       background: #f96302;
       color: white;
@@ -1332,6 +1338,34 @@
             };
 
           // =============================================
+          // ENVIAR QR POR CORREO
+          // =============================================
+
+          const botonEnviarQr =
+            document.createElement(
+              'button'
+            );
+
+          botonEnviarQr.type =
+            'button';
+
+          botonEnviarQr.className =
+            'opcion botonEnviarQrPonente';
+
+          botonEnviarQr.textContent =
+            'Enviar QR';
+
+          botonEnviarQr.onclick =
+            function() {
+
+              enviarQrPonenteAdmin(
+                ponente,
+                botonEnviarQr
+              );
+
+            };
+
+          // =============================================
           // ELIMINAR
           // =============================================
 
@@ -1360,6 +1394,10 @@
 
           fila.appendChild(
             botonQr
+          );
+
+          fila.appendChild(
+            botonEnviarQr
           );
 
           fila.appendChild(
@@ -1508,6 +1546,166 @@ function verQrPonente(
       '</p>';
 
   }
+
+}
+
+  function enviarQrPonenteAdmin(
+  ponente,
+  boton
+) {
+
+  if (
+    rolSesion !==
+    'Administrador'
+  ) {
+    return;
+  }
+
+  const idPonente =
+    String(
+      ponente.idPonente || ''
+    ).trim();
+
+  const nombrePonente =
+    String(
+      ponente.NomPonente || ''
+    ).trim();
+
+  const correoPonente =
+    String(
+      ponente.CorreoPonente || ''
+    ).trim();
+
+  if (!idPonente) {
+
+    alert(
+      'No se encontró el ID del Ponente.'
+    );
+
+    return;
+  }
+
+  if (!correoPonente) {
+
+    alert(
+      'El Ponente "' +
+      nombrePonente +
+      '" no tiene correo registrado.'
+    );
+
+    return;
+  }
+
+  const confirmado =
+    confirm(
+      '¿Enviar el QR de "' +
+      nombrePonente +
+      '" al correo:\n\n' +
+      correoPonente +
+      '?'
+    );
+
+  if (!confirmado) {
+    return;
+  }
+
+  boton.disabled = true;
+
+  boton.textContent =
+    'Enviando...';
+
+  const nombreCallback =
+    'enviarQrPonenteAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      boton.disabled = false;
+
+      boton.textContent =
+        'Enviar QR';
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        alert(
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible enviar el QR.'
+        );
+
+        return;
+      }
+
+      alert(
+        'QR enviado correctamente.\n\n' +
+        'Ponente: ' +
+        (
+          resultado.NomPonente ||
+          nombrePonente
+        ) +
+        '\n' +
+        'Correo: ' +
+        (
+          resultado.CorreoPonente ||
+          correoPonente
+        )
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=enviarCorreoQrPonenteWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idPonente=' +
+    encodeURIComponent(
+      idPonente
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      boton.disabled = false;
+
+      boton.textContent =
+        'Enviar QR';
+
+      alert(
+        'No fue posible conectar con el servidor.'
+      );
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
 
 }
 
