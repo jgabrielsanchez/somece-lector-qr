@@ -277,6 +277,14 @@
         </button>
 
         <button
+          id="btnTalleresAdmin"
+          class="opcion oculto"
+          onclick="administrarTalleres()"
+        >
+          4. Talleres
+        </button>
+
+        <button
           id="btnAdministracion"
           class="opcion oculto"
           onclick="abrirAdministracion()"
@@ -544,6 +552,144 @@
     onclick="administrarPonentes()"
   >
     Regresar a Ponentes
+  </button>
+
+</div>
+
+<!-- =====================================================
+     ADMINISTRACIÓN DE TALLERES
+     ===================================================== -->
+
+<div
+  id="seccionTalleresAdmin"
+  class="oculto"
+>
+
+  <h2>
+    Talleres
+  </h2>
+
+  <p>
+    Administración de Talleres del Congreso.
+  </p>
+
+  <div id="listaTalleresAdmin"></div>
+
+  <button
+    class="botonContinuar"
+    type="button"
+    onclick="nuevoTallerAdmin()"
+  >
+    Nuevo Taller
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="volverMenu()"
+  >
+    Regresar al menú
+  </button>
+
+</div>
+
+
+<!-- =====================================================
+     FORMULARIO DE TALLER
+     ===================================================== -->
+
+<div
+  id="seccionFormularioTaller"
+  class="oculto"
+>
+
+  <h2 id="tituloFormularioTaller">
+    Taller
+  </h2>
+
+  <input
+    id="idTallerFormulario"
+    type="hidden"
+  >
+
+  <label for="talleristaFormulario">
+    Tallerista
+  </label>
+
+  <select id="talleristaFormulario">
+    <option value="">
+      Seleccione un Tallerista...
+    </option>
+  </select>
+
+  <label for="nomTallerFormulario">
+    Nombre del Taller
+  </label>
+
+  <input
+    id="nomTallerFormulario"
+    type="text"
+    autocomplete="off"
+  >
+
+  <label for="fechaTallerFormulario">
+    Fecha
+  </label>
+
+  <input
+    id="fechaTallerFormulario"
+    type="date"
+  >
+
+  <label for="horaTallerFormulario">
+    Hora
+  </label>
+
+  <input
+    id="horaTallerFormulario"
+    type="time"
+  >
+
+  <label for="modalidadTallerFormulario">
+    Modalidad
+  </label>
+
+  <select id="modalidadTallerFormulario">
+
+    <option value="">
+      Seleccione una modalidad...
+    </option>
+
+    <option value="Presencial">
+      Presencial
+    </option>
+
+    <option value="A Distancia">
+      A Distancia
+    </option>
+
+  </select>
+
+  <div
+    id="mensajeFormularioTaller"
+    class="oculto"
+  ></div>
+
+  <button
+    id="btnGuardarTaller"
+    class="botonContinuar"
+    type="button"
+    onclick="guardarTallerAdmin()"
+  >
+    Guardar
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="administrarTalleres()"
+  >
+    Cancelar
   </button>
 
 </div>
@@ -999,26 +1145,45 @@
       'btnAdministracion'
     );
 
-  if (!botonAdministracion) {
-    return;
-  }
+  const botonTalleres =
+    document.getElementById(
+      'btnTalleresAdmin'
+    );
 
   if (
     rolSesion ===
     'Administrador'
   ) {
 
-    botonAdministracion
-      .classList.remove(
-        'oculto'
-      );
+    if (botonAdministracion) {
+      botonAdministracion
+        .classList.remove(
+          'oculto'
+        );
+    }
+
+    if (botonTalleres) {
+      botonTalleres
+        .classList.remove(
+          'oculto'
+        );
+    }
 
   } else {
 
-    botonAdministracion
-      .classList.add(
-        'oculto'
-      );
+    if (botonAdministracion) {
+      botonAdministracion
+        .classList.add(
+          'oculto'
+        );
+    }
+
+    if (botonTalleres) {
+      botonTalleres
+        .classList.add(
+          'oculto'
+        );
+    }
 
   }
 
@@ -1195,6 +1360,465 @@
   cargarPonentes();
 
 }
+
+  // =====================================================
+  // ADMINISTRACIÓN DE TALLERES
+  // =====================================================
+
+  function administrarTalleres() {
+
+    if (rolSesion !== 'Administrador') {
+      return;
+    }
+
+    mostrarSeccion('seccionTalleresAdmin');
+    cargarTalleresAdmin();
+  }
+
+
+  // =====================================================
+  // CARGAR TALLERES PARA ADMINISTRACIÓN
+  // =====================================================
+
+  function cargarTalleresAdmin() {
+
+    if (rolSesion !== 'Administrador') {
+      return;
+    }
+
+    const contenedor =
+      document.getElementById('listaTalleresAdmin');
+
+    contenedor.innerHTML =
+      '<p>Cargando Talleres...</p>';
+
+    const nombreCallback =
+      'cargarTalleresAdmin_' + Date.now();
+
+    window[nombreCallback] =
+      function(resultado) {
+
+        delete window[nombreCallback];
+        contenedor.innerHTML = '';
+
+        if (!Array.isArray(resultado)) {
+          contenedor.innerHTML =
+            '<p>' +
+            (
+              resultado && resultado.mensaje
+                ? resultado.mensaje
+                : 'No fue posible cargar los Talleres.'
+            ) +
+            '</p>';
+          return;
+        }
+
+        if (resultado.length === 0) {
+          contenedor.innerHTML =
+            '<p>No hay Talleres registrados.</p>';
+          return;
+        }
+
+        resultado.forEach(
+          function(taller) {
+
+            const fila =
+              document.createElement('div');
+
+            fila.className = 'itemAdministracion';
+
+            const datos =
+              document.createElement('div');
+
+            datos.textContent =
+              taller.idTaller +
+              ' — ' +
+              taller.NomTaller +
+              ' — ' +
+              (
+                taller.NomPonente ||
+                ('Tallerista ID ' + taller.idPonente)
+              ) +
+              ' — ' +
+              taller.Fecha +
+              ' — ' +
+              taller.Hora +
+              ' — ' +
+              taller.Modalidad;
+
+            fila.appendChild(datos);
+
+            const botonEditar =
+              document.createElement('button');
+
+            botonEditar.type = 'button';
+            botonEditar.className = 'opcion botonEditarPonente';
+            botonEditar.textContent = 'Editar';
+            botonEditar.onclick = function() {
+              editarTallerAdmin(taller);
+            };
+
+            fila.appendChild(botonEditar);
+
+            const botonEliminar =
+              document.createElement('button');
+
+            botonEliminar.type = 'button';
+            botonEliminar.className = 'opcion botonEliminarPonente';
+            botonEliminar.textContent = 'Eliminar';
+            botonEliminar.onclick = function() {
+              eliminarTallerAdmin(taller);
+            };
+
+            fila.appendChild(botonEliminar);
+            contenedor.appendChild(fila);
+          }
+        );
+      };
+
+    const script = document.createElement('script');
+
+    script.src =
+      URL_WEB_APP +
+      '?pagina=buscarTalleresWeb' +
+      '&token=' + encodeURIComponent(tokenSesion) +
+      '&callback=' + encodeURIComponent(nombreCallback);
+
+    script.onerror = function() {
+      delete window[nombreCallback];
+      contenedor.innerHTML =
+        '<p>No fue posible conectar con el servidor.</p>';
+    };
+
+    document.body.appendChild(script);
+  }
+
+
+  // =====================================================
+  // NUEVO TALLER
+  // =====================================================
+
+  function nuevoTallerAdmin() {
+
+    if (rolSesion !== 'Administrador') {
+      return;
+    }
+
+    document.getElementById('idTallerFormulario').value = '';
+    document.getElementById('nomTallerFormulario').value = '';
+    document.getElementById('fechaTallerFormulario').value = '';
+    document.getElementById('horaTallerFormulario').value = '';
+    document.getElementById('modalidadTallerFormulario').value = '';
+    document.getElementById('tituloFormularioTaller').textContent =
+      'Nuevo Taller';
+
+    const mensaje =
+      document.getElementById('mensajeFormularioTaller');
+
+    mensaje.textContent = '';
+    mensaje.classList.add('oculto');
+
+    mostrarSeccion('seccionFormularioTaller');
+    cargarTalleristasFormulario('');
+  }
+
+
+  // =====================================================
+  // EDITAR TALLER
+  // =====================================================
+
+  function editarTallerAdmin(taller) {
+
+    if (rolSesion !== 'Administrador') {
+      return;
+    }
+
+    document.getElementById('idTallerFormulario').value =
+      taller.idTaller || '';
+    document.getElementById('nomTallerFormulario').value =
+      taller.NomTaller || '';
+    document.getElementById('fechaTallerFormulario').value =
+      taller.Fecha || '';
+    document.getElementById('horaTallerFormulario').value =
+      taller.Hora || '';
+    document.getElementById('modalidadTallerFormulario').value =
+      taller.Modalidad || '';
+    document.getElementById('tituloFormularioTaller').textContent =
+      'Editar Taller';
+
+    const mensaje =
+      document.getElementById('mensajeFormularioTaller');
+
+    mensaje.textContent = '';
+    mensaje.classList.add('oculto');
+
+    mostrarSeccion('seccionFormularioTaller');
+    cargarTalleristasFormulario(taller.idPonente || '');
+  }
+
+
+  // =====================================================
+  // CARGAR TALLERISTAS EN EL FORMULARIO
+  // =====================================================
+
+  function cargarTalleristasFormulario(idPonenteSeleccionado) {
+
+    if (rolSesion !== 'Administrador') {
+      return;
+    }
+
+    const select =
+      document.getElementById('talleristaFormulario');
+
+    select.innerHTML =
+      '<option value="">Cargando Talleristas...</option>';
+    select.disabled = true;
+
+    const nombreCallback =
+      'cargarTalleristasFormulario_' + Date.now();
+
+    window[nombreCallback] =
+      function(resultado) {
+
+        delete window[nombreCallback];
+        select.disabled = false;
+        select.innerHTML =
+          '<option value="">Seleccione un Tallerista...</option>';
+
+        if (!Array.isArray(resultado)) {
+          const opcion = document.createElement('option');
+          opcion.value = '';
+          opcion.textContent =
+            resultado && resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar Talleristas.';
+          select.appendChild(opcion);
+          return;
+        }
+
+        const talleristas = resultado.filter(
+          function(ponente) {
+            return String(ponente.TipoPonente || '')
+              .trim()
+              .toLowerCase() === 'tallerista';
+          }
+        );
+
+        talleristas.forEach(
+          function(ponente) {
+            const opcion = document.createElement('option');
+            opcion.value = String(ponente.idPonente || '');
+            opcion.textContent = ponente.NomPonente || '';
+            select.appendChild(opcion);
+          }
+        );
+
+        if (idPonenteSeleccionado !== undefined &&
+            idPonenteSeleccionado !== null) {
+          select.value = String(idPonenteSeleccionado);
+        }
+      };
+
+    const script = document.createElement('script');
+
+    script.src =
+      URL_WEB_APP +
+      '?pagina=buscarPonentesWeb' +
+      '&token=' + encodeURIComponent(tokenSesion) +
+      '&callback=' + encodeURIComponent(nombreCallback);
+
+    script.onerror = function() {
+      delete window[nombreCallback];
+      select.disabled = false;
+      select.innerHTML =
+        '<option value="">Error al cargar Talleristas</option>';
+    };
+
+    document.body.appendChild(script);
+  }
+
+
+  // =====================================================
+  // GUARDAR TALLER
+  // =====================================================
+
+  function guardarTallerAdmin() {
+
+    if (rolSesion !== 'Administrador') {
+      return;
+    }
+
+    const idTaller =
+      document.getElementById('idTallerFormulario').value.trim();
+    const idPonente =
+      document.getElementById('talleristaFormulario').value.trim();
+    const NomTaller =
+      document.getElementById('nomTallerFormulario').value.trim();
+    const Fecha =
+      document.getElementById('fechaTallerFormulario').value.trim();
+    const Hora =
+      document.getElementById('horaTallerFormulario').value.trim();
+    const Modalidad =
+      document.getElementById('modalidadTallerFormulario').value.trim();
+
+    const mensaje =
+      document.getElementById('mensajeFormularioTaller');
+    const boton =
+      document.getElementById('btnGuardarTaller');
+
+    if (!idPonente || !NomTaller || !Fecha || !Hora || !Modalidad) {
+      mensaje.textContent = 'Complete todos los campos.';
+      mensaje.className = 'error';
+      return;
+    }
+
+    const esActualizacion = Boolean(idTaller);
+
+    mensaje.textContent = 'Guardando...';
+    mensaje.className = 'info';
+    boton.disabled = true;
+
+    const nombreCallback =
+      (esActualizacion
+        ? 'actualizarTallerAdmin_'
+        : 'crearTallerAdmin_') +
+      Date.now();
+
+    window[nombreCallback] =
+      function(resultado) {
+
+        delete window[nombreCallback];
+        boton.disabled = false;
+
+        if (!resultado || !resultado.ok) {
+          mensaje.textContent =
+            resultado && resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible guardar el Taller.';
+          mensaje.className = 'error';
+          return;
+        }
+
+        mensaje.textContent =
+          resultado.mensaje ||
+          (esActualizacion
+            ? 'Taller actualizado correctamente.'
+            : 'Taller creado correctamente.');
+        mensaje.className = 'exito';
+
+        setTimeout(
+          function() {
+            administrarTalleres();
+          },
+          700
+        );
+      };
+
+    let url =
+      URL_WEB_APP +
+      '?pagina=' +
+      (esActualizacion
+        ? 'actualizarTallerWeb'
+        : 'crearTallerWeb') +
+      '&token=' + encodeURIComponent(tokenSesion);
+
+    if (esActualizacion) {
+      url += '&idTaller=' + encodeURIComponent(idTaller);
+    }
+
+    url +=
+      '&idPonente=' + encodeURIComponent(idPonente) +
+      '&NomTaller=' + encodeURIComponent(NomTaller) +
+      '&Fecha=' + encodeURIComponent(Fecha) +
+      '&Hora=' + encodeURIComponent(Hora) +
+      '&Modalidad=' + encodeURIComponent(Modalidad) +
+      '&callback=' + encodeURIComponent(nombreCallback);
+
+    const script = document.createElement('script');
+    script.src = url;
+
+    script.onerror = function() {
+      delete window[nombreCallback];
+      boton.disabled = false;
+      mensaje.textContent =
+        'No fue posible conectar con el servidor.';
+      mensaje.className = 'error';
+    };
+
+    document.body.appendChild(script);
+  }
+
+
+  // =====================================================
+  // ELIMINAR TALLER
+  // =====================================================
+
+  function eliminarTallerAdmin(taller) {
+
+    if (rolSesion !== 'Administrador') {
+      return;
+    }
+
+    const idTaller = String(taller.idTaller || '').trim();
+    const nombreTaller = String(taller.NomTaller || '').trim();
+
+    if (!idTaller) {
+      return;
+    }
+
+    const confirmado = confirm(
+      '¿Está seguro de eliminar el Taller "' +
+      nombreTaller +
+      '"?\n\n' +
+      'Esta acción no se puede deshacer.'
+    );
+
+    if (!confirmado) {
+      return;
+    }
+
+    const nombreCallback =
+      'eliminarTallerAdmin_' + Date.now();
+
+    window[nombreCallback] =
+      function(resultado) {
+
+        delete window[nombreCallback];
+
+        if (!resultado || !resultado.ok) {
+          alert(
+            resultado && resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible eliminar el Taller.'
+          );
+          return;
+        }
+
+        alert(
+          resultado.mensaje ||
+          'Taller eliminado correctamente.'
+        );
+
+        cargarTalleresAdmin();
+      };
+
+    const script = document.createElement('script');
+
+    script.src =
+      URL_WEB_APP +
+      '?pagina=eliminarTallerWeb' +
+      '&token=' + encodeURIComponent(tokenSesion) +
+      '&idTaller=' + encodeURIComponent(idTaller) +
+      '&callback=' + encodeURIComponent(nombreCallback);
+
+    script.onerror = function() {
+      delete window[nombreCallback];
+      alert('No fue posible conectar con el servidor.');
+    };
+
+    document.body.appendChild(script);
+  }
+
 
   function cargarPonentes() {
 
@@ -2916,6 +3540,14 @@ function guardarUsuarioAdmin() {
 
       document
         .getElementById('seccionUsuarios')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionTalleresAdmin')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionFormularioTaller')
         .classList.add('oculto');
 
       document
