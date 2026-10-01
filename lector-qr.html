@@ -968,6 +968,441 @@
       }
     }
 
+  
+    /* Acciones compactas de Administración y Ponentes */
+    #seccionAdministracion .accionesAdministracion,
+    #seccionPonentes .accionesPonentesAdmin {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    #seccionAdministracion .accionesAdministracion button,
+    #seccionPonentes .accionesPonentesAdmin button {
+      width: auto !important;
+      min-width: 0;
+      margin: 0;
+      padding: 7px 14px;
+      min-height: 34px;
+    }
+
+    #seccionPonentes .botonActualizarQrPonente {
+      background: #4D7396;
+      color: #FFFFFF;
+    }
+
+    #seccionPonentes .mensajeQrPonentesAdmin {
+      min-height: 20px;
+      margin-top: 10px;
+      color: #647473;
+      font-size: 13px;
+    }
+
+    #listaPonentes .ponenteAcciones {
+      gap: 6px;
+    }
+
+    #listaPonentes .ponenteAcciones .opcion {
+      width: auto !important;
+      min-height: 30px;
+      padding: 5px 9px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 760px) {
+      #seccionAdministracion .accionesAdministracion,
+      #seccionPonentes .accionesPonentesAdmin {
+        align-items: stretch;
+      }
+
+      #listaPonentes .ponenteAcciones {
+        flex-wrap: wrap;
+      }
+    }
+
+  
+    /* =====================================================
+       ADMINISTRACIÓN · USUARIOS
+       Tarjetas compactas consistentes con Ponentes
+       ===================================================== */
+
+    #seccionUsuarios {
+      max-width: 1040px;
+    }
+
+    #seccionUsuarios > h2 {
+      margin-bottom: 4px;
+    }
+
+    #seccionUsuarios > p {
+      margin-top: 0;
+      margin-bottom: 18px;
+      color: var(--texto-secundario);
+    }
+
+    #listaUsuarios {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 18px;
+    }
+
+    #listaUsuarios .usuarioAdmin {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 9px 14px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+      background: var(--superficie);
+      box-shadow: 0 1px 3px rgba(24,61,61,.04);
+    }
+
+    #listaUsuarios .usuarioDatosCompactos {
+      min-width: 0;
+      line-height: 1.22;
+    }
+
+    #listaUsuarios .usuarioNombre {
+      margin: 0 0 2px;
+      color: var(--texto);
+      font-size: 15px;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    #listaUsuarios .usuarioRol {
+      margin: 0;
+      color: var(--texto-secundario);
+      font-size: 13px;
+    }
+
+    #listaUsuarios .usuarioAcciones {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+      flex-wrap: nowrap;
+    }
+
+    #listaUsuarios .usuarioAcciones .opcion {
+      width: auto !important;
+      min-width: 0;
+      min-height: 30px;
+      margin: 0;
+      padding: 5px 12px;
+      border-radius: 7px;
+      line-height: 1.05;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    #listaUsuarios .botonEditarUsuario {
+      background: var(--editar);
+      color: #FFFFFF;
+    }
+
+    #listaUsuarios .botonEliminarUsuario {
+      background: var(--eliminar);
+      color: #FFFFFF;
+    }
+
+    #seccionUsuarios .accionesUsuariosAdmin {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    #seccionUsuarios .accionesUsuariosAdmin button {
+      width: auto !important;
+      min-width: 0;
+      min-height: 34px;
+      margin: 0;
+      padding: 7px 14px;
+    }
+
+    @media (max-width: 700px) {
+      #listaUsuarios .usuarioAdmin {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      #listaUsuarios .usuarioAcciones {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 520px) {
+      #listaUsuarios .usuarioAcciones {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #listaUsuarios .usuarioAcciones .opcion {
+        width: 100% !important;
+      }
+    }
+
+  
+    /* Formulario Usuarios: Guardar / Cancelar compactos */
+    #seccionFormularioUsuario .botonContinuar,
+    #seccionFormularioUsuario .opcion.secundario {
+      width: auto !important;
+      min-width: 0;
+      min-height: 34px;
+      padding: 7px 14px;
+      margin-right: 8px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 520px) {
+      #seccionFormularioUsuario .botonContinuar,
+      #seccionFormularioUsuario .opcion.secundario {
+        width: auto !important;
+      }
+    }
+
+  
+    /* Formulario Usuario compacto, consistente con Ponentes */
+    #seccionFormularioUsuario {
+      max-width: 620px;
+    }
+
+    #seccionFormularioUsuario label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 5px;
+    }
+
+    #seccionFormularioUsuario input:not([type="hidden"]),
+    #seccionFormularioUsuario select {
+      display: block;
+      width: 100% !important;
+      max-width: 460px;
+      min-height: 38px;
+      padding: 7px 10px;
+      box-sizing: border-box;
+    }
+
+    #seccionFormularioUsuario .accionesFormularioUsuario {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    #seccionFormularioUsuario .accionesFormularioUsuario button {
+      width: auto !important;
+      min-width: 0;
+      min-height: 34px;
+      margin: 0;
+      padding: 7px 14px;
+    }
+
+    @media (max-width: 520px) {
+      #seccionFormularioUsuario input:not([type="hidden"]),
+      #seccionFormularioUsuario select {
+        max-width: 100%;
+      }
+
+      #seccionFormularioUsuario .accionesFormularioUsuario {
+        flex-wrap: wrap;
+      }
+    }
+
+  
+    /* Formulario Ponentes: Guardar / Cancelar compactos */
+    #seccionFormularioPonente .accionesFormularioPonente {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    #seccionFormularioPonente .accionesFormularioPonente button {
+      width: auto !important;
+      min-width: 0;
+      min-height: 34px;
+      margin: 0;
+      padding: 7px 14px;
+    }
+
+    @media (max-width: 520px) {
+      #seccionFormularioPonente .accionesFormularioPonente {
+        flex-wrap: wrap;
+      }
+    }
+
+  
+    /* =====================================================
+       GESTIÓN · INSCRIPCIÓN TALLERES
+       ===================================================== */
+
+    body.modulo-inscripcion-talleres
+      #btnInscripcionTalleresAdmin {
+      background: var(--activo);
+      color: var(--sidebar);
+      font-weight: 700;
+    }
+
+    .listaTalleresInscripcion {
+      display: grid;
+      gap: 8px;
+      max-width: 860px;
+      margin-bottom: 18px;
+    }
+
+    .tallerInscripcionEnlace {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+      background: var(--superficie);
+      color: var(--texto);
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(24,61,61,.04);
+    }
+
+    .tallerInscripcionEnlace:hover {
+      background: #F7FAF9;
+      border-color: #C9DAD6;
+    }
+
+    .tallerInscripcionEnlace strong {
+      margin-bottom: 2px;
+      font-size: 15px;
+    }
+
+    .tallerInscripcionEnlace span,
+    .detalleTalleristaInscripcion {
+      color: var(--texto-secundario);
+      font-size: 13px;
+    }
+
+    #listaPonentesTallerSeleccionado {
+      display: grid;
+      gap: 8px;
+      max-width: 860px;
+      margin: 14px 0 18px;
+    }
+
+    .ponenteInscripcionItem {
+      display: grid;
+      grid-template-columns: minmax(240px,1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 14px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+      background: var(--superficie);
+    }
+
+    .ponenteInscripcionNombre {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .ponenteInscripcionAcciones,
+    .accionesInscripcionTaller,
+    .accionesFormularioInscripcionTaller {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ponenteInscripcionAcciones .opcion {
+      width: auto !important;
+      min-width: 0;
+      min-height: 30px;
+      margin: 0;
+      padding: 5px 11px;
+      font-size: 12px;
+    }
+
+    .accionesInscripcionTaller button,
+    .accionesFormularioInscripcionTaller button,
+    #vistaTalleresInscripcionAdmin > .opcion {
+      width: auto !important;
+      min-width: 0;
+      min-height: 34px;
+      margin: 0;
+      padding: 7px 14px;
+    }
+
+    #seccionFormularioInscripcionTaller {
+      max-width: 620px;
+    }
+
+    #seccionFormularioInscripcionTaller input,
+    #seccionFormularioInscripcionTaller select {
+      display: block;
+      width: 100% !important;
+      max-width: 460px;
+      min-height: 38px;
+      box-sizing: border-box;
+    }
+
+    #seccionFormularioInscripcionTaller
+      .accionesFormularioInscripcionTaller {
+      margin-top: 18px;
+    }
+
+    /* Guardar / Cancelar compactos en todos los procesos de GESTIÓN */
+    #seccionFormularioTaller .botonContinuar,
+    #seccionFormularioTaller .opcion.secundario,
+    #seccionFormularioTrabajo .botonContinuar,
+    #seccionFormularioTrabajo .opcion.secundario,
+    #seccionFormularioConversatorio .botonContinuar,
+    #seccionFormularioConversatorio .opcion.secundario,
+    #seccionFormularioConversatorioTrabajo .botonContinuar,
+    #seccionFormularioConversatorioTrabajo .opcion.secundario {
+      width: auto !important;
+      min-width: 0;
+      min-height: 34px;
+      padding: 7px 14px;
+    }
+
+    @media (max-width: 620px) {
+      .ponenteInscripcionItem {
+        grid-template-columns: 1fr;
+      }
+
+      .ponenteInscripcionAcciones {
+        justify-content: flex-start;
+      }
+    }
+
+  
+    /* Conversatorio-Trabajos: acciones generales compactas */
+    .accionesConversatorioTrabajo > button {
+      width: auto !important;
+      min-width: 0 !important;
+      min-height: 34px;
+      margin: 0 !important;
+      padding: 7px 14px !important;
+    }
+
+    @media (max-width: 768px) {
+      .accionesConversatorioTrabajo > button {
+        width: auto !important;
+        margin: 0 !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -1081,6 +1516,14 @@
         </button>
 
         <button
+          id="btnInscripcionTalleresAdmin"
+          class="opcion oculto"
+          onclick="administrarInscripcionTalleres()"
+        >
+          Inscripción Talleres
+        </button>
+
+        <button
           id="btnTrabajosAdmin"
           class="opcion oculto"
           onclick="administrarTrabajos()"
@@ -1182,21 +1625,25 @@
 
   <div id="listaUsuarios"></div>
 
-  <button
-    class="botonContinuar"
-    type="button"
-    onclick="nuevoUsuario()"
-  >
-    Nuevo Usuario
-  </button>
+  <div class="accionesUsuariosAdmin">
 
-  <button
-    class="opcion secundario"
-    type="button"
-    onclick="abrirAdministracion()"
-  >
-    Regresar a Administración
-  </button>
+    <button
+      class="botonContinuar"
+      type="button"
+      onclick="nuevoUsuario()"
+    >
+      Nuevo Usuario
+    </button>
+
+    <button
+      class="opcion secundario"
+      type="button"
+      onclick="volverMenu()"
+    >
+      Regresar al menú
+    </button>
+
+  </div>
 
 </div>
 
@@ -1219,21 +1666,46 @@
 
   <div id="listaPonentes"></div>
 
-  <button
-    class="botonContinuar"
-    type="button"
-    onclick="nuevoPonente()"
-  >
-    Nuevo Ponente
-  </button>
+  <div class="accionesPonentesAdmin">
 
-  <button
-    class="opcion secundario"
-    type="button"
-    onclick="volverMenu()"
-  >
-    Regresar al menú
-  </button>
+    <button
+      class="botonContinuar"
+      type="button"
+      onclick="nuevoPonente()"
+    >
+      Nuevo Ponente
+    </button>
+
+    <button
+      class="opcion botonQrPonente"
+      type="button"
+      onclick="generarQrPonentesVaciosAdmin(this)"
+    >
+      qrPonentes Vacíos
+    </button>
+
+    <button
+      class="opcion botonActualizarQrPonente"
+      type="button"
+      onclick="actualizarTodosQrPonentesAdmin(this)"
+    >
+      Actualizar qrPonentes
+    </button>
+
+    <button
+      class="opcion secundario"
+      type="button"
+      onclick="volverMenu()"
+    >
+      Regresar al menú
+    </button>
+
+  </div>
+
+  <div
+    id="mensajeQrPonentesAdmin"
+    class="mensajeQrPonentesAdmin"
+  ></div>
 
 </div>
 
@@ -1332,22 +1804,26 @@
     class="oculto"
   ></div>
 
-  <button
-    id="btnGuardarPonente"
-    class="botonContinuar"
-    type="button"
-    onclick="guardarPonenteAdmin()"
-  >
-    Guardar
-  </button>
+  <div class="accionesFormularioPonente">
 
-  <button
-    class="opcion secundario"
-    type="button"
-    onclick="administrarPonentes()"
-  >
-    Cancelar
-  </button>
+    <button
+      id="btnGuardarPonente"
+      class="botonContinuar"
+      type="button"
+      onclick="guardarPonenteAdmin()"
+    >
+      Guardar
+    </button>
+
+    <button
+      class="opcion secundario"
+      type="button"
+      onclick="administrarPonentes()"
+    >
+      Cancelar
+    </button>
+
+  </div>
 
 </div>
 
@@ -1516,6 +1992,132 @@
   </button>
 
 </div>
+
+
+<!-- =====================================================
+     INSCRIPCIÓN A TALLERES · MAESTRO / DETALLE
+     ===================================================== -->
+
+<div
+  id="seccionInscripcionTalleresAdmin"
+  class="oculto"
+>
+  <h2>Inscripción Talleres</h2>
+  <p>
+    Administración de Ponentes inscritos en Talleres.
+  </p>
+
+  <div id="vistaTalleresInscripcionAdmin">
+    <div
+      id="listaTalleresInscripcionAdmin"
+      class="listaTalleresInscripcion"
+    ></div>
+
+    <button
+      id="btnRegresarMenuInscripcionTalleres"
+      class="opcion secundario"
+      type="button"
+      onclick="volverMenu()"
+    >
+      Regresar al menú
+    </button>
+  </div>
+
+  <div
+    id="detalleTallerInscripcionAdmin"
+    class="oculto"
+  >
+    <h3 id="tituloTallerInscripcionSeleccionado"></h3>
+    <p
+      id="talleristaInscripcionSeleccionado"
+      class="detalleTalleristaInscripcion"
+    ></p>
+
+    <div
+      id="listaPonentesTallerSeleccionado"
+    ></div>
+
+    <div class="accionesInscripcionTaller">
+      <button
+        class="botonContinuar"
+        type="button"
+        onclick="nuevoPonenteInscripcionTallerAdmin()"
+      >
+        Agregar Ponente
+      </button>
+
+      <button
+        class="opcion secundario"
+        type="button"
+        onclick="volverListaTalleresInscripcion()"
+      >
+        Volver a Talleres
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div
+  id="seccionFormularioInscripcionTaller"
+  class="oculto"
+>
+  <h2 id="tituloFormularioInscripcionTaller">
+    Agregar Ponente
+  </h2>
+
+  <input
+    id="idInscripTalleresFormulario"
+    type="hidden"
+  >
+
+  <label for="tallerInscripcionFormulario">
+    Taller
+  </label>
+
+  <input
+    id="tallerInscripcionFormulario"
+    type="text"
+    disabled
+  >
+
+  <label for="ponenteInscripcionFormulario">
+    Ponente
+  </label>
+
+  <select
+    id="ponenteInscripcionFormulario"
+  >
+    <option value="">
+      Seleccione un Ponente
+    </option>
+  </select>
+
+  <div
+    id="mensajeFormularioInscripcionTaller"
+    class="info oculto"
+  ></div>
+
+  <div class="accionesFormularioInscripcionTaller">
+    <button
+      id="btnGuardarInscripcionTaller"
+      class="botonContinuar"
+      type="button"
+      onclick="guardarInscripcionTallerAdmin()"
+    >
+      Guardar
+    </button>
+
+    <button
+      class="opcion secundario"
+      type="button"
+      onclick="cancelarFormularioInscripcionTaller()"
+    >
+      Cancelar
+    </button>
+  </div>
+</div>
+
 
 <!-- =====================================================
      ADMINISTRACIÓN DE TRABAJOS
@@ -1962,22 +2564,26 @@
     class="oculto"
   ></div>
 
-  <button
-    id="btnGuardarUsuario"
-    class="botonContinuar"
-    type="button"
-    onclick="guardarUsuarioAdmin()"
-  >
-    Guardar
-  </button>
+  <div class="accionesFormularioUsuario">
 
-  <button
-    class="opcion secundario"
-    type="button"
-    onclick="administrarUsuarios()"
-  >
-    Cancelar
-  </button>
+    <button
+      id="btnGuardarUsuario"
+      class="botonContinuar"
+      type="button"
+      onclick="guardarUsuarioAdmin()"
+    >
+      Guardar
+    </button>
+
+    <button
+      class="opcion secundario"
+      type="button"
+      onclick="administrarUsuarios()"
+    >
+      Cancelar
+    </button>
+
+  </div>
 
 </div>
 
@@ -2208,6 +2814,7 @@
     function marcarModuloVisual(nombreModulo) {
       const modulos = [
         'talleres',
+        'inscripcion-talleres',
         'trabajos',
         'conversatorios',
         'conversatorio-trabajos'
@@ -2394,6 +3001,28 @@
     document.getElementById(
       'btnTalleresAdmin'
     );
+
+  const btnInscripcionTalleresAdmin =
+    document.getElementById(
+      'btnInscripcionTalleresAdmin'
+    );
+
+  if (btnInscripcionTalleresAdmin) {
+
+    if (
+      rolSesion ===
+      'Administrador'
+    ) {
+      btnInscripcionTalleresAdmin
+        .classList
+        .remove('oculto');
+    } else {
+      btnInscripcionTalleresAdmin
+        .classList
+        .add('oculto');
+    }
+
+  }
 
   const btnTrabajosAdmin =
     document.getElementById(
@@ -3609,6 +4238,961 @@ function guardarTrabajoAdmin() {
     );
 
 }
+
+
+// =====================================================
+// INSCRIPCIÓN A TALLERES · MAESTRO / DETALLE
+// =====================================================
+
+let tallerInscripcionSeleccionadoAdmin = null;
+let relacionesInscripcionTalleresAdmin = [];
+
+function administrarInscripcionTalleres() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  tallerInscripcionSeleccionadoAdmin = null;
+  relacionesInscripcionTalleresAdmin = [];
+
+  mostrarSeccion(
+    'seccionInscripcionTalleresAdmin'
+  );
+
+  document.body.classList.add(
+    'modulo-inscripcion-talleres'
+  );
+
+  mostrarVistaListaTalleresInscripcion();
+  cargarTalleresInscripcionAdmin();
+
+}
+
+
+function mostrarVistaListaTalleresInscripcion() {
+
+  const lista =
+    document.getElementById(
+      'vistaTalleresInscripcionAdmin'
+    );
+
+  const detalle =
+    document.getElementById(
+      'detalleTallerInscripcionAdmin'
+    );
+
+  if (lista) {
+    lista.classList.remove('oculto');
+  }
+
+  if (detalle) {
+    detalle.classList.add('oculto');
+  }
+
+}
+
+
+function volverListaTalleresInscripcion() {
+
+  tallerInscripcionSeleccionadoAdmin = null;
+  relacionesInscripcionTalleresAdmin = [];
+
+  mostrarSeccion(
+    'seccionInscripcionTalleresAdmin'
+  );
+
+  document.body.classList.add(
+    'modulo-inscripcion-talleres'
+  );
+
+  mostrarVistaListaTalleresInscripcion();
+  cargarTalleresInscripcionAdmin();
+
+}
+
+
+function cargarTalleresInscripcionAdmin() {
+
+  const contenedor =
+    document.getElementById(
+      'listaTalleresInscripcionAdmin'
+    );
+
+  if (!contenedor) {
+    return;
+  }
+
+  contenedor.innerHTML =
+    '<p>Cargando Talleres...</p>';
+
+  const callback =
+    'callbackTalleresInscripcion_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+      contenedor.innerHTML = '';
+
+      if (!Array.isArray(resultado)) {
+        contenedor.innerHTML =
+          '<p>' +
+          (
+            resultado &&
+            resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar los Talleres.'
+          ) +
+          '</p>';
+        return;
+      }
+
+      if (!resultado.length) {
+        contenedor.innerHTML =
+          '<p>No hay Talleres registrados.</p>';
+        return;
+      }
+
+      resultado.forEach(
+        function(taller) {
+
+          const boton =
+            document.createElement(
+              'button'
+            );
+
+          boton.type = 'button';
+          boton.className =
+            'tallerInscripcionEnlace';
+
+          const nombre =
+            document.createElement(
+              'strong'
+            );
+
+          nombre.textContent =
+            taller.NomTaller ||
+            (
+              'Taller ' +
+              taller.idTaller
+            );
+
+          const tallerista =
+            document.createElement(
+              'span'
+            );
+
+          tallerista.textContent =
+            'Tallerista: ' +
+            (
+              taller.NomPonente ||
+              'Sin Tallerista'
+            );
+
+          boton.appendChild(nombre);
+          boton.appendChild(tallerista);
+
+          boton.onclick =
+            function() {
+              abrirDetalleTallerInscripcion(
+                taller
+              );
+            };
+
+          contenedor.appendChild(
+            boton
+          );
+
+        }
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarTalleresWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&ts=' +
+    Date.now();
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function abrirDetalleTallerInscripcion(
+  taller
+) {
+
+  if (
+    !taller ||
+    !taller.idTaller
+  ) {
+    return;
+  }
+
+  tallerInscripcionSeleccionadoAdmin = {
+    idTaller:
+      String(
+        taller.idTaller
+      ).trim(),
+    NomTaller:
+      String(
+        taller.NomTaller || ''
+      ).trim(),
+    Tallerista:
+      String(
+        taller.NomPonente || ''
+      ).trim()
+  };
+
+  document
+    .getElementById(
+      'vistaTalleresInscripcionAdmin'
+    )
+    .classList
+    .add('oculto');
+
+  document
+    .getElementById(
+      'detalleTallerInscripcionAdmin'
+    )
+    .classList
+    .remove('oculto');
+
+  document
+    .getElementById(
+      'tituloTallerInscripcionSeleccionado'
+    )
+    .textContent =
+      tallerInscripcionSeleccionadoAdmin
+        .NomTaller;
+
+  document
+    .getElementById(
+      'talleristaInscripcionSeleccionado'
+    )
+    .textContent =
+      'Tallerista: ' +
+      (
+        tallerInscripcionSeleccionadoAdmin
+          .Tallerista ||
+        'Sin Tallerista'
+      );
+
+  cargarPonentesTallerSeleccionado();
+
+}
+
+
+function cargarPonentesTallerSeleccionado() {
+
+  const contenedor =
+    document.getElementById(
+      'listaPonentesTallerSeleccionado'
+    );
+
+  contenedor.innerHTML =
+    '<p>Cargando Ponentes inscritos...</p>';
+
+  const callback =
+    'callbackDetalleInscripcionTaller_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+      contenedor.innerHTML = '';
+
+      if (!Array.isArray(resultado)) {
+        contenedor.innerHTML =
+          '<p>No fue posible cargar las inscripciones.</p>';
+        return;
+      }
+
+      relacionesInscripcionTalleresAdmin =
+        resultado;
+
+      const relacionesTaller =
+        resultado.filter(
+          relacion =>
+            String(
+              relacion.idTaller || ''
+            ).trim() ===
+            tallerInscripcionSeleccionadoAdmin
+              .idTaller
+        );
+
+      if (!relacionesTaller.length) {
+        contenedor.innerHTML =
+          '<p>No hay Ponentes inscritos en este Taller.</p>';
+        return;
+      }
+
+      relacionesTaller.forEach(
+        function(relacion) {
+
+          const tarjeta =
+            document.createElement(
+              'div'
+            );
+
+          tarjeta.className =
+            'ponenteInscripcionItem';
+
+          const nombre =
+            document.createElement(
+              'div'
+            );
+
+          nombre.className =
+            'ponenteInscripcionNombre';
+
+          nombre.textContent =
+            relacion.NomPonente ||
+            (
+              'Ponente ' +
+              relacion.idPonente
+            );
+
+          const acciones =
+            document.createElement(
+              'div'
+            );
+
+          acciones.className =
+            'ponenteInscripcionAcciones';
+
+          const editar =
+            document.createElement(
+              'button'
+            );
+
+          editar.type = 'button';
+          editar.className =
+            'opcion botonEditarPonente';
+          editar.textContent =
+            'Editar';
+
+          editar.onclick =
+            function() {
+              editarInscripcionTallerAdmin(
+                relacion
+              );
+            };
+
+          const eliminar =
+            document.createElement(
+              'button'
+            );
+
+          eliminar.type = 'button';
+          eliminar.className =
+            'opcion botonEliminarPonente';
+          eliminar.textContent =
+            'Eliminar';
+
+          eliminar.onclick =
+            function() {
+              eliminarInscripcionTallerAdmin(
+                relacion
+              );
+            };
+
+          acciones.appendChild(
+            editar
+          );
+
+          acciones.appendChild(
+            eliminar
+          );
+
+          tarjeta.appendChild(
+            nombre
+          );
+
+          tarjeta.appendChild(
+            acciones
+          );
+
+          contenedor.appendChild(
+            tarjeta
+          );
+
+        }
+      );
+
+    };
+
+  cargarRelacionesInscripcionTalleres(
+    callback
+  );
+
+}
+
+
+function cargarRelacionesInscripcionTalleres(
+  callback
+) {
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarInscripcionesTalleresAdminWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&ts=' +
+    Date.now();
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function nuevoPonenteInscripcionTallerAdmin() {
+
+  if (
+    !tallerInscripcionSeleccionadoAdmin
+  ) {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idInscripTalleresFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tituloFormularioInscripcionTaller'
+    )
+    .textContent =
+      'Agregar Ponente';
+
+  prepararFormularioInscripcionTaller(
+    ''
+  );
+
+}
+
+
+function editarInscripcionTallerAdmin(
+  relacion
+) {
+
+  document
+    .getElementById(
+      'idInscripTalleresFormulario'
+    )
+    .value =
+      relacion.idInscripTalleres || '';
+
+  document
+    .getElementById(
+      'tituloFormularioInscripcionTaller'
+    )
+    .textContent =
+      'Editar Inscripción';
+
+  prepararFormularioInscripcionTaller(
+    relacion.idPonente
+  );
+
+}
+
+
+function prepararFormularioInscripcionTaller(
+  idPonenteActual
+) {
+
+  mostrarSeccion(
+    'seccionFormularioInscripcionTaller'
+  );
+
+  document.body.classList.add(
+    'modulo-inscripcion-talleres'
+  );
+
+  document
+    .getElementById(
+      'tallerInscripcionFormulario'
+    )
+    .value =
+      tallerInscripcionSeleccionadoAdmin
+        .NomTaller;
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioInscripcionTaller'
+    );
+
+  mensaje.textContent = '';
+  mensaje.className =
+    'info oculto';
+
+  cargarPonentesDisponiblesInscripcion(
+    idPonenteActual
+  );
+
+}
+
+
+function cargarPonentesDisponiblesInscripcion(
+  idPonenteActual
+) {
+
+  const select =
+    document.getElementById(
+      'ponenteInscripcionFormulario'
+    );
+
+  select.disabled = true;
+  select.innerHTML =
+    '<option value="">Cargando Ponentes...</option>';
+
+  const callbackRelaciones =
+    'callbackRelacionesFiltroTaller_' +
+    Date.now();
+
+  window[callbackRelaciones] =
+    function(relaciones) {
+
+      delete window[
+        callbackRelaciones
+      ];
+
+      if (!Array.isArray(relaciones)) {
+        select.disabled = false;
+        select.innerHTML =
+          '<option value="">No fue posible validar inscripciones</option>';
+        return;
+      }
+
+      const conteo =
+        new Map();
+
+      relaciones.forEach(
+        relacion => {
+
+          const id =
+            String(
+              relacion.idPonente || ''
+            ).trim();
+
+          if (!id) {
+            return;
+          }
+
+          if (
+            String(
+              relacion.idInscripTalleres || ''
+            ).trim() ===
+            String(
+              document
+                .getElementById(
+                  'idInscripTalleresFormulario'
+                )
+                .value || ''
+            ).trim()
+          ) {
+            return;
+          }
+
+          conteo.set(
+            id,
+            (
+              conteo.get(id) || 0
+            ) + 1
+          );
+
+        }
+      );
+
+      const callbackPonentes =
+        'callbackPonentesFiltroTaller_' +
+        Date.now();
+
+      window[callbackPonentes] =
+        function(ponentes) {
+
+          delete window[
+            callbackPonentes
+          ];
+
+          select.disabled = false;
+          select.innerHTML =
+            '<option value="">Seleccione un Ponente</option>';
+
+          if (!Array.isArray(ponentes)) {
+            select.innerHTML =
+              '<option value="">No fue posible cargar los Ponentes</option>';
+            return;
+          }
+
+          const idTaller =
+            tallerInscripcionSeleccionadoAdmin
+              .idTaller;
+
+          const disponibles =
+            ponentes.filter(
+              ponente => {
+
+                const id =
+                  String(
+                    ponente.idPonente || ''
+                  ).trim();
+
+                if (
+                  id ===
+                  String(
+                    idPonenteActual || ''
+                  ).trim()
+                ) {
+                  return true;
+                }
+
+                const yaEnTaller =
+                  relaciones.some(
+                    relacion =>
+                      String(
+                        relacion.idTaller || ''
+                      ).trim() === idTaller &&
+                      String(
+                        relacion.idPonente || ''
+                      ).trim() === id
+                  );
+
+                if (yaEnTaller) {
+                  return false;
+                }
+
+                return (
+                  conteo.get(id) || 0
+                ) < 2;
+
+              }
+            );
+
+          disponibles.forEach(
+            ponente => {
+
+              const option =
+                document.createElement(
+                  'option'
+                );
+
+              option.value =
+                ponente.idPonente;
+
+              option.textContent =
+                ponente.NomPonente ||
+                (
+                  'Ponente ' +
+                  ponente.idPonente
+                );
+
+              if (
+                String(
+                  ponente.idPonente
+                ) ===
+                String(
+                  idPonenteActual || ''
+                )
+              ) {
+                option.selected = true;
+              }
+
+              select.appendChild(
+                option
+              );
+
+            }
+          );
+
+          if (!disponibles.length) {
+            select.innerHTML =
+              '<option value="">No hay Ponentes disponibles</option>';
+          }
+
+        };
+
+      const scriptPonentes =
+        document.createElement(
+          'script'
+        );
+
+      scriptPonentes.src =
+        URL_WEB_APP +
+        '?pagina=buscarPonentesWeb' +
+        '&token=' +
+        encodeURIComponent(
+          tokenSesion
+        ) +
+        '&callback=' +
+        encodeURIComponent(
+          callbackPonentes
+        ) +
+        '&ts=' +
+        Date.now();
+
+      document.body.appendChild(
+        scriptPonentes
+      );
+
+    };
+
+  cargarRelacionesInscripcionTalleres(
+    callbackRelaciones
+  );
+
+}
+
+
+function guardarInscripcionTallerAdmin() {
+
+  const idInscripcion =
+    String(
+      document
+        .getElementById(
+          'idInscripTalleresFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const idPonente =
+    String(
+      document
+        .getElementById(
+          'ponenteInscripcionFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioInscripcionTaller'
+    );
+
+  if (!idPonente) {
+    mensaje.textContent =
+      'Seleccione un Ponente.';
+    mensaje.className =
+      'error';
+    return;
+  }
+
+  const pagina =
+    idInscripcion
+      ? 'actualizarInscripcionTallerAdminWeb'
+      : 'crearInscripcionTallerAdminWeb';
+
+  const callback =
+    'callbackGuardarInscripcionTaller_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible guardar la inscripción.';
+        mensaje.className =
+          'error';
+        return;
+      }
+
+      mostrarSeccion(
+        'seccionInscripcionTalleresAdmin'
+      );
+
+      document.body.classList.add(
+        'modulo-inscripcion-talleres'
+      );
+
+      abrirDetalleTallerInscripcion(
+        tallerInscripcionSeleccionadoAdmin
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  let url =
+    URL_WEB_APP +
+    '?pagina=' +
+    encodeURIComponent(
+      pagina
+    ) +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idTaller=' +
+    encodeURIComponent(
+      tallerInscripcionSeleccionadoAdmin
+        .idTaller
+    ) +
+    '&idPonente=' +
+    encodeURIComponent(
+      idPonente
+    );
+
+  if (idInscripcion) {
+    url +=
+      '&idInscripTalleres=' +
+      encodeURIComponent(
+        idInscripcion
+      );
+  }
+
+  url +=
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&ts=' +
+    Date.now();
+
+  script.src = url;
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function eliminarInscripcionTallerAdmin(
+  relacion
+) {
+
+  if (
+    !confirm(
+      '¿Eliminar la inscripción de "' +
+      (
+        relacion.NomPonente ||
+        relacion.idPonente
+      ) +
+      '" de este Taller?'
+    )
+  ) {
+    return;
+  }
+
+  const callback =
+    'callbackEliminarInscripcionTaller_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+        alert(
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible eliminar la inscripción.'
+        );
+        return;
+      }
+
+      cargarPonentesTallerSeleccionado();
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=eliminarInscripcionTallerAdminWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idInscripTalleres=' +
+    encodeURIComponent(
+      relacion.idInscripTalleres
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&ts=' +
+    Date.now();
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function cancelarFormularioInscripcionTaller() {
+
+  mostrarSeccion(
+    'seccionInscripcionTalleresAdmin'
+  );
+
+  document.body.classList.add(
+    'modulo-inscripcion-talleres'
+  );
+
+  abrirDetalleTallerInscripcion(
+    tallerInscripcionSeleccionadoAdmin
+  );
+
+}
+
+
 
 // =====================================================
 // ADMINISTRAR CONVERSATORIOS
@@ -6507,6 +8091,35 @@ function eliminarConversatorioAdmin(
             };
 
           // =============================================
+          // ACTUALIZAR QR DEL PONENTE
+          // =============================================
+
+          const botonActualizarQr =
+            document.createElement(
+              'button'
+            );
+
+          botonActualizarQr.type =
+            'button';
+
+          botonActualizarQr.className =
+            'opcion botonActualizarQrPonente';
+
+          botonActualizarQr.textContent =
+            'Actualizar qrPonente';
+
+          botonActualizarQr.onclick =
+            function() {
+
+              actualizarQrPonenteIndividualAdmin(
+                ponente,
+                botonActualizarQr
+              );
+
+            };
+
+
+          // =============================================
           // ELIMINAR
           // =============================================
 
@@ -6539,6 +8152,10 @@ function eliminarConversatorioAdmin(
 
           acciones.appendChild(
             botonEnviarQr
+          );
+
+          acciones.appendChild(
+            botonActualizarQr
           );
 
           acciones.appendChild(
@@ -6593,6 +8210,221 @@ function eliminarConversatorioAdmin(
     .appendChild(
       script
     );
+
+}
+
+
+
+function ejecutarAccionQrPonentesAdmin(
+  pagina,
+  idPonente,
+  boton,
+  mensajeTemporal
+) {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  const contenedorMensaje =
+    document.getElementById(
+      'mensajeQrPonentesAdmin'
+    );
+
+  const textoOriginal =
+    boton
+      ? boton.textContent
+      : '';
+
+  if (boton) {
+    boton.disabled = true;
+    boton.textContent =
+      mensajeTemporal || 'Procesando...';
+  }
+
+  if (contenedorMensaje) {
+    contenedorMensaje.textContent =
+      'Procesando actualización de QR...';
+  }
+
+  const callback =
+    'callbackQrPonentes_' +
+    Date.now() +
+    '_' +
+    Math.floor(
+      Math.random() * 100000
+    );
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+
+      if (boton) {
+        boton.disabled = false;
+        boton.textContent =
+          textoOriginal;
+      }
+
+      const mensaje =
+        resultado &&
+        resultado.mensaje
+          ? resultado.mensaje
+          : (
+              resultado &&
+              resultado.ok
+                ? 'Proceso realizado correctamente.'
+                : 'No fue posible realizar el proceso.'
+            );
+
+      if (contenedorMensaje) {
+        contenedorMensaje.textContent =
+          mensaje;
+      }
+
+      if (
+        resultado &&
+        resultado.ok
+      ) {
+        cargarPonentesAdmin();
+      }
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  let url =
+    URL_WEB_APP +
+    '?pagina=' +
+    encodeURIComponent(
+      pagina
+    ) +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    );
+
+  if (idPonente) {
+    url +=
+      '&idPonente=' +
+      encodeURIComponent(
+        idPonente
+      );
+  }
+
+  url +=
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&ts=' +
+    Date.now();
+
+  script.src = url;
+
+  script.onerror =
+    function() {
+
+      delete window[callback];
+
+      if (boton) {
+        boton.disabled = false;
+        boton.textContent =
+          textoOriginal;
+      }
+
+      if (contenedorMensaje) {
+        contenedorMensaje.textContent =
+          'No fue posible conectar con el servidor.';
+      }
+
+    };
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function generarQrPonentesVaciosAdmin(
+  boton
+) {
+
+  if (
+    !confirm(
+      'Se generará qrPonente únicamente para los Ponentes que tengan ese campo vacío. ¿Continuar?'
+    )
+  ) {
+    return;
+  }
+
+  ejecutarAccionQrPonentesAdmin(
+    'generarQrPonentesVaciosWeb',
+    '',
+    boton,
+    'Generando...'
+  );
+
+}
+
+
+function actualizarTodosQrPonentesAdmin(
+  boton
+) {
+
+  if (
+    !confirm(
+      'Se regenerará qrPonente de todos los Ponentes con la información actual de Talleres, Trabajos, Conversatorios y demás registros relacionados. ¿Continuar?'
+    )
+  ) {
+    return;
+  }
+
+  ejecutarAccionQrPonentesAdmin(
+    'actualizarTodosQrPonentesWeb',
+    '',
+    boton,
+    'Actualizando...'
+  );
+
+}
+
+
+function actualizarQrPonenteIndividualAdmin(
+  ponente,
+  boton
+) {
+
+  if (
+    !ponente ||
+    !ponente.idPonente
+  ) {
+    return;
+  }
+
+  if (
+    !confirm(
+      'Se actualizará qrPonente de "' +
+      (
+        ponente.NomPonente ||
+        ponente.idPonente
+      ) +
+      '" con todos sus registros relacionados. ¿Continuar?'
+    )
+  ) {
+    return;
+  }
+
+  ejecutarAccionQrPonentesAdmin(
+    'actualizarQrPonenteWeb',
+    ponente.idPonente,
+    boton,
+    'Actualizando...'
+  );
 
 }
 
@@ -7425,10 +9257,57 @@ function nuevoPonente() {
           elemento.className =
             'usuarioAdmin';
 
-          elemento.textContent =
-            usuario.usuario +
-            ' — ' +
-            usuario.rol;
+          const datos =
+            document.createElement(
+              'div'
+            );
+
+          datos.className =
+            'usuarioDatosCompactos';
+
+          const nombre =
+            document.createElement(
+              'div'
+            );
+
+          nombre.className =
+            'usuarioNombre';
+
+          nombre.textContent =
+            String(
+              usuario.usuario || ''
+            ).trim();
+
+          const rol =
+            document.createElement(
+              'div'
+            );
+
+          rol.className =
+            'usuarioRol';
+
+          rol.textContent =
+            String(
+              usuario.rol || ''
+            ).trim();
+
+          datos.appendChild(
+            nombre
+          );
+
+          if (rol.textContent) {
+            datos.appendChild(
+              rol
+            );
+          }
+
+          const acciones =
+            document.createElement(
+              'div'
+            );
+
+          acciones.className =
+            'usuarioAcciones';
 
           const botonEditar =
             document.createElement(
@@ -7437,6 +9316,9 @@ function nuevoPonente() {
 
           botonEditar.type =
             'button';
+
+          botonEditar.className =
+            'opcion botonEditarUsuario';
 
           botonEditar.textContent =
             'Editar';
@@ -7450,7 +9332,7 @@ function nuevoPonente() {
 
             };
 
-          elemento.appendChild(
+          acciones.appendChild(
             botonEditar
           );
 
@@ -7461,6 +9343,9 @@ function nuevoPonente() {
 
           botonEliminar.type =
             'button';
+
+          botonEliminar.className =
+            'opcion botonEliminarUsuario';
 
           botonEliminar.textContent =
             'Eliminar';
@@ -7474,8 +9359,16 @@ function nuevoPonente() {
 
             };
 
-          elemento.appendChild(
+          acciones.appendChild(
             botonEliminar
+          );
+
+          elemento.appendChild(
+            datos
+          );
+
+          elemento.appendChild(
+            acciones
           );
 
           contenedor.appendChild(
@@ -8045,6 +9938,8 @@ function guardarUsuarioAdmin() {
       const seccionesConNavegacion = new Set([
         'seccionTalleresAdmin',
         'seccionFormularioTaller',
+        'seccionInscripcionTalleresAdmin',
+        'seccionFormularioInscripcionTaller',
         'seccionTrabajosAdmin',
         'seccionFormularioTrabajo',
         'seccionConversatoriosAdmin',
@@ -8089,6 +9984,18 @@ function guardarUsuarioAdmin() {
 
       document
         .getElementById('seccionTalleresAdmin')
+        .classList.add('oculto');
+
+      document
+        .getElementById(
+          'seccionInscripcionTalleresAdmin'
+        )
+        .classList.add('oculto');
+
+      document
+        .getElementById(
+          'seccionFormularioInscripcionTaller'
+        )
         .classList.add('oculto');
 
       document
@@ -8164,6 +10071,11 @@ function guardarUsuarioAdmin() {
       );
       
       if (
+        id === 'seccionInscripcionTalleresAdmin' ||
+        id === 'seccionFormularioInscripcionTaller'
+      ) {
+        marcarModuloVisual('inscripcion-talleres');
+      } else if (
         id === 'seccionTrabajosAdmin' ||
         id === 'seccionFormularioTrabajo'
       ) {
