@@ -13,7 +13,10 @@
   <title>Lector QR - SOMECE 2026</title>
 
   <!-- Librería para lectura QR -->
-  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://unpkg.com/html5-qrcode">
+    document.addEventListener('DOMContentLoaded', sincronizarInterfazResponsiva);
+
+  </script>
 
   <!-- Librería para generar QR gráfico -->
   <script
@@ -174,12 +177,805 @@
       border: none;
     }
 
+
+
+    /* =====================================================
+       REDISEÑO RESPONSIVO SOMECE 2026
+       Primera etapa: navegación + Talleres
+       ===================================================== */
+    :root {
+      --fondo: #f4f7f6;
+      --superficie: #ffffff;
+      --sidebar: #183d3d;
+      --sidebar-hover: #214e4e;
+      --texto: #243434;
+      --texto-secundario: #647473;
+      --borde: #dce5e2;
+      --principal: #397a73;
+      --principal-hover: #306a64;
+      --activo: #dcede9;
+      --editar: #4d7396;
+      --eliminar: #b65f5a;
+      --secundario: #71807d;
+    }
+
+    body {
+      padding: 0;
+      background: var(--fondo);
+      color: var(--texto);
+      text-align: left;
+    }
+
+    .contenedor {
+      max-width: none;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: var(--fondo);
+    }
+
+    /* Cabecera original: visible en login; dentro de la app actúa como marca */
+    .contenedor > h1,
+    .contenedor > .subtitulo {
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    #seccionLogin {
+      max-width: 460px;
+      margin: 24px auto;
+      padding: 28px;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(24,61,61,.08);
+    }
+
+    /* Navegación principal convertida en sidebar */
+    #menuPrincipal:not(.oculto) {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 50;
+      display: block;
+      width: 270px;
+      box-sizing: border-box;
+      padding: 28px 18px;
+      overflow-y: auto;
+      background: var(--sidebar);
+      color: #fff;
+    }
+
+    #menuPrincipal > p {
+      margin: 0 10px 20px;
+      font-size: 0;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    #menuPrincipal > p::after {
+      content: 'NAVEGACIÓN';
+      font-size: 18px;
+      color: #fff;
+    }
+
+    #menuPrincipal .menu {
+      gap: 5px;
+      margin-top: 0;
+    }
+
+    #menuPrincipal .menu::before {
+      content: 'REGISTRO';
+      display: block;
+      margin: 10px 12px 7px;
+      color: #9fc0bb;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+    }
+
+    #menuPrincipal .opcion {
+      padding: 11px 12px;
+      border-radius: 9px;
+      background: transparent;
+      color: #e9f2f0;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    #menuPrincipal .opcion:hover {
+      background: var(--sidebar-hover);
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
+    #menuPrincipal #btnTalleresAdmin {
+      margin-top: 30px;
+    }
+
+    #menuPrincipal #btnTalleresAdmin::before {
+      content: 'GESTIÓN';
+      position: absolute;
+      margin-top: -29px;
+      color: #9fc0bb;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      pointer-events: none;
+    }
+
+    #menuPrincipal #btnAdministracion {
+      margin-top: 30px;
+    }
+
+    #menuPrincipal #btnAdministracion::before {
+      content: 'SISTEMA';
+      position: absolute;
+      margin-top: -29px;
+      color: #9fc0bb;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      pointer-events: none;
+    }
+
+    /* Secciones: cuando hay sesión dejan espacio al sidebar */
+    body.sesion-activa .contenedor > h1,
+    body.sesion-activa .contenedor > .subtitulo {
+      margin-left: 310px;
+      max-width: none;
+      text-align: left;
+    }
+
+    body.sesion-activa .contenedor > h1 {
+      padding-top: 30px;
+      margin-top: 0;
+      margin-bottom: 2px;
+      font-size: 18px;
+      color: var(--principal);
+    }
+
+    body.sesion-activa .contenedor > .subtitulo {
+      margin-bottom: 12px;
+      color: var(--texto-secundario);
+    }
+
+    body.sesion-activa .contenedor > div:not(#menuPrincipal):not(#seccionLogin) {
+      width: auto;
+      max-width: 1050px;
+      margin-left: 290px;
+      margin-right: 20px;
+      box-sizing: border-box;
+    }
+
+    /* Talleres */
+    #seccionTalleresAdmin:not(.oculto),
+    #seccionFormularioTaller:not(.oculto) {
+      display: block;
+      padding: 26px;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      box-shadow: 0 8px 28px rgba(24,61,61,.06);
+    }
+
+    #seccionTalleresAdmin h2,
+    #seccionFormularioTaller h2 {
+      margin: 0 0 5px;
+      color: var(--texto);
+      font-size: clamp(25px, 3vw, 34px);
+    }
+
+    #seccionTalleresAdmin > p {
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: var(--texto-secundario);
+    }
+
+    #listaTalleresAdmin {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    #listaTalleresAdmin .itemAdministracion {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 16px 18px;
+      background: #fbfcfc;
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(24,61,61,.035);
+    }
+
+    #listaTalleresAdmin .itemAdministracion > div:first-child {
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    #listaTalleresAdmin .opcion {
+      width: auto;
+      min-width: 88px;
+      padding: 9px 13px;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    #seccionTalleresAdmin > .botonContinuar {
+      width: auto;
+      min-width: 150px;
+      padding: 11px 18px;
+      background: var(--principal);
+    }
+
+    #seccionTalleresAdmin > .secundario {
+      width: auto;
+      margin-left: 8px;
+      padding: 11px 18px;
+      background: transparent;
+      color: var(--secundario);
+      border: 1px solid var(--borde);
+    }
+
+    .botonContinuar,
+    .opcion {
+      transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+
+    .botonContinuar {
+      background: var(--principal);
+    }
+
+    .botonContinuar:hover:not(:disabled) {
+      background: var(--principal-hover);
+      box-shadow: 0 4px 12px rgba(57,122,115,.18);
+    }
+
+    .botonEditarPonente { background: var(--editar); }
+    .botonEliminarPonente { background: var(--eliminar); }
+    .secundario { background: var(--secundario); }
+
+    input,
+    select {
+      border-color: var(--borde);
+      color: var(--texto);
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 3px solid rgba(57,122,115,.14);
+      border-color: var(--principal);
+    }
+
+    #seccionFormularioTaller label {
+      color: var(--texto);
+    }
+
+    #seccionFormularioTaller input,
+    #seccionFormularioTaller select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 13px;
+      font-size: 16px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+    }
+
+    /* Estado activo de Talleres */
+    body.modulo-talleres #btnTalleresAdmin {
+      background: var(--activo);
+      color: #214e4e;
+      font-weight: 700;
+      box-shadow: inset 4px 0 0 var(--principal);
+    }
+
+
+
+    /* =====================================================
+       REDISEÑO RESPONSIVO - GESTIÓN
+       Trabajos + Conversatorios + Conversatorio-Trabajos
+       ===================================================== */
+    #seccionTrabajosAdmin:not(.oculto),
+    #seccionFormularioTrabajo:not(.oculto),
+    #seccionConversatoriosAdmin:not(.oculto),
+    #seccionFormularioConversatorio:not(.oculto),
+    #seccionConversatorioTrabajosAdmin:not(.oculto),
+    #seccionFormularioConversatorioTrabajo:not(.oculto) {
+      display: block;
+      padding: 26px;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      box-shadow: 0 8px 28px rgba(24,61,61,.06);
+    }
+
+    #seccionTrabajosAdmin h2,
+    #seccionFormularioTrabajo h2,
+    #seccionConversatoriosAdmin h2,
+    #seccionFormularioConversatorio h2,
+    #seccionConversatorioTrabajosAdmin h2,
+    #seccionFormularioConversatorioTrabajo h2 {
+      margin: 0 0 5px;
+      color: var(--texto);
+      font-size: clamp(25px, 3vw, 34px);
+    }
+
+    #seccionTrabajosAdmin > p,
+    #seccionConversatoriosAdmin > p,
+    #seccionConversatorioTrabajosAdmin > p {
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: var(--texto-secundario);
+    }
+
+    #listaTrabajosAdmin,
+    #listaConversatoriosAdmin,
+    #listaConversatorioTrabajosAdmin {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    #listaTrabajosAdmin .itemAdministracion,
+    #listaConversatoriosAdmin .itemAdministracion,
+    #listaConversatorioTrabajosAdmin .itemAdministracion {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 16px 18px;
+      background: #fbfcfc;
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(24,61,61,.035);
+    }
+
+    #listaTrabajosAdmin .itemAdministracion > div:first-child,
+    #listaConversatoriosAdmin .itemAdministracion > div:first-child,
+    #listaConversatorioTrabajosAdmin .itemAdministracion > div:first-child {
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    #listaTrabajosAdmin .opcion,
+    #listaConversatoriosAdmin .opcion,
+    #listaConversatorioTrabajosAdmin .opcion {
+      width: auto;
+      min-width: 88px;
+      padding: 9px 13px;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    #seccionTrabajosAdmin > .botonContinuar,
+    #seccionConversatoriosAdmin > .botonContinuar,
+    #seccionConversatorioTrabajosAdmin > .botonContinuar {
+      width: auto;
+      min-width: 150px;
+      padding: 11px 18px;
+      background: var(--principal);
+    }
+
+    #seccionTrabajosAdmin > .secundario,
+    #seccionConversatoriosAdmin > .secundario,
+    #seccionConversatorioTrabajosAdmin > .secundario {
+      width: auto;
+      margin-left: 8px;
+      padding: 11px 18px;
+      background: transparent;
+      color: var(--secundario);
+      border: 1px solid var(--borde);
+    }
+
+    #seccionFormularioTrabajo input,
+    #seccionFormularioTrabajo select,
+    #seccionFormularioConversatorio input,
+    #seccionFormularioConversatorio select,
+    #seccionFormularioConversatorioTrabajo input,
+    #seccionFormularioConversatorioTrabajo select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 13px;
+      font-size: 16px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+    }
+
+    body.modulo-trabajos #btnTrabajosAdmin,
+    body.modulo-conversatorios #btnConversatoriosAdmin,
+    body.modulo-conversatorio-trabajos #btnConversatorioTrabajosAdmin {
+      background: var(--activo);
+      color: #214e4e;
+      font-weight: 700;
+      box-shadow: inset 4px 0 0 var(--principal);
+    }
+
+    /* Botón móvil */
+    #btnMenuMovil {
+      display: none;
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 80;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--sidebar);
+      color: #fff;
+      font-size: 23px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(24,61,61,.18);
+    }
+
+    @media (max-width: 768px) {
+      body.sesion-activa {
+        padding-top: 64px;
+      }
+
+      #btnMenuMovil {
+        display: block;
+      }
+
+      #menuPrincipal:not(.oculto) {
+        width: min(82vw, 300px);
+        transform: translateX(-105%);
+        transition: transform .22s ease;
+        box-shadow: 10px 0 30px rgba(20,45,45,.18);
+      }
+
+      body.menu-movil-abierto #menuPrincipal:not(.oculto) {
+        transform: translateX(0);
+      }
+
+      body.sesion-activa .contenedor > h1,
+      body.sesion-activa .contenedor > .subtitulo,
+      body.sesion-activa .contenedor > div:not(#menuPrincipal):not(#seccionLogin) {
+        margin-left: 16px;
+        margin-right: 16px;
+      }
+
+      body.sesion-activa .contenedor > h1 {
+        padding-top: 0;
+      }
+
+      #seccionTalleresAdmin:not(.oculto),
+      #seccionFormularioTaller:not(.oculto) {
+        padding: 18px;
+        border-radius: 13px;
+      }
+
+      #listaTalleresAdmin .itemAdministracion {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      #listaTalleresAdmin .itemAdministracion > div:first-child {
+        grid-column: 1 / -1;
+      }
+
+      #listaTalleresAdmin .opcion {
+        width: 100%;
+      }
+
+      #seccionTalleresAdmin > .botonContinuar,
+      #seccionTalleresAdmin > .secundario {
+        width: 100%;
+        margin-left: 0;
+      }
+
+
+      #seccionTrabajosAdmin:not(.oculto),
+      #seccionFormularioTrabajo:not(.oculto),
+      #seccionConversatoriosAdmin:not(.oculto),
+      #seccionFormularioConversatorio:not(.oculto),
+      #seccionConversatorioTrabajosAdmin:not(.oculto),
+      #seccionFormularioConversatorioTrabajo:not(.oculto) {
+        padding: 18px;
+        border-radius: 13px;
+      }
+
+      #listaTrabajosAdmin .itemAdministracion,
+      #listaConversatoriosAdmin .itemAdministracion,
+      #listaConversatorioTrabajosAdmin .itemAdministracion {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      #listaTrabajosAdmin .itemAdministracion > div:first-child,
+      #listaConversatoriosAdmin .itemAdministracion > div:first-child,
+      #listaConversatorioTrabajosAdmin .itemAdministracion > div:first-child {
+        grid-column: 1 / -1;
+      }
+
+      #listaTrabajosAdmin .opcion,
+      #listaConversatoriosAdmin .opcion,
+      #listaConversatorioTrabajosAdmin .opcion,
+      #seccionTrabajosAdmin > .botonContinuar,
+      #seccionTrabajosAdmin > .secundario,
+      #seccionConversatoriosAdmin > .botonContinuar,
+      #seccionConversatoriosAdmin > .secundario,
+      #seccionConversatorioTrabajosAdmin > .botonContinuar,
+      #seccionConversatorioTrabajosAdmin > .secundario {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+
+
+
+    /* =====================================================
+       CONVERSATORIO - TRABAJOS / MAESTRO - DETALLE
+       Presentación únicamente; conserva CRUD y rutas actuales.
+       ===================================================== */
+    #listaConversatorioTrabajosAdmin.listaConversatoriosMaestro {
+      display: grid;
+      gap: 10px;
+      margin: 22px 0;
+    }
+
+    .conversatorioEnlace {
+      width: 100%;
+      border: 1px solid var(--borde);
+      background: var(--superficie);
+      color: var(--principal);
+      border-radius: 10px;
+      padding: 15px 18px;
+      text-align: left;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .15s ease;
+    }
+
+    .conversatorioEnlace:hover,
+    .conversatorioEnlace:focus-visible {
+      background: var(--activo);
+      border-color: var(--principal);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    #detalleConversatorioTrabajoAdmin {
+      margin-top: 20px;
+    }
+
+    #tituloConversatorioTrabajoSeleccionado {
+      margin: 0 0 16px 0;
+      color: var(--texto);
+      font-size: 1.2rem;
+    }
+
+    #listaTrabajosConversatorioSeleccionado {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .trabajoConversatorioItem {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 14px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+      background: var(--superficie);
+    }
+
+    .trabajoConversatorioItem .opcion {
+      min-height: 32px;
+      padding: 5px 14px;
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .trabajoConversatorioNombre {
+      min-width: 0;
+      color: var(--texto);
+      overflow-wrap: anywhere;
+    }
+
+    .accionesConversatorioTrabajo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    #conversatorioConverTrabFormulario:disabled {
+      opacity: 1;
+      color: var(--texto);
+      background: #eef3f1;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      .trabajoConversatorioItem {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .trabajoConversatorioNombre {
+        grid-column: 1 / -1;
+      }
+
+      .trabajoConversatorioItem .opcion {
+        width: 100%;
+        margin: 0;
+      }
+
+      .accionesConversatorioTrabajo > button {
+        width: 100%;
+        margin: 0;
+      }
+    }
+
+  
+    /* =====================================================
+       ADMINISTRACIÓN · PONENTES
+       Tarjetas compactas, paleta SOMECE
+       ===================================================== */
+
+    #seccionPonentes {
+      max-width: 1040px;
+    }
+
+    #seccionPonentes > h2 {
+      margin-bottom: 4px;
+    }
+
+    #seccionPonentes > p {
+      margin-top: 0;
+      margin-bottom: 18px;
+      color: var(--texto-secundario);
+    }
+
+    #listaPonentes {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 18px;
+    }
+
+    #listaPonentes .itemAdministracion {
+      display: grid;
+      grid-template-columns: minmax(300px, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 9px 14px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+      background: var(--superficie);
+      box-shadow: 0 1px 3px rgba(24,61,61,.04);
+    }
+
+    #listaPonentes .ponenteDatosCompactos {
+      min-width: 0;
+      line-height: 1.22;
+    }
+
+    #listaPonentes .ponenteNombre {
+      margin: 0 0 2px;
+      color: var(--texto);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    #listaPonentes .ponenteDetalle,
+    #listaPonentes .ponenteCorreo {
+      margin: 0;
+      color: var(--texto-secundario);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    #listaPonentes .ponenteAcciones {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+      flex-wrap: nowrap;
+    }
+
+    #listaPonentes .ponenteAcciones .opcion {
+      min-height: 30px;
+      margin: 0;
+      padding: 5px 11px;
+      border-radius: 7px;
+      line-height: 1.05;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    #listaPonentes .botonEditarPonente {
+      background: var(--editar);
+    }
+
+    #listaPonentes .botonQrPonente {
+      background: var(--principal);
+      color: #fff;
+    }
+
+    #listaPonentes .botonEnviarQrPonente {
+      background: var(--secundario);
+      color: #fff;
+    }
+
+    #listaPonentes .botonEliminarPonente {
+      background: var(--eliminar);
+    }
+
+    #seccionPonentes > .botonContinuar,
+    #seccionPonentes > .secundario {
+      margin-top: 0;
+    }
+
+    @media (max-width: 900px) {
+      #listaPonentes .itemAdministracion {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      #listaPonentes .ponenteAcciones {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 520px) {
+      #listaPonentes .itemAdministracion {
+        padding: 10px 12px;
+      }
+
+      #listaPonentes .ponenteAcciones {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #listaPonentes .ponenteAcciones .opcion {
+        width: 100%;
+      }
+    }
+
+  
+    /* Administración: acciones compactas, consistentes con Trabajos/Conversatorios */
+    #seccionAdministracion .accionesAdministracion {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    #seccionAdministracion .accionesAdministracion button {
+      margin: 0;
+    }
+
+    @media (max-width: 520px) {
+      #seccionAdministracion .accionesAdministracion {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      #seccionAdministracion .accionesAdministracion button {
+        width: 100%;
+      }
+    }
+
   </style>
 
 </head>
 
 
 <body>
+
+  <button id="btnMenuMovil" type="button" aria-label="Abrir navegación" onclick="alternarMenuMovil()">☰</button>
 
   <div class="contenedor">
 
@@ -259,21 +1055,21 @@
           class="opcion"
           onclick="seleccionarCongreso()"
         >
-          1. Registro al Congreso
+          Registro Congreso
         </button>
 
         <button
           class="opcion"
           onclick="seleccionarTaller()"
         >
-          2. Registro al Taller
+          Registro Taller
         </button>
 
         <button
           class="opcion"
           onclick="seleccionarConversatorio()"
         >
-          3. Registro al Conversatorio
+          Registro Conversatorio
         </button>
 
         <button
@@ -281,7 +1077,15 @@
           class="opcion oculto"
           onclick="administrarTalleres()"
         >
-          4. Talleres
+          Talleres
+        </button>
+
+        <button
+          id="btnTrabajosAdmin"
+          class="opcion oculto"
+          onclick="administrarTrabajos()"
+        >
+          Trabajos
         </button>
 
         <button
@@ -289,7 +1093,15 @@
           class="opcion oculto"
           onclick="administrarConversatorios()"
         >
-          5. Conversatorios
+          Conversatorios
+        </button>
+
+        <button
+          id="btnConversatorioTrabajosAdmin"
+          class="opcion oculto"
+          onclick="administrarConversatorioTrabajos()"
+        >
+          Conversatorio-Trabajos
         </button>
 
         <button
@@ -321,30 +1133,33 @@
         Seleccione el catálogo que desea administrar:
       </p>
 
-      <div class="menu">
+      <div class="accionesAdministracion">
 
         <button
-          class="opcion"
+          class="botonContinuar"
+          type="button"
           onclick="administrarUsuarios()"
         >
           Usuarios
         </button>
 
-          <button
-            class="opcion"
-            onclick="administrarPonentes()"
-          >
+        <button
+          class="botonContinuar"
+          type="button"
+          onclick="administrarPonentes()"
+        >
           Ponentes
         </button>
 
-      </div>
+        <button
+          class="opcion secundario"
+          type="button"
+          onclick="volverMenu()"
+        >
+          Regresar al menú
+        </button>
 
-      <button
-        class="opcion secundario"
-        onclick="volverMenu()"
-      >
-        Regresar al menú
-      </button>
+      </div>
 
     </div>
 
@@ -415,9 +1230,9 @@
   <button
     class="opcion secundario"
     type="button"
-    onclick="abrirAdministracion()"
+    onclick="volverMenu()"
   >
-    Regresar a Administración
+    Regresar al menú
   </button>
 
 </div>
@@ -703,6 +1518,136 @@
 </div>
 
 <!-- =====================================================
+     ADMINISTRACIÓN DE TRABAJOS
+     ===================================================== -->
+
+<div
+  id="seccionTrabajosAdmin"
+  class="oculto"
+>
+
+  <h2>
+    Trabajos
+  </h2>
+
+  <p>
+    Administración de Trabajos del Congreso.
+  </p>
+
+  <div id="listaTrabajosAdmin"></div>
+
+  <button
+    class="botonContinuar"
+    type="button"
+    onclick="nuevoTrabajoAdmin()"
+  >
+    Nuevo Trabajo
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="volverMenu()"
+  >
+    Regresar al menú
+  </button>
+
+</div>
+
+<!-- =====================================================
+     FORMULARIO DE TRABAJO
+     ===================================================== -->
+
+<div
+  id="seccionFormularioTrabajo"
+  class="oculto"
+>
+
+  <h2 id="tituloFormularioTrabajo">
+    Nuevo Trabajo
+  </h2>
+
+  <input
+    type="hidden"
+    id="idTrabajoFormulario"
+  >
+
+  <label for="nomTrabajoFormulario">
+    Nombre del Trabajo
+  </label>
+
+  <input
+    type="text"
+    id="nomTrabajoFormulario"
+    autocomplete="off"
+    placeholder="Nombre del Trabajo"
+  >
+
+  <label for="ponente1TrabajoFormulario">
+    Ponente 1
+  </label>
+
+  <select id="ponente1TrabajoFormulario">
+    <option value="">
+      Seleccione el Ponente principal...
+    </option>
+  </select>
+
+  <label for="ponente2TrabajoFormulario">
+    Ponente 2 (opcional)
+  </label>
+
+  <select id="ponente2TrabajoFormulario">
+    <option value="">
+      Sin Ponente
+    </option>
+  </select>
+
+  <label for="ponente3TrabajoFormulario">
+    Ponente 3 (opcional)
+  </label>
+
+  <select id="ponente3TrabajoFormulario">
+    <option value="">
+      Sin Ponente
+    </option>
+  </select>
+
+  <label for="ponente4TrabajoFormulario">
+    Ponente 4 (opcional)
+  </label>
+
+  <select id="ponente4TrabajoFormulario">
+    <option value="">
+      Sin Ponente
+    </option>
+  </select>
+
+  <div
+    id="mensajeFormularioTrabajo"
+    class="info oculto"
+  ></div>
+
+  <button
+    id="btnGuardarTrabajo"
+    class="botonContinuar"
+    type="button"
+    onclick="guardarTrabajoAdmin()"
+  >
+    Guardar
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="administrarTrabajos()"
+  >
+    Cancelar
+  </button>
+
+</div>
+
+<!-- =====================================================
      ADMINISTRACIÓN DE CONVERSATORIOS
      ===================================================== -->
 
@@ -817,6 +1762,137 @@
     class="opcion secundario"
     type="button"
     onclick="administrarConversatorios()"
+  >
+    Cancelar
+  </button>
+
+</div>
+
+  <!-- =====================================================
+     ADMINISTRACIÓN DE CONVERSATORIO - TRABAJOS
+     ===================================================== -->
+
+<div
+  id="seccionConversatorioTrabajosAdmin"
+  class="oculto"
+>
+
+  <h2>
+    Conversatorio - Trabajos
+  </h2>
+
+  <p>
+    Asignación de Trabajos a Conversatorios.
+  </p>
+
+  <!-- Vista inicial: catálogo de Conversatorios -->
+  <div id="vistaConversatoriosConverTrabAdmin">
+    <div
+      id="listaConversatorioTrabajosAdmin"
+      class="listaConversatoriosMaestro"
+    ></div>
+  </div>
+
+  <!-- Vista detalle: Trabajos del Conversatorio seleccionado -->
+  <div
+    id="detalleConversatorioTrabajoAdmin"
+    class="oculto"
+  >
+    <h3 id="tituloConversatorioTrabajoSeleccionado"></h3>
+
+    <div id="listaTrabajosConversatorioSeleccionado"></div>
+
+    <div class="accionesConversatorioTrabajo">
+      <button
+        id="btnAgregarTrabajoConversatorio"
+        class="botonContinuar"
+        type="button"
+        onclick="nuevoConversatorioTrabajoAdmin()"
+      >
+        Agregar Trabajo
+      </button>
+
+      <button
+        class="opcion secundario"
+        type="button"
+        onclick="volverListaConversatoriosConverTrab()"
+      >
+        Volver a Conversatorios
+      </button>
+    </div>
+  </div>
+
+  <button
+    id="btnRegresarMenuConverTrab"
+    class="opcion secundario"
+    type="button"
+    onclick="volverMenu()"
+  >
+    Regresar al menú
+  </button>
+
+</div>
+
+<!-- =====================================================
+     FORMULARIO CONVERSATORIO - TRABAJO
+     ===================================================== -->
+
+<div
+  id="seccionFormularioConversatorioTrabajo"
+  class="oculto"
+>
+
+  <h2 id="tituloFormularioConversatorioTrabajo">
+    Nueva asignación
+  </h2>
+
+  <input
+    type="hidden"
+    id="idConverTrabFormulario"
+  >
+
+  <label for="conversatorioConverTrabFormulario">
+    Conversatorio
+  </label>
+
+  <select
+    id="conversatorioConverTrabFormulario"
+  >
+    <option value="">
+      Seleccione un Conversatorio...
+    </option>
+  </select>
+
+  <label for="trabajoConverTrabFormulario">
+    Trabajo
+  </label>
+
+  <select
+    id="trabajoConverTrabFormulario"
+  >
+    <option value="">
+      Seleccione un Trabajo...
+    </option>
+  </select>
+
+  <div
+    id="mensajeFormularioConversatorioTrabajo"
+    class="info oculto"
+  ></div>
+
+  <button
+    id="btnGuardarConversatorioTrabajo"
+    class="botonContinuar"
+    type="button"
+    onclick="guardarConversatorioTrabajoAdmin()"
+  >
+    Guardar
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="cancelarFormularioConversatorioTrabajo()"
   >
     Cancelar
   </button>
@@ -1110,6 +2186,44 @@
 
     let nombreConversatorioSeleccionado = '';
 
+    // =====================================================
+    // INTERFAZ RESPONSIVA
+    // Sólo controla presentación; no modifica reglas de negocio.
+    // =====================================================
+    function sincronizarInterfazResponsiva() {
+      document.body.classList.toggle(
+        'sesion-activa',
+        Boolean(tokenSesion)
+      );
+    }
+
+    function alternarMenuMovil() {
+      document.body.classList.toggle('menu-movil-abierto');
+    }
+
+    function cerrarMenuMovil() {
+      document.body.classList.remove('menu-movil-abierto');
+    }
+
+    function marcarModuloVisual(nombreModulo) {
+      const modulos = [
+        'talleres',
+        'trabajos',
+        'conversatorios',
+        'conversatorio-trabajos'
+      ];
+
+      modulos.forEach(function(modulo) {
+        document.body.classList.toggle(
+          'modulo-' + modulo,
+          nombreModulo === modulo
+        );
+      });
+
+      cerrarMenuMovil();
+    }
+
+
     let tokenSesion =
       sessionStorage.getItem(
         'someceTokenSesion'
@@ -1206,6 +2320,7 @@
       );
 
       actualizarMenuPorRol();
+      sincronizarInterfazResponsiva();
 
       document
         .getElementById('seccionLogin')
@@ -1261,6 +2376,7 @@
     .body
     .appendChild(script);
 
+    
 }
 
   // =====================================================
@@ -1278,6 +2394,32 @@
     document.getElementById(
       'btnTalleresAdmin'
     );
+
+  const btnTrabajosAdmin =
+    document.getElementById(
+      'btnTrabajosAdmin'
+    );
+
+  if (btnTrabajosAdmin) {
+
+    if (
+      rolSesion ===
+      'Administrador'
+    ) {
+
+      btnTrabajosAdmin
+        .classList
+        .remove('oculto');
+
+    } else {
+
+      btnTrabajosAdmin
+        .classList
+        .add('oculto');
+
+    }
+
+  }
 
   if (
     rolSesion ===
@@ -1342,6 +2484,33 @@
 
   }
 
+  const btnConversatorioTrabajosAdmin =
+      document.getElementById(
+        'btnConversatorioTrabajosAdmin'
+      );
+
+    if (btnConversatorioTrabajosAdmin) {
+
+      if (
+        rolSesion ===
+        'Administrador'
+      ) {
+
+        btnConversatorioTrabajosAdmin
+          .classList
+          .remove('oculto');
+
+      } else {
+
+        btnConversatorioTrabajosAdmin
+          .classList
+          .add('oculto');
+
+      }
+
+    }
+
+
 }
 
   // =====================================================
@@ -1379,6 +2548,7 @@
       );
 
         actualizarMenuPorRol();
+        sincronizarInterfazResponsiva();
 
         document
           .getElementById('seccionLogin')
@@ -1526,9 +2696,919 @@
       return;
     }
 
+    marcarModuloVisual('talleres');
     mostrarSeccion('seccionTalleresAdmin');
     cargarTalleresAdmin();
   }
+
+// =====================================================
+// ADMINISTRACIÓN DE TRABAJOS
+// =====================================================
+
+function administrarTrabajos() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  mostrarSeccion(
+    'seccionTrabajosAdmin'
+  );
+
+  cargarTrabajosAdmin();
+
+}
+
+// =====================================================
+// CARGAR TRABAJOS PARA ADMINISTRACIÓN
+// =====================================================
+
+function cargarTrabajosAdmin() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  const contenedor =
+    document.getElementById(
+      'listaTrabajosAdmin'
+    );
+
+  contenedor.innerHTML =
+    '<p>Cargando Trabajos...</p>';
+
+  const nombreCallback =
+    'cargarTrabajosAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      contenedor.innerHTML = '';
+
+      if (!Array.isArray(resultado)) {
+
+        contenedor.innerHTML =
+          '<p>' +
+          (
+            resultado &&
+            resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar los Trabajos.'
+          ) +
+          '</p>';
+
+        return;
+      }
+
+      if (resultado.length === 0) {
+
+        contenedor.innerHTML =
+          '<p>No hay Trabajos registrados.</p>';
+
+        return;
+      }
+
+      resultado.forEach(
+        function(trabajo) {
+
+          const fila =
+            document.createElement(
+              'div'
+            );
+
+          fila.className =
+            'itemAdministracion';
+
+          const datos =
+            document.createElement(
+              'div'
+            );
+
+          // =============================================
+          // AUTORES
+          // =============================================
+
+          const autores = [];
+
+          if (trabajo.NomPonente1) {
+            autores.push(
+              trabajo.NomPonente1
+            );
+          }
+
+          if (trabajo.NomPonente2) {
+            autores.push(
+              trabajo.NomPonente2
+            );
+          }
+
+          if (trabajo.NomPonente3) {
+            autores.push(
+              trabajo.NomPonente3
+            );
+          }
+
+          if (trabajo.NomPonente4) {
+            autores.push(
+              trabajo.NomPonente4
+            );
+          }
+
+          datos.textContent =
+            trabajo.idTrabajo +
+            ' — ' +
+            trabajo.NomTrabajo +
+            ' — ' +
+            (
+              autores.length
+                ? autores.join(', ')
+                : 'Sin Ponentes'
+            );
+
+          fila.appendChild(
+            datos
+          );
+
+          // =============================================
+          // EDITAR
+          // =============================================
+
+          const botonEditar =
+            document.createElement(
+              'button'
+            );
+
+          botonEditar.type =
+            'button';
+
+          botonEditar.className =
+            'opcion botonEditarPonente';
+
+          botonEditar.textContent =
+            'Editar';
+
+          botonEditar.onclick =
+            function() {
+
+              editarTrabajoAdmin(
+                trabajo
+              );
+
+            };
+
+          fila.appendChild(
+            botonEditar
+          );
+
+          // =============================================
+          // ELIMINAR
+          // =============================================
+
+          const botonEliminar =
+            document.createElement(
+              'button'
+            );
+
+          botonEliminar.type =
+            'button';
+
+          botonEliminar.className =
+            'opcion botonEliminarPonente';
+
+          botonEliminar.textContent =
+            'Eliminar';
+
+          botonEliminar.onclick =
+            function() {
+
+              eliminarTrabajoAdmin(
+                trabajo
+              );
+
+            };
+
+          fila.appendChild(
+            botonEliminar
+          );
+
+          contenedor.appendChild(
+            fila
+          );
+
+        }
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarTrabajosWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      contenedor.innerHTML =
+        '<p>No fue posible conectar con el servidor.</p>';
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
+// =====================================================
+// NUEVO TRABAJO
+// =====================================================
+
+function nuevoTrabajoAdmin() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idTrabajoFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'nomTrabajoFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tituloFormularioTrabajo'
+    )
+    .textContent =
+      'Nuevo Trabajo';
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioTrabajo'
+    );
+
+  mensaje.textContent = '';
+  mensaje.className =
+    'info oculto';
+
+  mostrarSeccion(
+    'seccionFormularioTrabajo'
+  );
+
+  cargarPonentesTrabajoFormulario();
+
+}
+
+// =====================================================
+// EDITAR TRABAJO
+// =====================================================
+
+function editarTrabajoAdmin(trabajo) {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idTrabajoFormulario'
+    )
+    .value =
+      trabajo.idTrabajo || '';
+
+  document
+    .getElementById(
+      'nomTrabajoFormulario'
+    )
+    .value =
+      trabajo.NomTrabajo || '';
+
+  document
+    .getElementById(
+      'tituloFormularioTrabajo'
+    )
+    .textContent =
+      'Editar Trabajo';
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioTrabajo'
+    );
+
+  mensaje.textContent = '';
+  mensaje.className =
+    'info oculto';
+
+  mostrarSeccion(
+    'seccionFormularioTrabajo'
+  );
+
+  // Una sola carga del catálogo de Ponentes.
+  // Después se seleccionan localmente los
+  // cuatro autores actuales.
+  cargarPonentesTrabajoFormulario({
+    idPonente1:
+      trabajo.idPonente1 || '',
+
+    idPonente2:
+      trabajo.idPonente2 || '',
+
+    idPonente3:
+      trabajo.idPonente3 || '',
+
+    idPonente4:
+      trabajo.idPonente4 || ''
+  });
+
+}
+
+// =====================================================
+// ELIMINAR TRABAJO
+// =====================================================
+
+function eliminarTrabajoAdmin(
+  trabajo
+) {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  if (
+    !trabajo ||
+    !trabajo.idTrabajo
+  ) {
+    return;
+  }
+
+  const nombreTrabajo =
+    trabajo.NomTrabajo ||
+    (
+      'Trabajo ' +
+      trabajo.idTrabajo
+    );
+
+  const confirmar =
+    window.confirm(
+      '¿Desea eliminar el Trabajo?\n\n' +
+      nombreTrabajo +
+      '\n\n' +
+      'Esta acción no se puede deshacer.'
+    );
+
+  if (!confirmar) {
+    return;
+  }
+
+  const nombreCallback =
+    'eliminarTrabajoAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        window.alert(
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible eliminar el Trabajo.'
+        );
+
+        return;
+      }
+
+      window.alert(
+        resultado.mensaje ||
+        'Trabajo eliminado correctamente.'
+      );
+
+      cargarTrabajosAdmin();
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=eliminarTrabajoWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idTrabajo=' +
+    encodeURIComponent(
+      trabajo.idTrabajo
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      window.alert(
+        'No fue posible conectar con el servidor.'
+      );
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
+// =====================================================
+// CARGAR PONENTES EN FORMULARIO DE TRABAJO
+// =====================================================
+
+function cargarPonentesTrabajoFormulario(
+  seleccionados
+) {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  seleccionados =
+    seleccionados || {};
+
+  const idsSelects = [
+    'ponente1TrabajoFormulario',
+    'ponente2TrabajoFormulario',
+    'ponente3TrabajoFormulario',
+    'ponente4TrabajoFormulario'
+  ];
+
+  idsSelects.forEach(
+    function(idSelect) {
+
+      const select =
+        document.getElementById(
+          idSelect
+        );
+
+      select.innerHTML =
+        '<option value="">Cargando Ponentes...</option>';
+
+      select.disabled = true;
+
+    }
+  );
+
+  const nombreCallback =
+    'cargarPonentesTrabajoFormulario_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      if (!Array.isArray(resultado)) {
+
+        idsSelects.forEach(
+          function(idSelect) {
+
+            const select =
+              document.getElementById(
+                idSelect
+              );
+
+            select.disabled = false;
+
+            select.innerHTML =
+              '<option value="">No fue posible cargar Ponentes</option>';
+
+          }
+        );
+
+        return;
+      }
+
+      idsSelects.forEach(
+        function(idSelect, indice) {
+
+          const select =
+            document.getElementById(
+              idSelect
+            );
+
+          select.disabled = false;
+
+          select.innerHTML = '';
+
+          const opcionVacia =
+            document.createElement(
+              'option'
+            );
+
+          opcionVacia.value = '';
+
+          opcionVacia.textContent =
+            indice === 0
+              ? 'Seleccione el Ponente principal...'
+              : 'Sin Ponente';
+
+          select.appendChild(
+            opcionVacia
+          );
+
+          resultado.forEach(
+            function(ponente) {
+
+              const opcion =
+                document.createElement(
+                  'option'
+                );
+
+              opcion.value =
+                String(
+                  ponente.idPonente || ''
+                );
+
+              opcion.textContent =
+                ponente.NomPonente || '';
+
+              select.appendChild(
+                opcion
+              );
+
+            }
+          );
+
+          const idSeleccionado =
+            seleccionados[
+              'idPonente' +
+              (indice + 1)
+            ];
+
+          if (
+            idSeleccionado !== undefined &&
+            idSeleccionado !== null
+          ) {
+
+            select.value =
+              String(
+                idSeleccionado
+              );
+
+          }
+
+        }
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarPonentesWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      idsSelects.forEach(
+        function(idSelect) {
+
+          const select =
+            document.getElementById(
+              idSelect
+            );
+
+          select.disabled = false;
+
+          select.innerHTML =
+            '<option value="">Error al cargar Ponentes</option>';
+
+        }
+      );
+
+    };
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
+// =====================================================
+// GUARDAR TRABAJO
+// ALTA
+// =====================================================
+
+function guardarTrabajoAdmin() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  const idTrabajo =
+    String(
+      document
+        .getElementById(
+          'idTrabajoFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const NomTrabajo =
+    String(
+      document
+        .getElementById(
+          'nomTrabajoFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const idPonente1 =
+    String(
+      document
+        .getElementById(
+          'ponente1TrabajoFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const idPonente2 =
+    String(
+      document
+        .getElementById(
+          'ponente2TrabajoFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const idPonente3 =
+    String(
+      document
+        .getElementById(
+          'ponente3TrabajoFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const idPonente4 =
+    String(
+      document
+        .getElementById(
+          'ponente4TrabajoFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioTrabajo'
+    );
+
+  const boton =
+    document.getElementById(
+      'btnGuardarTrabajo'
+    );
+
+  // =============================================
+  // VALIDACIONES DEL FORMULARIO
+  // =============================================
+
+  if (!NomTrabajo) {
+
+    mensaje.textContent =
+      'Ingrese el nombre del Trabajo.';
+
+    mensaje.className =
+      'error';
+
+    return;
+  }
+
+  if (!idPonente1) {
+
+    mensaje.textContent =
+      'Seleccione al menos el Ponente 1.';
+
+    mensaje.className =
+      'error';
+
+    return;
+  }
+
+  const ponentesSeleccionados = [
+    idPonente1,
+    idPonente2,
+    idPonente3,
+    idPonente4
+  ].filter(
+    function(idPonente) {
+      return idPonente !== '';
+    }
+  );
+
+  const ponentesUnicos =
+    new Set(
+      ponentesSeleccionados
+    );
+
+  if (
+    ponentesUnicos.size !==
+    ponentesSeleccionados.length
+  ) {
+
+    mensaje.textContent =
+      'Un mismo Ponente no puede aparecer más de una vez en el mismo Trabajo.';
+
+    mensaje.className =
+      'error';
+
+    return;
+  }
+
+  boton.disabled = true;
+
+  mensaje.textContent =
+    'Guardando Trabajo...';
+
+  mensaje.className =
+    'info';
+
+  const nombreCallback =
+    'guardarTrabajoAdmin_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      boton.disabled = false;
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible guardar el Trabajo.';
+
+        mensaje.className =
+          'error';
+
+        return;
+      }
+
+      mensaje.textContent =
+        resultado.mensaje ||
+        (
+          idTrabajo
+            ? 'Trabajo actualizado correctamente.'
+            : 'Trabajo creado correctamente.'
+        );
+
+      mensaje.className =
+        'exito';
+
+      setTimeout(
+        function() {
+
+          administrarTrabajos();
+
+        },
+        800
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  const pagina =
+    idTrabajo
+      ? 'actualizarTrabajoWeb'
+      : 'crearTrabajoWeb';
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=' +
+    pagina +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    (
+      idTrabajo
+        ? '&idTrabajo=' +
+          encodeURIComponent(
+            idTrabajo
+          )
+        : ''
+    ) +
+    '&NomTrabajo=' +
+    encodeURIComponent(
+      NomTrabajo
+    ) +
+    '&idPonente1=' +
+    encodeURIComponent(
+      idPonente1
+    ) +
+    '&idPonente2=' +
+    encodeURIComponent(
+      idPonente2
+    ) +
+    '&idPonente3=' +
+    encodeURIComponent(
+      idPonente3
+    ) +
+    '&idPonente4=' +
+    encodeURIComponent(
+      idPonente4
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
 
 // =====================================================
 // ADMINISTRAR CONVERSATORIOS
@@ -1545,6 +3625,787 @@ function administrarConversatorios() {
   );
 
   cargarConversatoriosAdmin();
+
+}
+
+// =====================================================
+// ADMINISTRAR CONVERSATORIO - TRABAJOS
+// Vista maestro: primero muestra los Conversatorios.
+// =====================================================
+
+let conversatorioTrabajoSeleccionadoAdmin = null;
+let relacionesConversatorioTrabajoAdmin = [];
+
+function administrarConversatorioTrabajos() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  conversatorioTrabajoSeleccionadoAdmin = null;
+  relacionesConversatorioTrabajoAdmin = [];
+
+  mostrarSeccion(
+    'seccionConversatorioTrabajosAdmin'
+  );
+
+  mostrarVistaListaConversatoriosConverTrab();
+  cargarConversatorioTrabajosAdmin();
+
+}
+
+// =====================================================
+// VISTA INICIAL: LISTA DE CONVERSATORIOS
+// =====================================================
+
+function mostrarVistaListaConversatoriosConverTrab() {
+
+  const vistaLista =
+    document.getElementById(
+      'vistaConversatoriosConverTrabAdmin'
+    );
+
+  const detalle =
+    document.getElementById(
+      'detalleConversatorioTrabajoAdmin'
+    );
+
+  const regresarMenu =
+    document.getElementById(
+      'btnRegresarMenuConverTrab'
+    );
+
+  if (vistaLista) {
+    vistaLista.classList.remove('oculto');
+  }
+
+  if (detalle) {
+    detalle.classList.add('oculto');
+  }
+
+  if (regresarMenu) {
+    regresarMenu.classList.remove('oculto');
+  }
+}
+
+function volverListaConversatoriosConverTrab() {
+
+  conversatorioTrabajoSeleccionadoAdmin = null;
+  relacionesConversatorioTrabajoAdmin = [];
+
+  mostrarVistaListaConversatoriosConverTrab();
+  cargarConversatorioTrabajosAdmin();
+}
+
+// =====================================================
+// CARGAR CONVERSATORIOS PARA LA VISTA MAESTRO
+// =====================================================
+
+function cargarConversatorioTrabajosAdmin() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  const contenedor =
+    document.getElementById(
+      'listaConversatorioTrabajosAdmin'
+    );
+
+  if (!contenedor) {
+    return;
+  }
+
+  contenedor.innerHTML =
+    '<p>Cargando Conversatorios...</p>';
+
+  const nombreCallback =
+    'cargarConversatoriosMaestroConverTrab_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[nombreCallback];
+      contenedor.innerHTML = '';
+
+      if (!Array.isArray(resultado)) {
+
+        contenedor.innerHTML =
+          '<p>' +
+          (
+            resultado && resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar los Conversatorios.'
+          ) +
+          '</p>';
+
+        return;
+      }
+
+      if (resultado.length === 0) {
+        contenedor.innerHTML =
+          '<p>No hay Conversatorios registrados.</p>';
+        return;
+      }
+
+      resultado.forEach(
+        function(conversatorio) {
+
+          const boton =
+            document.createElement('button');
+
+          boton.type = 'button';
+          boton.className = 'conversatorioEnlace';
+          boton.textContent =
+            conversatorio.NomConversatorio ||
+            (
+              'Conversatorio ' +
+              conversatorio.idConversatorio
+            );
+
+          boton.onclick = function() {
+            abrirDetalleConversatorioTrabajo(
+              conversatorio
+            );
+          };
+
+          contenedor.appendChild(boton);
+        }
+      );
+    };
+
+  const script =
+    document.createElement('script');
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarConversatoriosWeb' +
+    '&token=' +
+    encodeURIComponent(tokenSesion) +
+    '&callback=' +
+    encodeURIComponent(nombreCallback);
+
+  script.onerror = function() {
+    delete window[nombreCallback];
+    contenedor.innerHTML =
+      '<p>No fue posible conectar con el servidor.</p>';
+  };
+
+  document.body.appendChild(script);
+}
+
+// =====================================================
+// DETALLE DE UN CONVERSATORIO Y SUS TRABAJOS
+// =====================================================
+
+function abrirDetalleConversatorioTrabajo(
+  conversatorio
+) {
+
+  if (
+    !conversatorio ||
+    !conversatorio.idConversatorio
+  ) {
+    return;
+  }
+
+  conversatorioTrabajoSeleccionadoAdmin = {
+    idConversatorio:
+      String(
+        conversatorio.idConversatorio
+      ).trim(),
+    NomConversatorio:
+      String(
+        conversatorio.NomConversatorio ||
+        (
+          'Conversatorio ' +
+          conversatorio.idConversatorio
+        )
+      ).trim()
+  };
+
+  const vistaLista =
+    document.getElementById(
+      'vistaConversatoriosConverTrabAdmin'
+    );
+
+  const detalle =
+    document.getElementById(
+      'detalleConversatorioTrabajoAdmin'
+    );
+
+  const regresarMenu =
+    document.getElementById(
+      'btnRegresarMenuConverTrab'
+    );
+
+  const titulo =
+    document.getElementById(
+      'tituloConversatorioTrabajoSeleccionado'
+    );
+
+  if (vistaLista) {
+    vistaLista.classList.add('oculto');
+  }
+
+  if (detalle) {
+    detalle.classList.remove('oculto');
+  }
+
+  if (regresarMenu) {
+    regresarMenu.classList.add('oculto');
+  }
+
+  if (titulo) {
+    titulo.textContent =
+      conversatorioTrabajoSeleccionadoAdmin
+        .NomConversatorio;
+  }
+
+  cargarTrabajosConversatorioSeleccionado();
+}
+
+function cargarTrabajosConversatorioSeleccionado() {
+
+  if (
+    !conversatorioTrabajoSeleccionadoAdmin ||
+    !conversatorioTrabajoSeleccionadoAdmin.idConversatorio
+  ) {
+    return;
+  }
+
+  const contenedor =
+    document.getElementById(
+      'listaTrabajosConversatorioSeleccionado'
+    );
+
+  contenedor.innerHTML =
+    '<p>Cargando Trabajos...</p>';
+
+  const idConversatorio =
+    conversatorioTrabajoSeleccionadoAdmin
+      .idConversatorio;
+
+  const nombreCallback =
+    'cargarDetalleConverTrab_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[nombreCallback];
+      contenedor.innerHTML = '';
+
+      if (!Array.isArray(resultado)) {
+        contenedor.innerHTML =
+          '<p>' +
+          (
+            resultado && resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar los Trabajos asignados.'
+          ) +
+          '</p>';
+        return;
+      }
+
+      relacionesConversatorioTrabajoAdmin =
+        resultado.filter(
+          function(relacion) {
+            return String(
+              relacion.idConversatorio || ''
+            ).trim() === idConversatorio;
+          }
+        );
+
+      if (
+        relacionesConversatorioTrabajoAdmin.length === 0
+      ) {
+        contenedor.innerHTML =
+          '<p>No hay Trabajos asignados a este Conversatorio.</p>';
+        return;
+      }
+
+      relacionesConversatorioTrabajoAdmin.forEach(
+        function(relacion) {
+
+          const fila =
+            document.createElement('div');
+          fila.className =
+            'trabajoConversatorioItem';
+
+          const nombre =
+            document.createElement('div');
+          nombre.className =
+            'trabajoConversatorioNombre';
+          nombre.textContent =
+            relacion.NomTrabajo ||
+            (
+              'Trabajo ' +
+              relacion.idTrabajo
+            );
+
+          const botonEditar =
+            document.createElement('button');
+          botonEditar.type = 'button';
+          botonEditar.className =
+            'opcion botonEditarPonente';
+          botonEditar.textContent = 'Editar';
+          botonEditar.onclick = function() {
+            editarConversatorioTrabajoAdmin(
+              relacion
+            );
+          };
+
+          const botonEliminar =
+            document.createElement('button');
+          botonEliminar.type = 'button';
+          botonEliminar.className =
+            'opcion botonEliminarPonente';
+          botonEliminar.textContent = 'Eliminar';
+          botonEliminar.onclick = function() {
+            eliminarConversatorioTrabajoAdmin(
+              relacion
+            );
+          };
+
+          fila.appendChild(nombre);
+          fila.appendChild(botonEditar);
+          fila.appendChild(botonEliminar);
+          contenedor.appendChild(fila);
+        }
+      );
+    };
+
+  const script =
+    document.createElement('script');
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarConversatorioTrabajosWeb' +
+    '&token=' +
+    encodeURIComponent(tokenSesion) +
+    '&callback=' +
+    encodeURIComponent(nombreCallback);
+
+  script.onerror = function() {
+    delete window[nombreCallback];
+    contenedor.innerHTML =
+      '<p>No fue posible conectar con el servidor.</p>';
+  };
+
+  document.body.appendChild(script);
+}
+
+// =====================================================
+// NUEVA ASIGNACIÓN CONVERSATORIO - TRABAJO
+// =====================================================
+
+function nuevoConversatorioTrabajoAdmin() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  if (
+    !conversatorioTrabajoSeleccionadoAdmin ||
+    !conversatorioTrabajoSeleccionadoAdmin.idConversatorio
+  ) {
+    return;
+  }
+
+  document
+    .getElementById(
+      'idConverTrabFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'tituloFormularioConversatorioTrabajo'
+    )
+    .textContent =
+      'Agregar Trabajo';
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioConversatorioTrabajo'
+    );
+
+  mensaje.textContent = '';
+  mensaje.className = 'info oculto';
+
+  mostrarSeccion(
+    'seccionFormularioConversatorioTrabajo'
+  );
+
+  const selectConversatorio =
+    document.getElementById(
+      'conversatorioConverTrabFormulario'
+    );
+
+  selectConversatorio.disabled = true;
+
+  cargarConversatoriosConverTrabFormulario(
+    conversatorioTrabajoSeleccionadoAdmin
+      .idConversatorio
+  );
+
+  cargarTrabajosConverTrabFormulario();
+}
+
+function cancelarFormularioConversatorioTrabajo() {
+
+  if (
+    conversatorioTrabajoSeleccionadoAdmin &&
+    conversatorioTrabajoSeleccionadoAdmin.idConversatorio
+  ) {
+    mostrarSeccion(
+      'seccionConversatorioTrabajosAdmin'
+    );
+    abrirDetalleConversatorioTrabajo(
+      conversatorioTrabajoSeleccionadoAdmin
+    );
+    return;
+  }
+
+  administrarConversatorioTrabajos();
+}
+
+
+// =====================================================
+// CARGAR CONVERSATORIOS EN EL FORMULARIO
+// =====================================================
+
+function cargarConversatoriosConverTrabFormulario(
+  idSeleccionado
+) {
+
+  const select =
+    document.getElementById(
+      'conversatorioConverTrabFormulario'
+    );
+
+  select.innerHTML =
+    '<option value="">Cargando conversatorios...</option>';
+
+  const nombreCallback =
+    'callbackConversatoriosConverTrab_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      select.innerHTML =
+        '<option value="">Seleccione un Conversatorio</option>';
+
+      if (!Array.isArray(resultado)) {
+
+        select.innerHTML =
+          '<option value="">No fue posible cargar los Conversatorios</option>';
+
+        return;
+      }
+
+      resultado.forEach(
+        conversatorio => {
+
+          const option =
+            document.createElement(
+              'option'
+            );
+
+          option.value =
+            conversatorio.idConversatorio;
+
+          if (
+            String(
+              conversatorio.idConversatorio
+            ) ===
+            String(
+              idSeleccionado || ''
+            )
+          ) {
+            option.selected = true;
+          }
+
+          option.textContent =
+            conversatorio.NomConversatorio ||
+            (
+              'Conversatorio ' +
+              conversatorio.idConversatorio
+            );
+
+          select.appendChild(
+            option
+          );
+
+        }
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarConversatoriosWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  document.body.appendChild(
+    script
+  );
+}
+
+
+// =====================================================
+// CARGAR TRABAJOS EN EL FORMULARIO
+// =====================================================
+
+function cargarTrabajosConverTrabFormulario(
+  idSeleccionado
+) {
+
+  const select =
+    document.getElementById(
+      'trabajoConverTrabFormulario'
+    );
+
+  select.innerHTML =
+    '<option value="">Cargando trabajos disponibles...</option>';
+
+  select.disabled = true;
+
+  const idTrabajoActual =
+    String(
+      idSeleccionado || ''
+    ).trim();
+
+  // Primero obtener todas las relaciones existentes.
+  // Con ellas se excluyen del selector los Trabajos
+  // que ya pertenecen a cualquier Conversatorio.
+  const callbackRelaciones =
+    'callbackRelacionesDisponibles_' +
+    Date.now();
+
+  window[callbackRelaciones] =
+    function(relaciones) {
+
+      delete window[
+        callbackRelaciones
+      ];
+
+      if (!Array.isArray(relaciones)) {
+
+        select.disabled = false;
+
+        select.innerHTML =
+          '<option value="">' +
+          'No fue posible validar los Trabajos asignados' +
+          '</option>';
+
+        return;
+      }
+
+      const trabajosAsignados =
+        new Set(
+          relaciones
+            .map(
+              relacion =>
+                String(
+                  relacion.idTrabajo || ''
+                ).trim()
+            )
+            .filter(
+              idTrabajo =>
+                idTrabajo !== '' &&
+                idTrabajo !== idTrabajoActual
+            )
+        );
+
+      const callbackTrabajos =
+        'callbackTrabajosConverTrab_' +
+        Date.now();
+
+      window[callbackTrabajos] =
+        function(resultado) {
+
+          delete window[
+            callbackTrabajos
+          ];
+
+          select.disabled = false;
+
+          select.innerHTML =
+            '<option value="">' +
+            'Seleccione un Trabajo' +
+            '</option>';
+
+          if (!Array.isArray(resultado)) {
+
+            select.innerHTML =
+              '<option value="">' +
+              'No fue posible cargar los Trabajos' +
+              '</option>';
+
+            return;
+          }
+
+          const trabajosDisponibles =
+            resultado.filter(
+              trabajo => {
+
+                const idTrabajo =
+                  String(
+                    trabajo.idTrabajo || ''
+                  ).trim();
+
+                return (
+                  idTrabajo === idTrabajoActual ||
+                  !trabajosAsignados.has(
+                    idTrabajo
+                  )
+                );
+
+              }
+            );
+
+          if (
+            trabajosDisponibles.length === 0
+          ) {
+
+            select.innerHTML =
+              '<option value="">' +
+              'No hay Trabajos disponibles para asignar' +
+              '</option>';
+
+            return;
+          }
+
+          trabajosDisponibles.forEach(
+            trabajo => {
+
+              const option =
+                document.createElement(
+                  'option'
+                );
+
+              option.value =
+                trabajo.idTrabajo;
+
+              if (
+                String(
+                  trabajo.idTrabajo
+                ) === idTrabajoActual
+              ) {
+                option.selected = true;
+              }
+
+              option.textContent =
+                trabajo.NomTrabajo ||
+                (
+                  'Trabajo ' +
+                  trabajo.idTrabajo
+                );
+
+              select.appendChild(
+                option
+              );
+
+            }
+          );
+
+        };
+
+      const scriptTrabajos =
+        document.createElement(
+          'script'
+        );
+
+      scriptTrabajos.src =
+        URL_WEB_APP +
+        '?pagina=buscarTrabajosWeb' +
+        '&token=' +
+        encodeURIComponent(
+          tokenSesion
+        ) +
+        '&callback=' +
+        encodeURIComponent(
+          callbackTrabajos
+        );
+
+      scriptTrabajos.onerror =
+        function() {
+
+          delete window[
+            callbackTrabajos
+          ];
+
+          select.disabled = false;
+
+          select.innerHTML =
+            '<option value="">' +
+            'No fue posible conectar con el servidor' +
+            '</option>';
+
+        };
+
+      document.body.appendChild(
+        scriptTrabajos
+      );
+
+    };
+
+  const scriptRelaciones =
+    document.createElement(
+      'script'
+    );
+
+  scriptRelaciones.src =
+    URL_WEB_APP +
+    '?pagina=buscarConversatorioTrabajosWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callbackRelaciones
+    );
+
+  scriptRelaciones.onerror =
+    function() {
+
+      delete window[
+        callbackRelaciones
+      ];
+
+      select.disabled = false;
+
+      select.innerHTML =
+        '<option value="">' +
+        'No fue posible conectar con el servidor' +
+        '</option>';
+
+    };
+
+  document.body.appendChild(
+    scriptRelaciones
+  );
 
 }
 
@@ -1617,12 +4478,17 @@ function cargarConversatoriosAdmin() {
               'div'
             );
 
-          const fechaMostrar =
+          const fechaNormalizada =
             normalizarFechaFormulario(
               conversatorio.Fecha
             ) ||
             String(
               conversatorio.Fecha || ''
+            );
+
+          const fechaMostrar =
+            formatearFechaVisual(
+              fechaNormalizada
             );
 
           const horaMostrar =
@@ -1761,6 +4627,404 @@ function cargarConversatoriosAdmin() {
       script
     );
 
+}
+
+// =====================================================
+// GUARDAR CONVERSATORIO - TRABAJO
+// ALTA
+// =====================================================
+
+function guardarConversatorioTrabajoAdmin() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  const idConversatorio =
+    String(
+      document
+        .getElementById(
+          'conversatorioConverTrabFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const idConverTrab =
+    String(
+      document
+        .getElementById(
+          'idConverTrabFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const idTrabajo =
+    String(
+      document
+        .getElementById(
+          'trabajoConverTrabFormulario'
+        )
+        .value || ''
+    ).trim();
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioConversatorioTrabajo'
+    );
+
+  if (
+    !idConversatorio ||
+    !idTrabajo
+  ) {
+
+    mensaje.textContent =
+      'Seleccione un Conversatorio y un Trabajo.';
+
+    mensaje.className =
+      'info';
+
+    return;
+  }
+
+  mensaje.textContent =
+    'Guardando asignación...';
+
+  mensaje.className =
+    'info';
+
+  const nombreCallback =
+    'callbackGuardarConverTrab_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible guardar la asignación.';
+
+        mensaje.className =
+          'error';
+
+        return;
+      }
+
+      mensaje.textContent =
+        resultado.mensaje ||
+        'Asignación registrada correctamente.';
+
+      mensaje.className =
+        'exito';
+
+      setTimeout(
+        function() {
+
+          if (
+            conversatorioTrabajoSeleccionadoAdmin &&
+            conversatorioTrabajoSeleccionadoAdmin.idConversatorio
+          ) {
+            mostrarSeccion(
+              'seccionConversatorioTrabajosAdmin'
+            );
+            abrirDetalleConversatorioTrabajo(
+              conversatorioTrabajoSeleccionadoAdmin
+            );
+          } else {
+            administrarConversatorioTrabajos();
+          }
+
+        },
+        1000
+      );
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      mensaje.textContent =
+        'No fue posible comunicarse con el servidor.';
+
+      mensaje.className =
+        'error';
+    };
+
+  if (idConverTrab) {
+
+    // ===============================================
+    // ACTUALIZAR ASIGNACIÓN EXISTENTE
+    // ===============================================
+
+    script.src =
+      URL_WEB_APP +
+      '?pagina=actualizarConversatorioTrabajoWeb' +
+      '&token=' +
+      encodeURIComponent(
+        tokenSesion
+      ) +
+      '&idConverTrab=' +
+      encodeURIComponent(
+        idConverTrab
+      ) +
+      '&idConversatorio=' +
+      encodeURIComponent(
+        idConversatorio
+      ) +
+      '&idTrabajo=' +
+      encodeURIComponent(
+        idTrabajo
+      ) +
+      '&callback=' +
+      encodeURIComponent(
+        nombreCallback
+      );
+
+  } else {
+
+    // ===============================================
+    // CREAR NUEVA ASIGNACIÓN
+    // ===============================================
+
+    script.src =
+      URL_WEB_APP +
+      '?pagina=crearConversatorioTrabajoWeb' +
+      '&token=' +
+      encodeURIComponent(
+        tokenSesion
+      ) +
+      '&idConversatorio=' +
+      encodeURIComponent(
+        idConversatorio
+      ) +
+      '&idTrabajo=' +
+      encodeURIComponent(
+        idTrabajo
+      ) +
+      '&callback=' +
+      encodeURIComponent(
+        nombreCallback
+      );
+  }
+    document
+    .body
+    .appendChild(
+      script
+    );
+}
+
+// =====================================================
+// EDITAR CONVERSATORIO - TRABAJO
+// =====================================================
+
+function editarConversatorioTrabajoAdmin(
+  relacion
+) {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  if (
+    !relacion ||
+    !relacion.idConverTrab
+  ) {
+    return;
+  }
+
+  conversatorioTrabajoSeleccionadoAdmin = {
+    idConversatorio:
+      String(
+        relacion.idConversatorio || ''
+      ).trim(),
+    NomConversatorio:
+      String(
+        relacion.NomConversatorio ||
+        ('Conversatorio ' + relacion.idConversatorio)
+      ).trim()
+  };
+
+  document
+    .getElementById(
+      'idConverTrabFormulario'
+    )
+    .value =
+      relacion.idConverTrab;
+
+  document
+    .getElementById(
+      'tituloFormularioConversatorioTrabajo'
+    )
+    .textContent =
+      'Editar Trabajo asignado';
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioConversatorioTrabajo'
+    );
+
+  mensaje.textContent = '';
+  mensaje.className =
+    'info oculto';
+
+  mostrarSeccion(
+    'seccionFormularioConversatorioTrabajo'
+  );
+
+  document
+    .getElementById(
+      'conversatorioConverTrabFormulario'
+    )
+    .disabled = true;
+
+  cargarConversatoriosConverTrabFormulario(
+    relacion.idConversatorio
+  );
+
+  cargarTrabajosConverTrabFormulario(
+    relacion.idTrabajo
+  );
+}
+
+// =====================================================
+// ELIMINAR CONVERSATORIO - TRABAJO
+// =====================================================
+
+function eliminarConversatorioTrabajoAdmin(
+  relacion
+) {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  if (
+    !relacion ||
+    !relacion.idConverTrab
+  ) {
+    return;
+  }
+
+  const nombreConversatorio =
+    relacion.NomConversatorio ||
+    relacion.idConversatorio ||
+    '';
+
+  const nombreTrabajo =
+    relacion.NomTrabajo ||
+    relacion.idTrabajo ||
+    '';
+
+  const confirmar =
+    window.confirm(
+      '¿Eliminar la asignación?\n\n' +
+      nombreConversatorio +
+      ' — ' +
+      nombreTrabajo
+    );
+
+  if (!confirmar) {
+    return;
+  }
+
+  const nombreCallback =
+    'callbackEliminarConverTrab_' +
+    Date.now();
+
+  window[nombreCallback] =
+    function(resultado) {
+
+      delete window[
+        nombreCallback
+      ];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+
+        alert(
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible eliminar la asignación.'
+        );
+
+        return;
+      }
+
+      alert(
+        resultado.mensaje ||
+        'Asignación eliminada correctamente.'
+      );
+
+      // Recargar el detalle del Conversatorio seleccionado.
+      if (
+        conversatorioTrabajoSeleccionadoAdmin &&
+        conversatorioTrabajoSeleccionadoAdmin.idConversatorio
+      ) {
+        cargarTrabajosConversatorioSeleccionado();
+      } else {
+        cargarConversatorioTrabajosAdmin();
+      }
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.onerror =
+    function() {
+
+      delete window[
+        nombreCallback
+      ];
+
+      alert(
+        'No fue posible comunicarse con el servidor.'
+      );
+    };
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=eliminarConversatorioTrabajoWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idConverTrab=' +
+    encodeURIComponent(
+      relacion.idConverTrab
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      nombreCallback
+    );
+
+  document
+    .body
+    .appendChild(
+      script
+    );
 }
 
 // =====================================================
@@ -2042,6 +5306,40 @@ function cargarModeradoresFormulario(
     .appendChild(
       script
     );
+
+}
+
+
+// =====================================================
+// FORMATO VISUAL DE FECHA PARA LISTADOS
+// Internamente el formulario conserva YYYY-MM-DD.
+// En pantalla se presenta DD-MM-YYYY, independiente
+// de la configuración regional del equipo.
+// =====================================================
+
+function formatearFechaVisual(
+  valor
+) {
+
+  const texto =
+    String(valor || '').trim();
+
+  const coincidencia =
+    texto.match(
+      /^(\d{4})-(\d{2})-(\d{2})$/
+    );
+
+  if (!coincidencia) {
+    return texto;
+  }
+
+  return (
+    coincidencia[3] +
+    '-' +
+    coincidencia[2] +
+    '-' +
+    coincidencia[1]
+  );
 
 }
 
@@ -3036,16 +6334,89 @@ function eliminarConversatorioAdmin(
               'div'
             );
 
-          datos.textContent =
-            ponente.idPonente +
-            ' — ' +
-            ponente.NomPonente +
-            ' — ' +
-            ponente.TipoPonente;
+          datos.className =
+            'ponenteDatosCompactos';
+
+          const nombre =
+            document.createElement(
+              'div'
+            );
+
+          nombre.className =
+            'ponenteNombre';
+
+          nombre.textContent =
+            ponente.NomPonente ||
+            (
+              'Ponente ' +
+              ponente.idPonente
+            );
+
+          const detalle =
+            document.createElement(
+              'div'
+            );
+
+          detalle.className =
+            'ponenteDetalle';
+
+          const tipo =
+            String(
+              ponente.TipoPonente || ''
+            ).trim();
+
+          const institucion =
+            String(
+              ponente['Institucion-Universidad'] || ''
+            ).trim();
+
+          detalle.textContent =
+            [tipo, institucion]
+              .filter(
+                valor => valor !== ''
+              )
+              .join(' · ');
+
+          const correo =
+            document.createElement(
+              'div'
+            );
+
+          correo.className =
+            'ponenteCorreo';
+
+          correo.textContent =
+            String(
+              ponente.CorreoPonente || ''
+            ).trim();
+
+          datos.appendChild(
+            nombre
+          );
+
+          if (detalle.textContent) {
+            datos.appendChild(
+              detalle
+            );
+          }
+
+          if (correo.textContent) {
+            datos.appendChild(
+              correo
+            );
+          }
 
           fila.appendChild(
             datos
           );
+
+          const acciones =
+            document.createElement(
+              'div'
+            );
+
+          acciones.className =
+            'ponenteAcciones';
 
 
           // =============================================
@@ -3075,7 +6446,7 @@ function eliminarConversatorioAdmin(
 
             };
 
-          fila.appendChild(
+          acciones.appendChild(
             botonEditar
           );
 
@@ -3162,16 +6533,20 @@ function eliminarConversatorioAdmin(
 
             };
 
-          fila.appendChild(
+          acciones.appendChild(
             botonQr
           );
 
-          fila.appendChild(
+          acciones.appendChild(
             botonEnviarQr
           );
 
-          fila.appendChild(
+          acciones.appendChild(
             botonEliminar
+          );
+
+          fila.appendChild(
+            acciones
           );
 
           contenedor.appendChild(
@@ -4663,9 +8038,38 @@ function guardarUsuarioAdmin() {
 
     function mostrarSeccion(id) {
 
-      document
-        .getElementById('menuPrincipal')
-        .classList.add('oculto');
+      // La navegación lateral permanece visible en los módulos
+      // de Gestión (opciones 4 a 7) y en Administración.
+      // En los flujos de Registro se conserva el comportamiento
+      // original de ocultarla para trabajar con el lector QR.
+      const seccionesConNavegacion = new Set([
+        'seccionTalleresAdmin',
+        'seccionFormularioTaller',
+        'seccionTrabajosAdmin',
+        'seccionFormularioTrabajo',
+        'seccionConversatoriosAdmin',
+        'seccionFormularioConversatorio',
+        'seccionConversatorioTrabajosAdmin',
+        'seccionFormularioConversatorioTrabajo',
+        'seccionAdministracion',
+        'seccionUsuarios',
+        'seccionFormularioUsuario',
+        'seccionPonentes',
+        'seccionFormularioPonente',
+        'seccionQrPonente'
+      ]);
+
+      const menuPrincipal =
+        document.getElementById('menuPrincipal');
+
+      if (
+        id === 'menuPrincipal' ||
+        seccionesConNavegacion.has(id)
+      ) {
+        menuPrincipal.classList.remove('oculto');
+      } else {
+        menuPrincipal.classList.add('oculto');
+      }
 
       document
         .getElementById('seccionTaller')
@@ -4688,6 +8092,22 @@ function guardarUsuarioAdmin() {
         .classList.add('oculto');
 
       document
+      .getElementById(
+        'seccionTrabajosAdmin'
+      )
+      .classList.add(
+        'oculto'
+      );
+
+      document
+      .getElementById(
+        'seccionFormularioTrabajo'
+      )
+      .classList.add(
+        'oculto'
+      );
+
+      document
         .getElementById('seccionFormularioTaller')
         .classList.add('oculto');
 
@@ -4697,6 +8117,18 @@ function guardarUsuarioAdmin() {
 
       document
         .getElementById('seccionFormularioConversatorio')
+        .classList.add('oculto');
+
+      document
+      .getElementById(
+        'seccionConversatorioTrabajosAdmin'
+      )
+      .classList.add('oculto');
+
+      document
+        .getElementById(
+          'seccionFormularioConversatorioTrabajo'
+        )
         .classList.add('oculto');
 
       document
@@ -4731,6 +8163,30 @@ function guardarUsuarioAdmin() {
         'oculto'
       );
       
+      if (
+        id === 'seccionTrabajosAdmin' ||
+        id === 'seccionFormularioTrabajo'
+      ) {
+        marcarModuloVisual('trabajos');
+      } else if (
+        id === 'seccionConversatoriosAdmin' ||
+        id === 'seccionFormularioConversatorio'
+      ) {
+        marcarModuloVisual('conversatorios');
+      } else if (
+        id === 'seccionConversatorioTrabajosAdmin' ||
+        id === 'seccionFormularioConversatorioTrabajo'
+      ) {
+        marcarModuloVisual('conversatorio-trabajos');
+      } else if (
+        id === 'seccionTalleresAdmin' ||
+        id === 'seccionFormularioTaller'
+      ) {
+        marcarModuloVisual('talleres');
+      } else if (id === 'menuPrincipal') {
+        marcarModuloVisual('');
+      }
+
       document
         .getElementById(id)
         .classList.remove('oculto');
