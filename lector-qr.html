@@ -1477,6 +1477,131 @@
       font-size: 12px;
     }
 
+  
+    /* =====================================================
+       CARTELES · CRUD EN TARJETAS
+       ===================================================== */
+    #seccionCartelesAdmin:not(.oculto),
+    #seccionFormularioCartel:not(.oculto) {
+      display: block;
+      padding: 26px;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      box-shadow: 0 8px 28px rgba(24,61,61,.06);
+    }
+
+    #seccionCartelesAdmin h2,
+    #seccionFormularioCartel h2 {
+      margin: 0 0 5px;
+      color: var(--texto);
+      font-size: clamp(25px, 3vw, 34px);
+    }
+
+    #seccionCartelesAdmin > p {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: var(--texto-secundario);
+    }
+
+    #listaCartelesAdmin {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 18px;
+    }
+
+    #listaCartelesAdmin .itemCartelAdmin {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 14px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+      background: var(--superficie);
+      box-shadow: 0 1px 3px rgba(24,61,61,.04);
+    }
+
+    .cartelDatosCompactos {
+      min-width: 0;
+      line-height: 1.28;
+    }
+
+    .cartelNombre {
+      margin: 0 0 3px;
+      color: var(--texto);
+      font-size: 15px;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    .cartelDetalle {
+      margin: 0;
+      color: var(--texto-secundario);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .cartelAcciones {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .cartelAcciones .opcion {
+      width: auto;
+      min-height: 30px;
+      margin: 0;
+      padding: 5px 11px;
+      border-radius: 7px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    #seccionCartelesAdmin > .botonContinuar,
+    #seccionCartelesAdmin > .secundario,
+    #seccionFormularioCartel > .botonContinuar,
+    #seccionFormularioCartel > .secundario {
+      width: auto;
+      min-width: 0;
+      min-height: 34px;
+      margin-right: 7px;
+      padding: 7px 14px;
+    }
+
+    #seccionFormularioCartel input,
+    #seccionFormularioCartel select {
+      width: min(100%, 620px);
+      box-sizing: border-box;
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+    }
+
+    body.modulo-carteles #btnCartelesAdmin {
+      background: var(--activo);
+      color: #214e4e;
+      font-weight: 700;
+      box-shadow: inset 4px 0 0 var(--principal);
+    }
+
+    @media (max-width: 720px) {
+      #seccionCartelesAdmin:not(.oculto),
+      #seccionFormularioCartel:not(.oculto) {
+        padding: 18px;
+      }
+
+      #listaCartelesAdmin .itemCartelAdmin {
+        grid-template-columns: 1fr;
+      }
+
+      .cartelAcciones {
+        justify-content: flex-start;
+      }
+    }
+
   </style>
 
 </head>
@@ -1603,6 +1728,14 @@
           onclick="administrarTrabajos()"
         >
           Trabajos
+        </button>
+
+        <button
+          id="btnCartelesAdmin"
+          class="opcion oculto"
+          onclick="administrarCarteles()"
+        >
+          Carteles
         </button>
 
         <button
@@ -2364,6 +2497,113 @@
 </div>
 
 <!-- =====================================================
+     ADMINISTRACIÓN DE CARTELES
+     ===================================================== -->
+
+<div
+  id="seccionCartelesAdmin"
+  class="oculto"
+>
+  <h2>Carteles</h2>
+  <p>Administración de Carteles del Congreso.</p>
+
+  <div id="listaCartelesAdmin"></div>
+
+  <button
+    class="botonContinuar"
+    type="button"
+    onclick="nuevoCartelAdmin()"
+  >
+    Nuevo Cartel
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="volverMenu()"
+  >
+    Regresar al menú
+  </button>
+</div>
+
+<!-- =====================================================
+     FORMULARIO DE CARTEL
+     ===================================================== -->
+
+<div
+  id="seccionFormularioCartel"
+  class="oculto"
+>
+  <h2 id="tituloFormularioCartel">
+    Nuevo Cartel
+  </h2>
+
+  <input
+    type="hidden"
+    id="idCartelFormulario"
+  >
+
+  <label for="nomCartelFormulario">
+    Nombre del Cartel
+  </label>
+  <input
+    type="text"
+    id="nomCartelFormulario"
+    autocomplete="off"
+    placeholder="Nombre del Cartel"
+  >
+
+  <label for="ponente1CartelFormulario">
+    Ponente 1
+  </label>
+  <select id="ponente1CartelFormulario">
+    <option value="">
+      Seleccione el Ponente principal...
+    </option>
+  </select>
+
+  <label for="ponente2CartelFormulario">
+    Ponente 2 (opcional)
+  </label>
+  <select id="ponente2CartelFormulario">
+    <option value="">
+      Sin Ponente
+    </option>
+  </select>
+
+  <label for="fechaCartelFormulario">
+    Fecha
+  </label>
+  <input
+    type="date"
+    id="fechaCartelFormulario"
+  >
+
+  <div
+    id="mensajeFormularioCartel"
+    class="info oculto"
+  ></div>
+
+  <button
+    id="btnGuardarCartel"
+    class="botonContinuar"
+    type="button"
+    onclick="guardarCartelAdmin()"
+  >
+    Guardar
+  </button>
+
+  <button
+    class="opcion secundario"
+    type="button"
+    onclick="administrarCarteles()"
+  >
+    Cancelar
+  </button>
+</div>
+
+
+<!-- =====================================================
      ADMINISTRACIÓN DE CONVERSATORIOS
      ===================================================== -->
 
@@ -2930,6 +3170,7 @@
         'talleres',
         'inscripcion-talleres',
         'trabajos',
+        'carteles',
         'conversatorios',
         'conversatorio-trabajos'
       ];
@@ -5566,6 +5807,776 @@ function cancelarFormularioInscripcionTaller() {
 // =====================================================
 // ADMINISTRAR CONVERSATORIOS
 // =====================================================
+
+
+// =====================================================
+// CARTELES - ADMINISTRACIÓN
+// =====================================================
+
+function administrarCarteles() {
+
+  if (rolSesion !== 'Administrador') {
+    return;
+  }
+
+  mostrarSeccion(
+    'seccionCartelesAdmin'
+  );
+
+  cargarCartelesAdmin();
+
+}
+
+
+function normalizarFechaCartel(valor) {
+
+  if (!valor) {
+    return '';
+  }
+
+  const texto =
+    String(valor).trim();
+
+  const coincidencia =
+    texto.match(
+      /^(\d{4})-(\d{2})-(\d{2})/
+    );
+
+  if (coincidencia) {
+    return (
+      coincidencia[1] + '-' +
+      coincidencia[2] + '-' +
+      coincidencia[3]
+    );
+  }
+
+  const fecha =
+    new Date(valor);
+
+  if (isNaN(fecha.getTime())) {
+    return '';
+  }
+
+  const anio =
+    fecha.getFullYear();
+
+  const mes =
+    String(
+      fecha.getMonth() + 1
+    ).padStart(2, '0');
+
+  const dia =
+    String(
+      fecha.getDate()
+    ).padStart(2, '0');
+
+  return anio + '-' + mes + '-' + dia;
+
+}
+
+
+function fechaCartelVisual(valor) {
+
+  const fecha =
+    normalizarFechaCartel(valor);
+
+  if (!fecha) {
+    return '';
+  }
+
+  const partes =
+    fecha.split('-');
+
+  return (
+    partes[2] + '-' +
+    partes[1] + '-' +
+    partes[0]
+  );
+
+}
+
+
+function cargarCartelesAdmin() {
+
+  const contenedor =
+    document.getElementById(
+      'listaCartelesAdmin'
+    );
+
+  contenedor.innerHTML =
+    '<div class="info">Cargando Carteles...</div>';
+
+  const callback =
+    'callbackCartelesAdmin_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+
+      if (!Array.isArray(resultado)) {
+
+        contenedor.innerHTML =
+          '<div class="error">' +
+          (
+            resultado &&
+            resultado.mensaje
+              ? resultado.mensaje
+              : 'No fue posible cargar los Carteles.'
+          ) +
+          '</div>';
+
+        return;
+      }
+
+      if (!resultado.length) {
+
+        contenedor.innerHTML =
+          '<div class="info">No hay Carteles registrados.</div>';
+
+        return;
+      }
+
+      contenedor.innerHTML = '';
+
+      resultado.forEach(
+        function(cartel) {
+
+          if (!cartel) {
+            return;
+          }
+
+          const tarjeta =
+            document.createElement(
+              'div'
+            );
+
+          tarjeta.className =
+            'itemCartelAdmin';
+
+          const datos =
+            document.createElement(
+              'div'
+            );
+
+          datos.className =
+            'cartelDatosCompactos';
+
+          const nombre =
+            document.createElement(
+              'p'
+            );
+
+          nombre.className =
+            'cartelNombre';
+
+          nombre.textContent =
+            cartel.NomCartel ||
+            (
+              'Cartel ' +
+              (cartel.idCartel || '')
+            );
+
+          const autores =
+            [
+              cartel.NomPonente1,
+              cartel.NomPonente2
+            ]
+            .filter(Boolean)
+            .join(' · ');
+
+          const detalle =
+            document.createElement(
+              'p'
+            );
+
+          detalle.className =
+            'cartelDetalle';
+
+          detalle.textContent =
+            (
+              autores ||
+              'Sin Ponente'
+            ) +
+            (
+              cartel.Fecha
+                ? ' · ' +
+                  fechaCartelVisual(
+                    cartel.Fecha
+                  )
+                : ''
+            );
+
+          datos.appendChild(nombre);
+          datos.appendChild(detalle);
+
+          const acciones =
+            document.createElement(
+              'div'
+            );
+
+          acciones.className =
+            'cartelAcciones';
+
+          const editar =
+            document.createElement(
+              'button'
+            );
+
+          editar.type = 'button';
+          editar.className =
+            'opcion botonEditarPonente';
+          editar.textContent =
+            'Editar';
+
+          editar.onclick =
+            function() {
+              editarCartelAdmin(
+                cartel
+              );
+            };
+
+          const eliminar =
+            document.createElement(
+              'button'
+            );
+
+          eliminar.type = 'button';
+          eliminar.className =
+            'opcion botonEliminarPonente';
+          eliminar.textContent =
+            'Eliminar';
+
+          eliminar.onclick =
+            function() {
+              eliminarCartelAdmin(
+                cartel
+              );
+            };
+
+          acciones.appendChild(editar);
+          acciones.appendChild(eliminar);
+
+          tarjeta.appendChild(datos);
+          tarjeta.appendChild(acciones);
+
+          contenedor.appendChild(
+            tarjeta
+          );
+
+        }
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarCartelesWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&_=' +
+    Date.now();
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function nuevoCartelAdmin() {
+
+  mostrarSeccion(
+    'seccionFormularioCartel'
+  );
+
+  document
+    .getElementById(
+      'tituloFormularioCartel'
+    )
+    .textContent =
+    'Nuevo Cartel';
+
+  document
+    .getElementById(
+      'idCartelFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'nomCartelFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'fechaCartelFormulario'
+    )
+    .value = '';
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioCartel'
+    );
+
+  mensaje.textContent = '';
+  mensaje.className =
+    'info oculto';
+
+  cargarPonentesCartelFormulario({
+    idPonente1: '',
+    idPonente2: ''
+  });
+
+}
+
+
+function editarCartelAdmin(cartel) {
+
+  if (
+    !cartel ||
+    !cartel.idCartel
+  ) {
+    return;
+  }
+
+  mostrarSeccion(
+    'seccionFormularioCartel'
+  );
+
+  document
+    .getElementById(
+      'tituloFormularioCartel'
+    )
+    .textContent =
+    'Editar Cartel';
+
+  document
+    .getElementById(
+      'idCartelFormulario'
+    )
+    .value =
+    cartel.idCartel || '';
+
+  document
+    .getElementById(
+      'nomCartelFormulario'
+    )
+    .value =
+    cartel.NomCartel || '';
+
+  document
+    .getElementById(
+      'fechaCartelFormulario'
+    )
+    .value =
+    normalizarFechaCartel(
+      cartel.Fecha
+    );
+
+  cargarPonentesCartelFormulario({
+    idPonente1:
+      cartel.idPonente1 || '',
+    idPonente2:
+      cartel.idPonente2 || ''
+  });
+
+}
+
+
+function cargarPonentesCartelFormulario(
+  seleccionados
+) {
+
+  seleccionados =
+    seleccionados || {};
+
+  const callback =
+    'callbackPonentesCartel_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+
+      const lista =
+        Array.isArray(resultado)
+          ? resultado
+          : [];
+
+      [
+        {
+          id:
+            'ponente1CartelFormulario',
+          valor:
+            seleccionados.idPonente1 || '',
+          texto:
+            'Seleccione el Ponente principal...'
+        },
+        {
+          id:
+            'ponente2CartelFormulario',
+          valor:
+            seleccionados.idPonente2 || '',
+          texto:
+            'Sin Ponente'
+        }
+      ].forEach(
+        function(config) {
+
+          const select =
+            document.getElementById(
+              config.id
+            );
+
+          select.innerHTML = '';
+
+          const inicial =
+            document.createElement(
+              'option'
+            );
+
+          inicial.value = '';
+          inicial.textContent =
+            config.texto;
+
+          select.appendChild(
+            inicial
+          );
+
+          lista.forEach(
+            function(ponente) {
+
+              if (
+                !ponente ||
+                !ponente.idPonente
+              ) {
+                return;
+              }
+
+              const opcion =
+                document.createElement(
+                  'option'
+                );
+
+              opcion.value =
+                ponente.idPonente;
+
+              opcion.textContent =
+                ponente.NomPonente ||
+                (
+                  'Ponente ' +
+                  ponente.idPonente
+                );
+
+              select.appendChild(
+                opcion
+              );
+
+            }
+          );
+
+          select.value =
+            String(
+              config.valor
+            );
+
+        }
+      );
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=buscarPonentesWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&_=' +
+    Date.now();
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function guardarCartelAdmin() {
+
+  const idCartel =
+    String(
+      document.getElementById(
+        'idCartelFormulario'
+      ).value || ''
+    ).trim();
+
+  const NomCartel =
+    String(
+      document.getElementById(
+        'nomCartelFormulario'
+      ).value || ''
+    ).trim();
+
+  const idPonente1 =
+    String(
+      document.getElementById(
+        'ponente1CartelFormulario'
+      ).value || ''
+    ).trim();
+
+  const idPonente2 =
+    String(
+      document.getElementById(
+        'ponente2CartelFormulario'
+      ).value || ''
+    ).trim();
+
+  const Fecha =
+    String(
+      document.getElementById(
+        'fechaCartelFormulario'
+      ).value || ''
+    ).trim();
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFormularioCartel'
+    );
+
+  if (!NomCartel) {
+    mensaje.textContent =
+      'Ingrese el nombre del Cartel.';
+    mensaje.className =
+      'error';
+    return;
+  }
+
+  if (!idPonente1 && !idPonente2) {
+    mensaje.textContent =
+      'Seleccione al menos un Ponente.';
+    mensaje.className =
+      'error';
+    return;
+  }
+
+  if (
+    idPonente1 &&
+    idPonente2 &&
+    idPonente1 === idPonente2
+  ) {
+    mensaje.textContent =
+      'Un mismo Ponente no puede aparecer dos veces en el Cartel.';
+    mensaje.className =
+      'error';
+    return;
+  }
+
+  const boton =
+    document.getElementById(
+      'btnGuardarCartel'
+    );
+
+  boton.disabled = true;
+  mensaje.textContent =
+    'Guardando Cartel...';
+  mensaje.className =
+    'info';
+
+  const callback =
+    'callbackGuardarCartel_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+      boton.disabled = false;
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible guardar el Cartel.';
+        mensaje.className =
+          'error';
+        return;
+      }
+
+      mensaje.textContent =
+        resultado.mensaje ||
+        'Cartel guardado correctamente.';
+      mensaje.className =
+        'exito';
+
+      setTimeout(
+        administrarCarteles,
+        700
+      );
+
+    };
+
+  const pagina =
+    idCartel
+      ? 'actualizarCartelWeb'
+      : 'crearCartelWeb';
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=' +
+    pagina +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    (
+      idCartel
+        ? '&idCartel=' +
+          encodeURIComponent(
+            idCartel
+          )
+        : ''
+    ) +
+    '&NomCartel=' +
+    encodeURIComponent(
+      NomCartel
+    ) +
+    '&idPonente1=' +
+    encodeURIComponent(
+      idPonente1
+    ) +
+    '&idPonente2=' +
+    encodeURIComponent(
+      idPonente2
+    ) +
+    '&Fecha=' +
+    encodeURIComponent(
+      Fecha
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&_=' +
+    Date.now();
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+function eliminarCartelAdmin(cartel) {
+
+  if (
+    !cartel ||
+    !cartel.idCartel
+  ) {
+    return;
+  }
+
+  if (
+    !window.confirm(
+      '¿Desea eliminar el Cartel?\n\n' +
+      (
+        cartel.NomCartel ||
+        cartel.idCartel
+      ) +
+      '\n\nEsta acción no se puede deshacer.'
+    )
+  ) {
+    return;
+  }
+
+  const callback =
+    'callbackEliminarCartel_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+        window.alert(
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible eliminar el Cartel.'
+        );
+        return;
+      }
+
+      cargarCartelesAdmin();
+
+    };
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=eliminarCartelWeb' +
+    '&token=' +
+    encodeURIComponent(
+      tokenSesion
+    ) +
+    '&idCartel=' +
+    encodeURIComponent(
+      cartel.idCartel
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callback
+    ) +
+    '&_=' +
+    Date.now();
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
 
 function administrarConversatorios() {
 
@@ -10311,6 +11322,8 @@ function guardarUsuarioAdmin() {
         'seccionFormularioInscripcionTaller',
         'seccionTrabajosAdmin',
         'seccionFormularioTrabajo',
+        'seccionCartelesAdmin',
+        'seccionFormularioCartel',
         'seccionConversatoriosAdmin',
         'seccionFormularioConversatorio',
         'seccionConversatorioTrabajosAdmin',
@@ -10384,6 +11397,14 @@ function guardarUsuarioAdmin() {
       );
 
       document
+        .getElementById('seccionCartelesAdmin')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionFormularioCartel')
+        .classList.add('oculto');
+
+      document
         .getElementById('seccionFormularioTaller')
         .classList.add('oculto');
 
@@ -10449,6 +11470,11 @@ function guardarUsuarioAdmin() {
         id === 'seccionFormularioTrabajo'
       ) {
         marcarModuloVisual('trabajos');
+      } else if (
+        id === 'seccionCartelesAdmin' ||
+        id === 'seccionFormularioCartel'
+      ) {
+        marcarModuloVisual('carteles');
       } else if (
         id === 'seccionConversatoriosAdmin' ||
         id === 'seccionFormularioConversatorio'
