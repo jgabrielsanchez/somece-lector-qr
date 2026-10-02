@@ -1661,6 +1661,49 @@
       padding: 7px 14px !important;
     }
 
+  
+    .configFechaLimiteTalleres {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--borde);
+    }
+
+    .filaFechaLimiteTalleres {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .filaFechaLimiteTalleres input[type="date"] {
+      width: auto;
+      min-width: 170px;
+      padding: 8px 10px;
+      border: 1px solid var(--borde);
+      border-radius: 8px;
+      font: inherit;
+      color: var(--texto);
+      background: var(--superficie);
+    }
+
+    .filaFechaLimiteTalleres button {
+      width: auto !important;
+      min-width: 0 !important;
+      padding: 7px 14px !important;
+      margin: 0 !important;
+    }
+
+    @media (max-width: 600px) {
+      .filaFechaLimiteTalleres {
+        align-items: stretch;
+      }
+
+      .filaFechaLimiteTalleres input[type="date"] {
+        width: 100%;
+      }
+    }
+
   </style>
 
 </head>
@@ -2311,6 +2354,43 @@
       id="mensajeMaxTalleresAdmin"
       class="oculto"
     ></div>
+
+    <div class="configFechaLimiteTalleres">
+      <div class="textoConfigMaxTalleres">
+        <strong>Fecha límite de inscripción externa</strong>
+        <span>
+          Inclusiva. Vacía = sin fecha límite. Sólo aplica a la liga externa.
+        </span>
+      </div>
+
+      <div class="filaFechaLimiteTalleres">
+        <input
+          id="fechaLimiteInscripcionTalleresAdmin"
+          type="date"
+        >
+
+        <button
+          type="button"
+          class="botonContinuar"
+          onclick="guardarFechaLimiteInscripcionTalleresAdmin()"
+        >
+          Guardar fecha
+        </button>
+
+        <button
+          type="button"
+          class="opcion secundario"
+          onclick="quitarFechaLimiteInscripcionTalleresAdmin()"
+        >
+          Sin límite
+        </button>
+      </div>
+
+      <div
+        id="mensajeFechaLimiteInscripcionTalleresAdmin"
+        class="oculto"
+      ></div>
+    </div>
   </div>
 
   <div id="vistaTalleresInscripcionAdmin">
@@ -4717,6 +4797,21 @@ function cargarConfigMaxTalleresAdmin() {
       campo.value =
         maxTalleresInscripcionAdmin;
 
+      const campoFecha =
+        document.getElementById(
+          'fechaLimiteInscripcionTalleresAdmin'
+        );
+
+      if (campoFecha) {
+        campoFecha.value =
+          resultado &&
+          resultado.fechaLimiteInscripcion
+            ? String(
+                resultado.fechaLimiteInscripcion
+              )
+            : '';
+      }
+
     };
 
   const script =
@@ -4851,6 +4946,97 @@ function guardarMaxTalleresAdmin() {
     Date.now();
 
   document.body.appendChild(script);
+
+}
+
+
+function guardarFechaLimiteInscripcionTalleresAdmin() {
+
+  const campo =
+    document.getElementById(
+      'fechaLimiteInscripcionTalleresAdmin'
+    );
+
+  const mensaje =
+    document.getElementById(
+      'mensajeFechaLimiteInscripcionTalleresAdmin'
+    );
+
+  if (!campo || !mensaje) return;
+
+  const fecha =
+    String(campo.value || '').trim();
+
+  campo.disabled = true;
+
+  const callback =
+    'callbackGuardarFechaLimiteTalleres_' +
+    Date.now();
+
+  window[callback] = function(resultado) {
+
+    delete window[callback];
+    campo.disabled = false;
+
+    if (!resultado || !resultado.ok) {
+      mensaje.textContent =
+        (resultado && resultado.mensaje) ||
+        'No fue posible guardar la fecha límite.';
+      mensaje.className = 'error';
+      return;
+    }
+
+    campo.value =
+      resultado.fechaLimiteInscripcion || '';
+
+    mensaje.textContent =
+      resultado.fechaLimiteInscripcion
+        ? 'Fecha límite guardada: ' +
+          resultado.fechaLimiteInscripcion +
+          ' (inclusive).'
+        : 'Inscripción externa sin fecha límite.';
+
+    mensaje.className = 'exito';
+  };
+
+  const script =
+    document.createElement('script');
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=guardarFechaLimiteInscripcionTalleres' +
+    '&token=' +
+    encodeURIComponent(tokenSesion) +
+    '&fechaLimite=' +
+    encodeURIComponent(fecha) +
+    '&callback=' +
+    encodeURIComponent(callback) +
+    '&_=' +
+    Date.now();
+
+  script.onerror = function() {
+    delete window[callback];
+    campo.disabled = false;
+    mensaje.textContent =
+      'No fue posible conectar con el servidor.';
+    mensaje.className = 'error';
+  };
+
+  document.body.appendChild(script);
+}
+
+
+function quitarFechaLimiteInscripcionTalleresAdmin() {
+
+  const campo =
+    document.getElementById(
+      'fechaLimiteInscripcionTalleresAdmin'
+    );
+
+  if (!campo) return;
+
+  campo.value = '';
+  guardarFechaLimiteInscripcionTalleresAdmin();
 
 }
 
