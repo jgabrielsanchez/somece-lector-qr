@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartel - SOMECE 2026</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin:0; padding:16px; font-family:Arial,sans-serif; background:#f5f5f5; color:#222; }
+    .contenedor { width:100%; max-width:760px; margin:0 auto; }
+    .encabezado,.tarjeta,.cargando,.error {
+      background:white; border-radius:14px; box-shadow:0 2px 10px rgba(0,0,0,.12);
+    }
+    .encabezado { padding:24px 20px; text-align:center; margin-bottom:16px; }
+    .encabezado h1 { margin:0 0 8px; font-size:28px; }
+    .evento { font-size:18px; font-weight:bold; color:#555; }
+    .tarjeta { padding:20px; margin-bottom:16px; }
+    .tarjeta h2 { margin:0 0 16px; font-size:21px; border-bottom:1px solid #ddd; padding-bottom:10px; }
+    .nombreCartel { font-size:26px; font-weight:bold; margin-bottom:14px; text-align:center; }
+    .dato { margin:8px 0; line-height:1.5; overflow-wrap:break-word; }
+    .elemento { padding:12px 0; border-bottom:1px solid #eee; line-height:1.5; }
+    .elemento:last-child { border-bottom:none; }
+    .vacio { color:#777; font-style:italic; }
+    .cargando,.error { padding:24px; text-align:center; font-size:18px; }
+    .error { color:#b00020; }
+    @media (max-width:600px) {
+      body { padding:10px; }
+      .encabezado { padding:20px 14px; }
+      .tarjeta { padding:18px 14px; }
+      .encabezado h1 { font-size:25px; }
+      .nombreCartel { font-size:23px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <div class="encabezado">
+      <h1>SOMECE 2026</h1>
+      <div class="evento">Información del Cartel</div>
+    </div>
+
+    <div id="estado" class="cargando">Cargando información...</div>
+
+    <div id="contenido" style="display:none;">
+      <div class="tarjeta">
+        <div id="nombreCartel" class="nombreCartel"></div>
+        <div id="datosCartel"></div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Ponentes</h2>
+        <div id="listaPonentes"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const URL_WEB_APP = 'https://script.google.com/a/macros/somece.org.mx/s/AKfycbzdBvqNmIBe6XMsKq3OfWwTGQQUruiNJbAr-8-9QI1XutTRrkCzFhvvAWAa55-OQmsrDA/exec';
+
+    function escaparHtml(valor) {
+      return String(valor == null ? '' : valor)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
+
+    function obtenerIdCartel() {
+      const parametros = new URLSearchParams(window.location.search);
+      return String(parametros.get('idCartel') || '').trim();
+    }
+
+    function mostrarError(mensaje) {
+      const estado = document.getElementById('estado');
+      estado.className = 'error';
+      estado.textContent = mensaje;
+      document.getElementById('contenido').style.display = 'none';
+    }
+
+    function htmlVacio(mensaje) {
+      return '<div class="vacio">' + escaparHtml(mensaje) + '</div>';
+    }
+
+    function mostrarCartel(datos) {
+      const cartel = datos.Cartel || {};
+      document.getElementById('nombreCartel').textContent =
+        cartel.NomCartel || '';
+
+      let html = '';
+
+      if (cartel.idCartel) {
+        html += '<div class="dato"><strong>ID Cartel:</strong> ' +
+          escaparHtml(cartel.idCartel) + '</div>';
+      }
+
+      if (cartel.Fecha) {
+        html += '<div class="dato"><strong>Fecha:</strong> ' +
+          escaparHtml(cartel.Fecha) + '</div>';
+      }
+
+      document.getElementById('datosCartel').innerHTML = html;
+    }
+
+    function mostrarPonentes(ponentes) {
+      const contenedor = document.getElementById('listaPonentes');
+
+      if (!Array.isArray(ponentes) || ponentes.length === 0) {
+        contenedor.innerHTML = htmlVacio('No hay Ponentes asignados.');
+        return;
+      }
+
+      contenedor.innerHTML = ponentes.map(function(ponente) {
+        let detalle = '';
+
+        if (ponente['Institucion-Universidad']) {
+          detalle += '<div>Institución / Universidad: ' +
+            escaparHtml(ponente['Institucion-Universidad']) + '</div>';
+        }
+
+        if (ponente.TipoPonente) {
+          detalle += '<div>Tipo de Ponente: ' +
+            escaparHtml(ponente.TipoPonente) + '</div>';
+        }
+
+        return '<div class="elemento"><strong>' +
+          escaparHtml(ponente.NomPonente || ('Ponente ' + (ponente.idPonente || ''))) +
+          '</strong>' + detalle + '</div>';
+      }).join('');
+    }
+
+    function recibirCartelPublico(respuesta) {
+      if (!respuesta || respuesta.ok !== true || !respuesta.datos) {
+        mostrarError(
+          respuesta && respuesta.mensaje
+            ? respuesta.mensaje
+            : 'No fue posible obtener la información del Cartel.'
+        );
+        return;
+      }
+
+      mostrarCartel(respuesta.datos);
+      mostrarPonentes(respuesta.datos.Ponentes);
+
+      document.getElementById('estado').style.display = 'none';
+      document.getElementById('contenido').style.display = 'block';
+    }
+
+    function cargarCartel() {
+      const idCartel = obtenerIdCartel();
+
+      if (!idCartel) {
+        mostrarError('No se recibió el idCartel.');
+        return;
+      }
+
+      const script = document.createElement('script');
+
+      script.src =
+        URL_WEB_APP +
+        '?pagina=cartelPublico' +
+        '&idCartel=' + encodeURIComponent(idCartel) +
+        '&callback=' + encodeURIComponent('recibirCartelPublico');
+
+      script.onerror = function() {
+        mostrarError('No fue posible conectar con SOMECE.');
+      };
+
+      document.body.appendChild(script);
+    }
+
+    cargarCartel();
+  </script>
+</body>
+</html>
