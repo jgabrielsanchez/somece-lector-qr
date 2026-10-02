@@ -6041,12 +6041,50 @@ function cargarCartelesAdmin() {
   };
 
   const script = document.createElement('script');
+
+  let respondio = false;
+
+  const callbackOriginal =
+    window[callback];
+
+  window[callback] = function(resultado) {
+    respondio = true;
+    callbackOriginal(resultado);
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+  };
+
   script.src = URL_WEB_APP +
     '?pagina=buscarCartelesWeb' +
     '&token=' + encodeURIComponent(tokenSesion) +
     '&callback=' + encodeURIComponent(callback) +
     '&_=' + Date.now();
+
+  script.onerror = function() {
+    if (respondio) return;
+    delete window[callback];
+    contenedor.innerHTML =
+      '<div class="error">' +
+      'No fue posible conectar con el servidor para cargar los Carteles.' +
+      '</div>';
+  };
+
   document.body.appendChild(script);
+
+  setTimeout(function() {
+    if (respondio) return;
+
+    if (typeof window[callback] === 'function') {
+      delete window[callback];
+    }
+
+    contenedor.innerHTML =
+      '<div class="error">' +
+      'El servidor no respondió al cargar los Carteles. ' +
+      'Revise que Code y DB estén publicados en la versión actual del Web App.' +
+      '</div>';
+  }, 15000);
 }
 
 function nuevoCartelAdmin() {
