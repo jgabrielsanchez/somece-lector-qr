@@ -3442,6 +3442,31 @@
 
   }
 
+  const botonesCartelesAdmin =
+    document.querySelectorAll(
+      '#btnCartelesAdmin'
+    );
+
+  botonesCartelesAdmin.forEach(
+    function(botonCarteles) {
+
+      if (
+        rolSesion ===
+        'Administrador'
+      ) {
+        botonCarteles
+          .classList
+          .remove('oculto');
+      } else {
+        botonCarteles
+          .classList
+          .add('oculto');
+      }
+
+    }
+  );
+
+
   const btnConversatoriosAdmin =
   document.getElementById(
     'btnConversatoriosAdmin'
