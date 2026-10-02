@@ -4793,6 +4793,18 @@ function abrirDetalleTallerInscripcion(
 
 function cargarPonentesTallerSeleccionado() {
 
+  if (
+    !tallerInscripcionSeleccionadoAdmin ||
+    !tallerInscripcionSeleccionadoAdmin.idTaller
+  ) {
+    return;
+  }
+
+  const idTallerSeleccionado =
+    String(
+      tallerInscripcionSeleccionadoAdmin.idTaller
+    ).trim();
+
   const contenedor =
     document.getElementById(
       'listaPonentesTallerSeleccionado'
@@ -4823,11 +4835,11 @@ function cargarPonentesTallerSeleccionado() {
       const relacionesTaller =
         resultado.filter(
           relacion =>
+            relacion &&
             String(
               relacion.idTaller || ''
             ).trim() ===
-            tallerInscripcionSeleccionadoAdmin
-              .idTaller
+            idTallerSeleccionado
         );
 
       if (!relacionesTaller.length) {
@@ -5061,6 +5073,18 @@ function cargarPonentesDisponiblesInscripcion(
   idPonenteActual
 ) {
 
+  if (
+    !tallerInscripcionSeleccionadoAdmin ||
+    !tallerInscripcionSeleccionadoAdmin.idTaller
+  ) {
+    return;
+  }
+
+  const idTallerSeleccionado =
+    String(
+      tallerInscripcionSeleccionadoAdmin.idTaller
+    ).trim();
+
   const callbackConfig =
     'callbackConfigInscripcionTaller_' +
     Date.now();
@@ -5145,6 +5169,10 @@ function cargarPonentesDisponiblesInscripcion(
       relaciones.forEach(
         relacion => {
 
+          if (!relacion) {
+            return;
+          }
+
           const id =
             String(
               relacion.idPonente || ''
@@ -5201,8 +5229,7 @@ function cargarPonentesDisponiblesInscripcion(
           }
 
           const idTaller =
-            tallerInscripcionSeleccionadoAdmin
-              .idTaller;
+            idTallerSeleccionado;
 
           const disponibles =
             ponentes.filter(
@@ -5225,6 +5252,7 @@ function cargarPonentesDisponiblesInscripcion(
                 const yaEnTaller =
                   relaciones.some(
                     relacion =>
+                      relacion &&
                       String(
                         relacion.idTaller || ''
                       ).trim() === idTaller &&
