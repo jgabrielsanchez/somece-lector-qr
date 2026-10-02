@@ -1403,6 +1403,80 @@
       }
     }
 
+  
+    /* REGISTROS: botones de acción compactos */
+    #seccionTaller > .botonContinuar,
+    #seccionTaller > .secundario,
+    #seccionConversatorio > .botonContinuar,
+    #seccionConversatorio > .secundario,
+    #seccionLector > .secundario {
+      width: auto !important;
+      min-width: 0 !important;
+      min-height: 34px;
+      margin-top: 14px;
+      margin-left: 0;
+      padding: 7px 14px !important;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+  
+    /* Configuración global de Inscripción a Talleres */
+    .configMaxTalleresAdmin {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      max-width: 860px;
+      margin: 14px 0 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+      background: var(--superficie);
+      flex-wrap: wrap;
+    }
+
+    .textoConfigMaxTalleres {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .textoConfigMaxTalleres span {
+      color: var(--texto-secundario);
+      font-size: 12px;
+    }
+
+    .selectorMaxTalleres {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .selectorMaxTalleres button {
+      width: 34px !important;
+      min-width: 34px !important;
+      height: 34px;
+      min-height: 34px;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: 18px;
+    }
+
+    .selectorMaxTalleres input {
+      width: 58px !important;
+      min-width: 58px;
+      height: 34px;
+      padding: 5px 6px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    #mensajeMaxTalleresAdmin {
+      flex-basis: 100%;
+      font-size: 12px;
+    }
+
   </style>
 
 </head>
@@ -2006,6 +2080,46 @@
   <p>
     Administración de Ponentes inscritos en Talleres.
   </p>
+
+  <div
+    id="configMaxTalleresAdmin"
+    class="configMaxTalleresAdmin"
+  >
+    <div class="textoConfigMaxTalleres">
+      <strong>Máximo de Talleres por Ponente</strong>
+      <span>
+        Aplica a todos los Ponentes y Talleres.
+      </span>
+    </div>
+
+    <div class="selectorMaxTalleres">
+      <button
+        type="button"
+        class="opcion secundario"
+        onclick="cambiarMaxTalleresAdmin(-1)"
+      >−</button>
+
+      <input
+        id="maxTalleresAdmin"
+        type="number"
+        min="1"
+        step="1"
+        value="1"
+        onchange="guardarMaxTalleresAdmin()"
+      >
+
+      <button
+        type="button"
+        class="botonContinuar"
+        onclick="cambiarMaxTalleresAdmin(1)"
+      >+</button>
+    </div>
+
+    <div
+      id="mensajeMaxTalleresAdmin"
+      class="oculto"
+    ></div>
+  </div>
 
   <div id="vistaTalleresInscripcionAdmin">
     <div
@@ -4246,6 +4360,7 @@ function guardarTrabajoAdmin() {
 
 let tallerInscripcionSeleccionadoAdmin = null;
 let relacionesInscripcionTalleresAdmin = [];
+let maxTalleresInscripcionAdmin = 1;
 
 function administrarInscripcionTalleres() {
 
@@ -4265,7 +4380,182 @@ function administrarInscripcionTalleres() {
   );
 
   mostrarVistaListaTalleresInscripcion();
+  cargarConfigMaxTalleresAdmin();
   cargarTalleresInscripcionAdmin();
+
+}
+
+
+
+function cargarConfigMaxTalleresAdmin() {
+
+  const campo =
+    document.getElementById(
+      'maxTalleresAdmin'
+    );
+
+  if (!campo) {
+    return;
+  }
+
+  const callback =
+    'callbackMaxTalleresAdmin_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+
+      const valor =
+        Number(
+          resultado &&
+          resultado.maxTalleres
+        );
+
+      maxTalleresInscripcionAdmin =
+        Number.isFinite(valor) &&
+        valor >= 1
+          ? Math.floor(valor)
+          : 1;
+
+      campo.value =
+        maxTalleresInscripcionAdmin;
+
+    };
+
+  const script =
+    document.createElement('script');
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=configInscripcionTalleres' +
+    '&callback=' +
+    encodeURIComponent(callback) +
+    '&_=' +
+    Date.now();
+
+  document.body.appendChild(script);
+
+}
+
+
+function cambiarMaxTalleresAdmin(cambio) {
+
+  const campo =
+    document.getElementById(
+      'maxTalleresAdmin'
+    );
+
+  if (!campo) {
+    return;
+  }
+
+  const actual =
+    Math.max(
+      1,
+      Math.floor(
+        Number(campo.value) || 1
+      )
+    );
+
+  campo.value =
+    Math.max(
+      1,
+      actual + cambio
+    );
+
+  guardarMaxTalleresAdmin();
+
+}
+
+
+function guardarMaxTalleresAdmin() {
+
+  const campo =
+    document.getElementById(
+      'maxTalleresAdmin'
+    );
+
+  const mensaje =
+    document.getElementById(
+      'mensajeMaxTalleresAdmin'
+    );
+
+  const valor =
+    Math.floor(
+      Number(campo.value)
+    );
+
+  if (
+    !Number.isFinite(valor) ||
+    valor < 1
+  ) {
+    campo.value = 1;
+    mensaje.textContent =
+      'El mínimo permitido es 1.';
+    mensaje.className = 'error';
+    return;
+  }
+
+  campo.disabled = true;
+
+  const callback =
+    'callbackGuardarMaxTalleres_' +
+    Date.now();
+
+  window[callback] =
+    function(resultado) {
+
+      delete window[callback];
+      campo.disabled = false;
+
+      if (
+        !resultado ||
+        !resultado.ok
+      ) {
+        mensaje.textContent =
+          resultado &&
+          resultado.mensaje
+            ? resultado.mensaje
+            : 'No fue posible guardar la configuración.';
+        mensaje.className = 'error';
+        cargarConfigMaxTalleresAdmin();
+        return;
+      }
+
+      maxTalleresInscripcionAdmin =
+        Number(
+          resultado.maxTalleres
+        ) || 1;
+
+      campo.value =
+        maxTalleresInscripcionAdmin;
+
+      mensaje.textContent =
+        'Máximo actualizado a ' +
+        maxTalleresInscripcionAdmin +
+        '.';
+      mensaje.className = 'exito';
+
+    };
+
+  const script =
+    document.createElement('script');
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=guardarConfigInscripcionTalleres' +
+    '&token=' +
+    encodeURIComponent(tokenSesion) +
+    '&maxTalleres=' +
+    encodeURIComponent(valor) +
+    '&callback=' +
+    encodeURIComponent(callback) +
+    '&_=' +
+    Date.now();
+
+  document.body.appendChild(script);
 
 }
 
@@ -4771,6 +5061,57 @@ function cargarPonentesDisponiblesInscripcion(
   idPonenteActual
 ) {
 
+  const callbackConfig =
+    'callbackConfigInscripcionTaller_' +
+    Date.now();
+
+  window[callbackConfig] =
+    function(configuracion) {
+
+      delete window[callbackConfig];
+
+      const maxRecibido =
+        Number(
+          configuracion &&
+          configuracion.maxTalleres
+        );
+
+      maxTalleresInscripcionAdmin =
+        Number.isFinite(maxRecibido) &&
+        maxRecibido >= 1
+          ? Math.floor(maxRecibido)
+          : 1;
+
+      ejecutarCargaPonentesDisponibles();
+
+    };
+
+  const scriptConfig =
+    document.createElement('script');
+
+  scriptConfig.src =
+    URL_WEB_APP +
+    '?pagina=configInscripcionTalleres' +
+    '&callback=' +
+    encodeURIComponent(callbackConfig) +
+    '&_=' +
+    Date.now();
+
+  scriptConfig.onerror =
+    function() {
+      delete window[callbackConfig];
+      maxTalleresInscripcionAdmin = 1;
+      ejecutarCargaPonentesDisponibles();
+    };
+
+  document.body.appendChild(
+    scriptConfig
+  );
+
+
+  function ejecutarCargaPonentesDisponibles() {
+
+
   const select =
     document.getElementById(
       'ponenteInscripcionFormulario'
@@ -4898,7 +5239,7 @@ function cargarPonentesDisponiblesInscripcion(
 
                 return (
                   conteo.get(id) || 0
-                ) < 2;
+                ) < maxTalleresInscripcionAdmin;
 
               }
             );
@@ -4974,9 +5315,9 @@ function cargarPonentesDisponiblesInscripcion(
   cargarRelacionesInscripcionTalleres(
     callbackRelaciones
   );
+  }
 
 }
-
 
 function guardarInscripcionTallerAdmin() {
 
