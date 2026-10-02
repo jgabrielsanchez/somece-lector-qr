@@ -1704,6 +1704,13 @@
       }
     }
 
+  
+    .ayudaCampoPonente {
+      margin: 5px 0 12px;
+      color: var(--texto-secundario, #647473);
+      font-size: 13px;
+    }
+
   </style>
 
 </head>
@@ -2097,6 +2104,21 @@
     </option>
 
   </select>
+
+  <label for="pedimentoPonenteFormulario">
+    Pedimento
+  </label>
+
+  <input
+    id="pedimentoPonenteFormulario"
+    type="text"
+    autocomplete="off"
+    placeholder="Opcional"
+  >
+
+  <div class="ayudaCampoPonente">
+    Opcional. Se guarda en la hoja PagoPonencia.
+  </div>
 
   <label for="videoYoutubeFormulario">
     Video YouTube
@@ -10350,6 +10372,13 @@ function verQrPonente(
 
   document
     .getElementById(
+      'pedimentoPonenteFormulario'
+    )
+    .value =
+      ponente.Pedimento || '';
+
+  document
+    .getElementById(
       'videoYoutubeFormulario'
   )
     .value =
@@ -10416,6 +10445,12 @@ function nuevoPonente() {
   document
     .getElementById(
       'tipoPonenteFormulario'
+    )
+    .value = '';
+
+  document
+    .getElementById(
+      'pedimentoPonenteFormulario'
     )
     .value = '';
 
@@ -10494,6 +10529,14 @@ function nuevoPonente() {
     document
       .getElementById(
         'tipoPonenteFormulario'
+      )
+      .value
+      .trim();
+
+  const Pedimento =
+    document
+      .getElementById(
+        'pedimentoPonenteFormulario'
       )
       .value
       .trim();
@@ -10653,6 +10696,11 @@ function nuevoPonente() {
     '&VideoYoutube=' +
     encodeURIComponent(
       VideoYoutube
+    ) +
+
+    '&Pedimento=' +
+    encodeURIComponent(
+      Pedimento
     ) +
 
     '&callback=' +
