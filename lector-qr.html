@@ -324,6 +324,14 @@
       pointer-events: none;
     }
 
+    #menuPrincipal .botonSalir {
+      margin-top: 22px;
+      border-top: 1px solid rgba(255,255,255,.16);
+      border-radius: 0 0 9px 9px;
+      padding-top: 14px;
+      color: #fff;
+    }
+
     /* Secciones: cuando hay sesión dejan espacio al sidebar */
     body.sesion-activa .contenedor > h1,
     body.sesion-activa .contenedor > .subtitulo {
@@ -1869,6 +1877,15 @@
           onclick="abrirAdministracion()"
         >
           Administración
+        </button>
+
+        <button
+          id="btnSalir"
+          class="opcion botonSalir"
+          type="button"
+          onclick="salirLector()"
+        >
+          Salir
         </button>
 
       </div>
@@ -3520,6 +3537,146 @@
 
     
 }
+
+  // =====================================================
+  // CERRAR SESIÓN Y REGRESAR AL LOGIN
+  // =====================================================
+
+  function limpiarSesionLocalYVolverLogin() {
+
+    tokenSesion = '';
+    rolSesion = '';
+
+    sessionStorage.removeItem(
+      'someceTokenSesion'
+    );
+
+    sessionStorage.removeItem(
+      'someceRolSesion'
+    );
+
+    cerrarMenuMovil();
+
+    document.body.classList.remove(
+      'sesion-activa'
+    );
+
+    document
+      .querySelectorAll(
+        '.contenedor > div[id^="seccion"]'
+      )
+      .forEach(
+        function(seccion) {
+          seccion.classList.add(
+            'oculto'
+          );
+        }
+      );
+
+    document
+      .getElementById('menuPrincipal')
+      .classList.add('oculto');
+
+    const login =
+      document.getElementById(
+        'seccionLogin'
+      );
+
+    login.classList.remove(
+      'oculto'
+    );
+
+    const usuario =
+      document.getElementById(
+        'usuarioLogin'
+      );
+
+    const contrasena =
+      document.getElementById(
+        'contrasenaLogin'
+      );
+
+    const mensaje =
+      document.getElementById(
+        'mensajeLogin'
+      );
+
+    contrasena.value = '';
+
+    mensaje.textContent = '';
+    mensaje.className = 'oculto';
+
+    if (usuario) {
+      usuario.focus();
+    }
+
+  }
+
+  function salirLector() {
+
+    const tokenActual =
+      String(
+        tokenSesion || ''
+      ).trim();
+
+    if (!tokenActual) {
+      limpiarSesionLocalYVolverLogin();
+      return;
+    }
+
+    const nombreCallback =
+      'cerrarSesionLector_' +
+      Date.now();
+
+    let finalizado = false;
+
+    function finalizarSalida() {
+
+      if (finalizado) {
+        return;
+      }
+
+      finalizado = true;
+
+      delete window[nombreCallback];
+
+      limpiarSesionLocalYVolverLogin();
+
+    }
+
+    window[nombreCallback] =
+      function() {
+        finalizarSalida();
+      };
+
+    const script =
+      document.createElement(
+        'script'
+      );
+
+    script.src =
+      URL_WEB_APP +
+      '?pagina=cerrarSesionLector' +
+      '&token=' +
+      encodeURIComponent(
+        tokenActual
+      ) +
+      '&callback=' +
+      encodeURIComponent(
+        nombreCallback
+      );
+
+    script.onerror =
+      function() {
+        finalizarSalida();
+      };
+
+    document
+      .body
+      .appendChild(script);
+
+  }
+
 
   // =====================================================
   // ACTUALIZA MENU POR ROL
