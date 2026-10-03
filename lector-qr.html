@@ -2242,13 +2242,33 @@
     type="hidden"
   >
 
-  <label for="talleristaFormulario">
-    Tallerista
+  <label for="tallerista1Formulario">
+    Tallerista 1 *
   </label>
 
-  <select id="talleristaFormulario">
+  <select id="tallerista1Formulario">
     <option value="">
       Seleccione un Tallerista...
+    </option>
+  </select>
+
+  <label for="tallerista2Formulario">
+    Tallerista 2
+  </label>
+
+  <select id="tallerista2Formulario">
+    <option value="">
+      Opcional...
+    </option>
+  </select>
+
+  <label for="tallerista3Formulario">
+    Tallerista 3
+  </label>
+
+  <select id="tallerista3Formulario">
+    <option value="">
+      Opcional...
     </option>
   </select>
 
@@ -5178,10 +5198,10 @@ function cargarTalleresInscripcionAdmin() {
             );
 
           tallerista.textContent =
-            'Tallerista: ' +
+            'Talleristas: ' +
             (
-              taller.NomPonente ||
-              'Sin Tallerista'
+              taller.Talleristas ||
+              'Sin Talleristas'
             );
 
           boton.appendChild(nombre);
@@ -5251,7 +5271,7 @@ function abrirDetalleTallerInscripcion(
       ).trim(),
     Tallerista:
       String(
-        taller.NomPonente || ''
+        taller.Talleristas || ''
       ).trim()
   };
 
@@ -5282,11 +5302,11 @@ function abrirDetalleTallerInscripcion(
       'talleristaInscripcionSeleccionado'
     )
     .textContent =
-      'Tallerista: ' +
+      'Talleristas: ' +
       (
         tallerInscripcionSeleccionadoAdmin
           .Tallerista ||
-        'Sin Tallerista'
+        'Sin Talleristas'
       );
 
   cargarPonentesTallerSeleccionado();
@@ -9095,8 +9115,8 @@ function eliminarConversatorioAdmin(
               taller.NomTaller +
               ' — ' +
               (
-                taller.NomPonente ||
-                ('Tallerista ID ' + taller.idPonente)
+                taller.Talleristas ||
+                'Sin Talleristas'
               ) +
               ' — ' +
               taller.Fecha +
@@ -9178,7 +9198,12 @@ function eliminarConversatorioAdmin(
     mensaje.classList.add('oculto');
 
     mostrarSeccion('seccionFormularioTaller');
-    cargarTalleristasFormulario('');
+
+    cargarTalleristasFormulario({
+      idPonente1: '',
+      idPonente2: '',
+      idPonente3: ''
+    });
   }
 
 
@@ -9212,7 +9237,12 @@ function eliminarConversatorioAdmin(
     mensaje.classList.add('oculto');
 
     mostrarSeccion('seccionFormularioTaller');
-    cargarTalleristasFormulario(taller.idPonente || '');
+
+    cargarTalleristasFormulario({
+      idPonente1: taller.idPonente1 || '',
+      idPonente2: taller.idPonente2 || '',
+      idPonente3: taller.idPonente3 || ''
+    });
   }
 
 
@@ -9220,18 +9250,25 @@ function eliminarConversatorioAdmin(
   // CARGAR TALLERISTAS EN EL FORMULARIO
   // =====================================================
 
-  function cargarTalleristasFormulario(idPonenteSeleccionado) {
+  function cargarTalleristasFormulario(seleccion) {
 
     if (rolSesion !== 'Administrador') {
       return;
     }
 
-    const select =
-      document.getElementById('talleristaFormulario');
+    seleccion = seleccion || {};
 
-    select.innerHTML =
-      '<option value="">Cargando Talleristas...</option>';
-    select.disabled = true;
+    const selects = [
+      document.getElementById('tallerista1Formulario'),
+      document.getElementById('tallerista2Formulario'),
+      document.getElementById('tallerista3Formulario')
+    ];
+
+    selects.forEach(function(select) {
+      select.innerHTML =
+        '<option value="">Cargando Talleristas...</option>';
+      select.disabled = true;
+    });
 
     const nombreCallback =
       'cargarTalleristasFormulario_' + Date.now();
@@ -9240,42 +9277,58 @@ function eliminarConversatorioAdmin(
       function(resultado) {
 
         delete window[nombreCallback];
-        select.disabled = false;
-        select.innerHTML =
-          '<option value="">Seleccione un Tallerista...</option>';
+
+        selects.forEach(function(select, indice) {
+          select.disabled = false;
+          select.innerHTML =
+            '<option value="">' +
+            (indice === 0
+              ? 'Seleccione un Tallerista...'
+              : 'Opcional...') +
+            '</option>';
+        });
 
         if (!Array.isArray(resultado)) {
-          const opcion = document.createElement('option');
-          opcion.value = '';
-          opcion.textContent =
+          const texto =
             resultado && resultado.mensaje
               ? resultado.mensaje
               : 'No fue posible cargar Talleristas.';
-          select.appendChild(opcion);
+
+          selects.forEach(function(select) {
+            const opcion = document.createElement('option');
+            opcion.value = '';
+            opcion.textContent = texto;
+            select.appendChild(opcion);
+          });
           return;
         }
 
-        const talleristas = resultado.filter(
-          function(ponente) {
+        const talleristas = resultado
+          .filter(function(ponente) {
             return String(ponente.TipoPonente || '')
               .trim()
               .toLowerCase() === 'tallerista';
-          }
-        );
+          })
+          .sort(function(a, b) {
+            return String(a.NomPonente || '').localeCompare(
+              String(b.NomPonente || ''),
+              'es',
+              { sensitivity: 'base' }
+            );
+          });
 
-        talleristas.forEach(
-          function(ponente) {
+        selects.forEach(function(select) {
+          talleristas.forEach(function(ponente) {
             const opcion = document.createElement('option');
             opcion.value = String(ponente.idPonente || '');
             opcion.textContent = ponente.NomPonente || '';
             select.appendChild(opcion);
-          }
-        );
+          });
+        });
 
-        if (idPonenteSeleccionado !== undefined &&
-            idPonenteSeleccionado !== null) {
-          select.value = String(idPonenteSeleccionado);
-        }
+        selects[0].value = String(seleccion.idPonente1 || '');
+        selects[1].value = String(seleccion.idPonente2 || '');
+        selects[2].value = String(seleccion.idPonente3 || '');
       };
 
     const script = document.createElement('script');
@@ -9288,9 +9341,12 @@ function eliminarConversatorioAdmin(
 
     script.onerror = function() {
       delete window[nombreCallback];
-      select.disabled = false;
-      select.innerHTML =
-        '<option value="">Error al cargar Talleristas</option>';
+
+      selects.forEach(function(select) {
+        select.disabled = false;
+        select.innerHTML =
+          '<option value="">Error al cargar Talleristas</option>';
+      });
     };
 
     document.body.appendChild(script);
@@ -9309,8 +9365,16 @@ function eliminarConversatorioAdmin(
 
     const idTaller =
       document.getElementById('idTallerFormulario').value.trim();
-    const idPonente =
-      document.getElementById('talleristaFormulario').value.trim();
+
+    const idPonente1 =
+      document.getElementById('tallerista1Formulario').value.trim();
+
+    const idPonente2 =
+      document.getElementById('tallerista2Formulario').value.trim();
+
+    const idPonente3 =
+      document.getElementById('tallerista3Formulario').value.trim();
+
     const NomTaller =
       document.getElementById('nomTallerFormulario').value.trim();
     const Fecha =
@@ -9325,8 +9389,20 @@ function eliminarConversatorioAdmin(
     const boton =
       document.getElementById('btnGuardarTaller');
 
-    if (!idPonente || !NomTaller || !Fecha || !Hora || !Modalidad) {
-      mensaje.textContent = 'Complete todos los campos.';
+    if (!idPonente1 || !NomTaller || !Fecha || !Hora || !Modalidad) {
+      mensaje.textContent =
+        'Complete los campos obligatorios.';
+      mensaje.className = 'error';
+      return;
+    }
+
+    const talleristas =
+      [idPonente1, idPonente2, idPonente3]
+        .filter(Boolean);
+
+    if (new Set(talleristas).size !== talleristas.length) {
+      mensaje.textContent =
+        'Un mismo Tallerista no puede repetirse dentro del Taller.';
       mensaje.className = 'error';
       return;
     }
@@ -9386,7 +9462,9 @@ function eliminarConversatorioAdmin(
     }
 
     url +=
-      '&idPonente=' + encodeURIComponent(idPonente) +
+      '&idPonente1=' + encodeURIComponent(idPonente1) +
+      '&idPonente2=' + encodeURIComponent(idPonente2) +
+      '&idPonente3=' + encodeURIComponent(idPonente3) +
       '&NomTaller=' + encodeURIComponent(NomTaller) +
       '&Fecha=' + encodeURIComponent(Fecha) +
       '&Hora=' + encodeURIComponent(Hora) +
