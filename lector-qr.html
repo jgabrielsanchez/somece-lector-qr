@@ -2701,6 +2701,11 @@
   <label for="nomCartelFormulario">Nombre del Cartel</label>
   <input type="text" id="nomCartelFormulario" autocomplete="off">
 
+  <label for="ponente1CartelFormulario">Ponente 1 *</label>
+  <select id="ponente1CartelFormulario">
+    <option value="">Seleccione un Ponente...</option>
+  </select>
+
   <label for="fechaCartelFormulario">Fecha</label>
   <input type="date" id="fechaCartelFormulario">
 
@@ -6207,11 +6212,9 @@ function cargarCartelesAdmin() {
         );
       }
 
-      if (cartel.NomPonente2) {
-        autoresCartel.push(
-          cartel.NomPonente2
-        );
-      }
+      if (cartel.NomPonente2) autoresCartel.push(cartel.NomPonente2);
+      if (cartel.NomPonente3) autoresCartel.push(cartel.NomPonente3);
+      if (cartel.NomPonente4) autoresCartel.push(cartel.NomPonente4);
 
       const detalle = document.createElement('p');
       detalle.className = 'cartelDetalle';
@@ -6315,15 +6318,47 @@ function cargarCartelesAdmin() {
   }, 15000);
 }
 
+function cargarPonente1FormularioCartel(idActual) {
+  const select = document.getElementById('ponente1CartelFormulario');
+  select.innerHTML = '<option value="">Cargando Ponentes...</option>';
+  const callback = 'callbackPonente1Cartel_' + Date.now();
+
+  window[callback] = function(resultado) {
+    delete window[callback];
+    select.innerHTML = '<option value="">Seleccione un Ponente...</option>';
+    (Array.isArray(resultado) ? resultado : [])
+      .sort(function(a,b) {
+        return String(a.NomPonente || '').localeCompare(
+          String(b.NomPonente || ''), 'es', {sensitivity:'base'}
+        );
+      })
+      .forEach(function(p) {
+        if (!p || !p.idPonente) return;
+        const op = document.createElement('option');
+        op.value = String(p.idPonente);
+        op.textContent = p.NomPonente || ('Ponente ' + p.idPonente);
+        select.appendChild(op);
+      });
+    select.value = String(idActual || '');
+  };
+
+  const script = document.createElement('script');
+  script.src = URL_WEB_APP +
+    '?pagina=buscarPonentesWeb' +
+    '&token=' + encodeURIComponent(tokenSesion) +
+    '&callback=' + encodeURIComponent(callback) +
+    '&_=' + Date.now();
+  document.body.appendChild(script);
+}
+
 function nuevoCartelAdmin() {
   mostrarSeccion('seccionFormularioCartel');
   document.getElementById('tituloFormularioCartel').textContent = 'Nuevo Cartel';
   document.getElementById('idCartelFormulario').value = '';
   document.getElementById('nomCartelFormulario').value = '';
   document.getElementById('fechaCartelFormulario').value = '';
-  const m = document.getElementById('mensajeFormularioCartel');
-  m.textContent = '';
-  m.className = 'info oculto';
+  document.getElementById('mensajeFormularioCartel').className = 'info oculto';
+  cargarPonente1FormularioCartel('');
 }
 
 function editarCartelAdmin(cartel) {
@@ -6332,18 +6367,24 @@ function editarCartelAdmin(cartel) {
   document.getElementById('tituloFormularioCartel').textContent = 'Editar Cartel';
   document.getElementById('idCartelFormulario').value = cartel.idCartel;
   document.getElementById('nomCartelFormulario').value = cartel.NomCartel || '';
-  document.getElementById('fechaCartelFormulario').value =
-    normalizarFechaCartel(cartel.Fecha);
+  document.getElementById('fechaCartelFormulario').value = normalizarFechaCartel(cartel.Fecha);
+  cargarPonente1FormularioCartel(cartel.idPonente1 || '');
 }
 
 function guardarCartelAdmin() {
   const idCartel = String(document.getElementById('idCartelFormulario').value || '').trim();
   const NomCartel = String(document.getElementById('nomCartelFormulario').value || '').trim();
   const Fecha = String(document.getElementById('fechaCartelFormulario').value || '').trim();
+  const idPonente1 = String(document.getElementById('ponente1CartelFormulario').value || '').trim();
   const mensaje = document.getElementById('mensajeFormularioCartel');
 
   if (!NomCartel) {
     mensaje.textContent = 'Ingrese el nombre del Cartel.';
+    mensaje.className = 'error';
+    return;
+  }
+  if (!idPonente1) {
+    mensaje.textContent = 'Seleccione el Ponente 1. Es obligatorio.';
     mensaje.className = 'error';
     return;
   }
@@ -6357,14 +6398,11 @@ function guardarCartelAdmin() {
   window[callback] = function(resultado) {
     delete window[callback];
     boton.disabled = false;
-
     if (!resultado || !resultado.ok) {
-      mensaje.textContent = (resultado && resultado.mensaje) ||
-        'No fue posible guardar el Cartel.';
+      mensaje.textContent = (resultado && resultado.mensaje) || 'No fue posible guardar el Cartel.';
       mensaje.className = 'error';
       return;
     }
-
     mensaje.textContent = resultado.mensaje || 'Cartel guardado correctamente.';
     mensaje.className = 'exito';
     setTimeout(administrarCarteles, 600);
@@ -6376,6 +6414,7 @@ function guardarCartelAdmin() {
     '?pagina=' + pagina +
     '&token=' + encodeURIComponent(tokenSesion) +
     (idCartel ? '&idCartel=' + encodeURIComponent(idCartel) : '') +
+    '&idPonente1=' + encodeURIComponent(idPonente1) +
     '&NomCartel=' + encodeURIComponent(NomCartel) +
     '&Fecha=' + encodeURIComponent(Fecha) +
     '&callback=' + encodeURIComponent(callback) +
@@ -6473,61 +6512,46 @@ function renderPonentesCartelAdmin() {
   contenedor.innerHTML = '';
 
   const ponentes = [];
-  if (cartelSeleccionadoAdmin.idPonente1) {
-    ponentes.push({
-      slot: 1,
-      idPonente: cartelSeleccionadoAdmin.idPonente1,
-      NomPonente: cartelSeleccionadoAdmin.NomPonente1 || ''
+  [1,2,3,4].forEach(function(slot) {
+    const id = cartelSeleccionadoAdmin['idPonente' + slot];
+    if (id) ponentes.push({
+      slot:slot,
+      idPonente:id,
+      NomPonente:cartelSeleccionadoAdmin['NomPonente' + slot] || ''
     });
-  }
-  if (cartelSeleccionadoAdmin.idPonente2) {
-    ponentes.push({
-      slot: 2,
-      idPonente: cartelSeleccionadoAdmin.idPonente2,
-      NomPonente: cartelSeleccionadoAdmin.NomPonente2 || ''
-    });
-  }
+  });
 
-  botonAgregar.classList.toggle('oculto', ponentes.length >= 2);
-
-  if (!ponentes.length) {
-    contenedor.innerHTML =
-      '<div class="info">Este Cartel todavía no tiene Ponentes asignados.</div>';
-    return;
-  }
+  botonAgregar.classList.toggle('oculto', ponentes.length >= 4);
 
   ponentes.forEach(function(ponente) {
     const tarjeta = document.createElement('div');
     tarjeta.className = 'itemCartelAdmin tarjetaPonenteCartel';
-
     const datos = document.createElement('div');
     datos.className = 'cartelDatosCompactos';
-
     const nombre = document.createElement('p');
     nombre.className = 'cartelNombre';
     nombre.textContent = ponente.NomPonente || ('Ponente ' + ponente.idPonente);
-
     const detalle = document.createElement('p');
     detalle.className = 'cartelDetalle';
     detalle.textContent = 'Ponente asignado al Cartel';
-
     datos.appendChild(nombre);
     datos.appendChild(detalle);
 
     const acciones = document.createElement('div');
     acciones.className = 'cartelAcciones';
-
     const editar = document.createElement('button');
     editar.type = 'button';
     editar.className = 'opcion botonEditarPonente';
     editar.textContent = 'Editar';
-    editar.onclick = function() { editarPonenteCartelAdmin(ponente.slot); };
+    editar.onclick = function(){ editarPonenteCartelAdmin(ponente.slot); };
 
     const eliminar = document.createElement('button');
     eliminar.type = 'button';
     eliminar.className = 'opcion botonEliminarPonente';
     eliminar.textContent = 'Eliminar';
-    eliminar.onclick = function() { eliminarPonenteCartelAdmin(ponente.slot); };
+    eliminar.disabled = ponentes.length <= 1;
+    eliminar.title = ponentes.length <= 1 ? 'El Cartel debe conservar al menos un Ponente.' : '';
+    eliminar.onclick = function(){ eliminarPonenteCartelAdmin(ponente.slot); };
 
     acciones.appendChild(editar);
     acciones.appendChild(eliminar);
@@ -6539,74 +6563,56 @@ function renderPonentesCartelAdmin() {
 
 function nuevoPonenteCartelAdmin() {
   if (!cartelSeleccionadoAdmin) return;
-  const cantidad = [
-    cartelSeleccionadoAdmin.idPonente1,
-    cartelSeleccionadoAdmin.idPonente2
-  ].filter(Boolean).length;
-
-  if (cantidad >= 2) {
-    window.alert('El Cartel ya tiene el máximo de 2 Ponentes.');
+  const ids = [1,2,3,4].map(n => cartelSeleccionadoAdmin['idPonente' + n]);
+  if (ids.filter(Boolean).length >= 4) {
+    window.alert('El Cartel ya tiene el máximo de 4 Ponentes.');
     return;
   }
-
-  slotPonenteCartelAdmin = cartelSeleccionadoAdmin.idPonente1 ? 2 : 1;
+  slotPonenteCartelAdmin = ids.findIndex(id => !id) + 1;
   mostrarSeccion('seccionFormularioPonenteCartel');
   document.getElementById('tituloFormularioPonenteCartel').textContent = 'Agregar Ponente';
-
-  const mensaje =
-    document.getElementById(
-      'mensajeFormularioPonenteCartel'
-    );
-
-  mensaje.textContent = '';
-  mensaje.className = 'info oculto';
-
+  document.getElementById('mensajeFormularioPonenteCartel').className = 'info oculto';
   cargarPonentesDisponiblesCartel('');
 }
 
 function editarPonenteCartelAdmin(slot) {
-  if (!cartelSeleccionadoAdmin || (slot !== 1 && slot !== 2)) return;
+  if (!cartelSeleccionadoAdmin || ![1,2,3,4].includes(slot)) return;
   slotPonenteCartelAdmin = slot;
   mostrarSeccion('seccionFormularioPonenteCartel');
   document.getElementById('tituloFormularioPonenteCartel').textContent = 'Editar Ponente';
-
-  const mensaje =
-    document.getElementById(
-      'mensajeFormularioPonenteCartel'
-    );
-
-  mensaje.textContent = '';
-  mensaje.className = 'info oculto';
-
-  const actual = slot === 1
-    ? cartelSeleccionadoAdmin.idPonente1
-    : cartelSeleccionadoAdmin.idPonente2;
-  cargarPonentesDisponiblesCartel(actual);
+  document.getElementById('mensajeFormularioPonenteCartel').className = 'info oculto';
+  cargarPonentesDisponiblesCartel(cartelSeleccionadoAdmin['idPonente' + slot] || '');
 }
 
 function cargarPonentesDisponiblesCartel(idActual) {
   const select = document.getElementById('ponenteCartelFormulario');
   select.innerHTML = '<option value="">Cargando Ponentes...</option>';
 
-  const otro = slotPonenteCartelAdmin === 1
-    ? String(cartelSeleccionadoAdmin.idPonente2 || '')
-    : String(cartelSeleccionadoAdmin.idPonente1 || '');
+  const ocupados = [1,2,3,4]
+    .filter(n => n !== slotPonenteCartelAdmin)
+    .map(n => String(cartelSeleccionadoAdmin['idPonente' + n] || ''))
+    .filter(Boolean);
 
   const callback = 'callbackPonentesCartel_' + Date.now();
   window[callback] = function(resultado) {
     delete window[callback];
     select.innerHTML = '<option value="">Seleccione un Ponente...</option>';
 
-    (Array.isArray(resultado) ? resultado : []).forEach(function(p) {
-      if (!p || !p.idPonente) return;
-      const id = String(p.idPonente);
-      if (id === otro) return;
-
-      const op = document.createElement('option');
-      op.value = id;
-      op.textContent = p.NomPonente || ('Ponente ' + id);
-      select.appendChild(op);
-    });
+    (Array.isArray(resultado) ? resultado : [])
+      .sort(function(a,b) {
+        return String(a.NomPonente || '').localeCompare(
+          String(b.NomPonente || ''), 'es', {sensitivity:'base'}
+        );
+      })
+      .forEach(function(p) {
+        if (!p || !p.idPonente) return;
+        const id = String(p.idPonente);
+        if (ocupados.includes(id)) return;
+        const op = document.createElement('option');
+        op.value = id;
+        op.textContent = p.NomPonente || ('Ponente ' + id);
+        select.appendChild(op);
+      });
 
     select.value = String(idActual || '');
   };
@@ -6734,11 +6740,18 @@ function guardarPonenteCartelAdmin() {
 }
 
 function eliminarPonenteCartelAdmin(slot) {
-  if (!cartelSeleccionadoAdmin || (slot !== 1 && slot !== 2)) return;
+  if (!cartelSeleccionadoAdmin || ![1,2,3,4].includes(slot)) return;
 
-  const nombre = slot === 1
-    ? cartelSeleccionadoAdmin.NomPonente1
-    : cartelSeleccionadoAdmin.NomPonente2;
+  const cantidad = [1,2,3,4]
+    .map(n => cartelSeleccionadoAdmin['idPonente' + n])
+    .filter(Boolean).length;
+
+  if (cantidad <= 1) {
+    window.alert('El Cartel debe conservar al menos un Ponente.');
+    return;
+  }
+
+  const nombre = cartelSeleccionadoAdmin['NomPonente' + slot];
 
   if (!window.confirm(
     '¿Eliminar a ' + (nombre || 'este Ponente') +
@@ -6748,16 +6761,11 @@ function eliminarPonenteCartelAdmin(slot) {
   const callback = 'callbackEliminarPonenteCartel_' + Date.now();
   window[callback] = function(resultado) {
     delete window[callback];
-
     if (!resultado || !resultado.ok) {
-      window.alert((resultado && resultado.mensaje) ||
-        'No fue posible eliminar la asignación.');
+      window.alert((resultado && resultado.mensaje) || 'No fue posible eliminar la asignación.');
       return;
     }
-
-    recargarDetalleCartelAdmin(
-      cartelSeleccionadoAdmin.idCartel
-    );
+    recargarDetalleCartelAdmin(cartelSeleccionadoAdmin.idCartel);
   };
 
   const script = document.createElement('script');
@@ -6814,7 +6822,7 @@ function verQrCartel(cartel) {
 function eliminarCartelAdmin(cartel) {
   if (!cartel || !cartel.idCartel) return;
 
-  const cantidad = [cartel.idPonente1, cartel.idPonente2].filter(Boolean).length;
+  const cantidad = [cartel.idPonente1, cartel.idPonente2, cartel.idPonente3, cartel.idPonente4].filter(Boolean).length;
   if (cantidad > 0) {
     window.alert(
       'No se puede eliminar el Cartel porque tiene ' +
