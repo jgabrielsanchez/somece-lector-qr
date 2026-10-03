@@ -6549,8 +6549,6 @@ function renderPonentesCartelAdmin() {
     eliminar.type = 'button';
     eliminar.className = 'opcion botonEliminarPonente';
     eliminar.textContent = 'Eliminar';
-    eliminar.disabled = ponentes.length <= 1;
-    eliminar.title = ponentes.length <= 1 ? 'El Cartel debe conservar al menos un Ponente.' : '';
     eliminar.onclick = function(){ eliminarPonenteCartelAdmin(ponente.slot); };
 
     acciones.appendChild(editar);
@@ -6741,15 +6739,6 @@ function guardarPonenteCartelAdmin() {
 
 function eliminarPonenteCartelAdmin(slot) {
   if (!cartelSeleccionadoAdmin || ![1,2,3,4].includes(slot)) return;
-
-  const cantidad = [1,2,3,4]
-    .map(n => cartelSeleccionadoAdmin['idPonente' + n])
-    .filter(Boolean).length;
-
-  if (cantidad <= 1) {
-    window.alert('El Cartel debe conservar al menos un Ponente.');
-    return;
-  }
 
   const nombre = cartelSeleccionadoAdmin['NomPonente' + slot];
 
