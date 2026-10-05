@@ -297,28 +297,18 @@
     #menuPrincipal #btnPonentesGestion,
     #menuPrincipal #btnConsultar,
     #menuPrincipal #btnConfiguracion,
-    #menuPrincipal #btnAdministracion {
-      margin-top: 34px;
-      position: relative;
-    }
-
+    #menuPrincipal #btnAdministracion { margin-top:34px; position:relative; }
     #menuPrincipal #btnPonentesGestion::before,
     #menuPrincipal #btnConsultar::before,
     #menuPrincipal #btnConfiguracion::before,
     #menuPrincipal #btnAdministracion::before {
-      position: absolute;
-      margin-top: -29px;
-      color: #9fc0bb;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .13em;
-      pointer-events: none;
+      position:absolute; margin-top:-29px; color:#9fc0bb;
+      font-size:11px; font-weight:700; letter-spacing:.13em; pointer-events:none;
     }
-
-    #menuPrincipal #btnPonentesGestion::before { content: 'GESTIÓN'; }
-    #menuPrincipal #btnConsultar::before { content: 'CONSULTAR'; }
-    #menuPrincipal #btnConfiguracion::before { content: 'CONFIGURACIÓN'; }
-    #menuPrincipal #btnAdministracion::before { content: 'ADMINISTRACIÓN'; }
+    #menuPrincipal #btnPonentesGestion::before { content:'GESTIÓN'; }
+    #menuPrincipal #btnConsultar::before { content:'CONSULTAR'; }
+    #menuPrincipal #btnConfiguracion::before { content:'CONFIGURACIÓN'; }
+    #menuPrincipal #btnAdministracion::before { content:'ADMINISTRACIÓN'; }
 
     #menuPrincipal .botonSalir {
       margin-top: 22px;
@@ -1730,6 +1720,292 @@
 
 <body>
 
+  <button id="btnMenuMovil" type="button" aria-label="Abrir navegación" onclick="alternarMenuMovil()">☰</button>
+
+  <div class="contenedor">
+
+    <h1>SOMECE 2026</h1>
+
+    <div class="subtitulo">
+      Lector QR
+    </div>
+
+<!-- =====================================================
+  INICIO DE SESIÓN
+    ===================================================== -->
+
+    <div id="seccionLogin">
+
+      <h2>
+        Inicio de sesión
+      </h2>
+
+      <p>
+        Ingrese sus credenciales para utilizar el lector QR.
+      </p>
+
+      <label for="usuarioLogin">
+        Usuario:
+      </label>
+
+      <input
+        type="text"
+        id="usuarioLogin"
+        autocomplete="username"
+      >
+
+      <label for="contrasenaLogin">
+        Contraseña:
+      </label>
+
+      <input
+        type="password"
+        id="contrasenaLogin"
+        autocomplete="current-password"
+      >
+
+      <button
+        id="btnIniciarSesion"
+        class="botonContinuar"
+        type="button"
+        onclick="iniciarSesionLector()"
+      >
+        Iniciar sesión
+      </button>
+
+      <div
+        id="mensajeLogin"
+        class="oculto"
+      ></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MENÚ PRINCIPAL
+         ===================================================== -->
+
+    <div
+      id="menuPrincipal"
+      class="oculto"
+    >
+
+      <p>
+        Seleccione el tipo de registro:
+      </p>
+
+      <div class="menu">
+        <button class="opcion" onclick="seleccionarCongreso()">Registro Congreso</button>
+        <button class="opcion" onclick="seleccionarTaller()">Registro Taller</button>
+        <button class="opcion" onclick="seleccionarConversatorio()">Registro Conversatorio</button>
+        
+        <button id="btnTalleresAdmin" class="opcion oculto" onclick="administrarTalleres()">Talleres</button>
+        <button id="btnInscripcionTalleresAdmin" class="opcion oculto" onclick="administrarInscripcionTalleres()">Inscripción Talleres</button>
+        <button id="btnTrabajosAdmin" class="opcion oculto" onclick="administrarTrabajos()">Trabajos</button>
+        <button id="btnCartelesAdmin" class="opcion oculto" onclick="administrarCarteles()">Carteles</button>
+        <button id="btnConversatoriosAdmin" class="opcion oculto" onclick="administrarConversatorios()">Conversatorios</button>
+        <button id="btnConversatorioTrabajosAdmin" class="opcion oculto" onclick="administrarConversatorioTrabajos()">Conversatorio-Trabajos</button>
+        <button id="btnConsultar" class="opcion oculto" onclick="abrirConsultar()">Consultar</button>
+        <button id="btnConfiguracion" class="opcion oculto" onclick="abrirConfiguracion()">Configuración</button>
+        <button id="btnAdministracion" class="opcion oculto" onclick="abrirAdministracion()">Administración</button>
+        <button id="btnSalir" class="opcion botonSalir" type="button" onclick="salirLector()">Salir</button>
+      </div>
+
+    </div>
+
+    <div id="seccionConsultar" class="oculto">
+      <h2>Consultar</h2>
+      <p>Consultas consolidadas del Congreso.</p>
+      <div class="accionesConsulta">
+        <button class="opcion" type="button" onclick="cargarConsultaSomece('inscripcionTalleres')">Inscripción Talleres</button>
+        <button class="opcion" type="button" onclick="cargarConsultaSomece('registroTalleres')">Registro de Talleres</button>
+        <button class="opcion" type="button" onclick="cargarConsultaSomece('conversatorioTrabajo')">Conversatorio-Trabajo</button>
+        <button class="opcion" type="button" onclick="cargarConsultaSomece('registroConversatorios')">Registro de Conversatorios</button>
+      </div>
+      <div id="resultadoConsultaSomece" class="resultadoConsultaSomece"></div>
+    </div>
+
+    <div id="seccionConfiguracion" class="oculto">
+      <h2>Configuración</h2>
+      <p>Parámetros generales y herramientas del Congreso.</p>
+  <div
+    id="configMaxTalleresAdmin"
+    class="configMaxTalleresAdmin"
+  >
+    <div class="textoConfigMaxTalleres">
+      <strong>Máximo de Talleres por Ponente</strong>
+      <span>
+        Aplica a todos los Ponentes y Talleres.
+      </span>
+    </div>
+
+    <div class="selectorMaxTalleres">
+      <button
+        type="button"
+        class="opcion secundario"
+        onclick="cambiarMaxTalleresAdmin(-1)"
+      >−</button>
+
+      <input
+        id="maxTalleresAdmin"
+        type="number"
+        min="1"
+        step="1"
+        value="1"
+        onchange="guardarMaxTalleresAdmin()"
+      >
+
+      <button
+        type="button"
+        class="botonContinuar"
+        onclick="cambiarMaxTalleresAdmin(1)"
+      >+</button>
+    </div>
+
+    <div
+      id="mensajeMaxTalleresAdmin"
+      class="oculto"
+    ></div>
+
+    <div class="configFechaLimiteTalleres">
+      <div class="textoConfigMaxTalleres">
+        <strong>Cupo máximo de participantes por Taller</strong>
+        <span>Configuración global para todos los Talleres. Máximo 50.</span>
+      </div>
+      <div class="selectorMaxTalleres">
+        <button type="button" class="opcion secundario" onclick="cambiarCupoTalleresAdmin(-1)">−</button>
+        <input id="cupoTalleresAdmin" type="number" min="0" max="50" step="1" value="0" onchange="guardarCupoTalleresAdmin()">
+        <button type="button" class="botonContinuar" onclick="cambiarCupoTalleresAdmin(1)">+</button>
+      </div>
+      <div id="mensajeCupoTalleresAdmin" class="oculto"></div>
+    </div>
+
+    <div class="configFechaLimiteTalleres">
+      <div class="textoConfigMaxTalleres">
+        <strong>Fecha límite de inscripción externa</strong>
+        <span>
+          Inclusiva. Vacía = sin fecha límite. Sólo aplica a la liga externa.
+        </span>
+      </div>
+
+      <div class="filaFechaLimiteTalleres">
+        <input
+          id="fechaLimiteInscripcionTalleresAdmin"
+          type="date"
+        >
+
+        <button
+          type="button"
+          class="botonContinuar"
+          onclick="guardarFechaLimiteInscripcionTalleresAdmin()"
+        >
+          Guardar fecha
+        </button>
+
+        <button
+          type="button"
+          class="opcion secundario"
+          onclick="quitarFechaLimiteInscripcionTalleresAdmin()"
+        >
+          Sin límite
+        </button>
+      </div>
+
+      <div
+        id="mensajeFechaLimiteInscripcionTalleresAdmin"
+        class="oculto"
+      ></div>
+    </div>
+  </div>
+
+      <div class="configHerramientasQr">
+        <div class="textoConfigMaxTalleres">
+          <strong>Herramientas de qrPonentes</strong>
+          <span>Generación y actualización general de códigos QR.</span>
+        </div>
+        <div class="accionesConfiguracionQr">
+          <button class="opcion botonQrPonente" type="button" onclick="generarQrPonentesVaciosAdmin(this)">qrPonentes Vacíos</button>
+          <button class="opcion botonActualizarQrPonente" type="button" onclick="actualizarTodosQrPonentesAdmin(this)">Actualizar qrPonentes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+     SECCIÓN ADMINISTRACIÓN
+     ===================================================== -->
+
+    <div
+      id="seccionAdministracion"
+      class="oculto"
+    >
+
+      <h2>
+        Administración
+      </h2>
+
+      <p>
+        Seleccione el catálogo que desea administrar:
+      </p>
+
+      <div class="accionesAdministracion">
+
+        <button
+          class="botonContinuar"
+          type="button"
+          onclick="administrarUsuarios()"
+        >
+          Usuarios
+        </button>
+
+        <button
+          class="botonContinuar"
+          type="button"
+          onclick="administrarPonentes()"
+        >
+          Ponentes
+        </button>
+
+        <button
+          class="opcion secundario"
+          type="button"
+          onclick="volverMenu()"
+        >
+          Regresar al menú
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- =====================================================
+     ADMINISTRACIÓN DE USUARIOS
+     ===================================================== -->
+
+<div
+  id="seccionUsuarios"
+  class="oculto"
+>
+
+  <h2>
+    Usuarios
+  </h2>
+
+  <p>
+    Administración de usuarios del sistema.
+  </p>
+
+  <div id="listaUsuarios"></div>
+
+  <div class="accionesUsuariosAdmin">
+
+    <button
+      class="botonContinuar"
+      type="button"
+      onclick="nuevoUsuario()"
+    >
+      Nuevo Usuario
+    </button>
+
     <button
       class="opcion secundario"
       type="button"
@@ -1739,6 +2015,56 @@
     </button>
 
   </div>
+
+</div>
+
+  <!-- =====================================================
+     ADMINISTRACIÓN DE PONENTES
+     ===================================================== -->
+
+<div
+  id="seccionPonentes"
+  class="oculto"
+>
+
+  <h2>
+    Ponentes
+  </h2>
+
+  <p>
+    Administración de Ponentes del Congreso.
+  </p>
+
+  <div id="listaPonentes"></div>
+
+  <div class="accionesPonentesAdmin">
+
+    <button
+      class="botonContinuar"
+      type="button"
+      onclick="nuevoPonente()"
+    >
+      Nuevo Ponente
+    </button>
+
+    
+
+    
+
+    <button
+      class="opcion secundario"
+      type="button"
+      onclick="volverMenu()"
+    >
+      Regresar al menú
+    </button>
+
+  </div>
+
+  <div
+    id="mensajeQrPonentesAdmin"
+    class="mensajeQrPonentesAdmin"
+  ></div>
 
 </div>
 
@@ -3307,19 +3633,9 @@
   // =====================================================
 
   function actualizarMenuPorRol() {
-
-  [
-    'btnPonentesGestion',
-    'btnConsultar',
-    'btnConfiguracion'
-  ].forEach(function(idBoton) {
-    const boton = document.getElementById(idBoton);
-    if (boton) {
-      boton.classList.toggle(
-        'oculto',
-        rolSesion !== 'Administrador'
-      );
-    }
+  ['btnPonentesGestion','btnConsultar','btnConfiguracion'].forEach(function(idBoton) {
+    const boton=document.getElementById(idBoton);
+    if (boton) boton.classList.toggle('oculto',rolSesion!=='Administrador');
   });
 
 
@@ -4596,7 +4912,6 @@ function guardarTrabajoAdmin() {
 }
 
 
-
 // =====================================================
 // CONSULTAR Y CONFIGURACIÓN
 // =====================================================
@@ -4810,16 +5125,12 @@ function cargarConfigMaxTalleresAdmin() {
       campo.value =
         maxTalleresInscripcionAdmin;
 
-      const campoCupo =
-        document.getElementById('cupoTalleresAdmin');
-
+      const campoCupo=document.getElementById('cupoTalleresAdmin');
       if (campoCupo) {
-        campoCupo.value =
-          Number(resultado && resultado.cupoTalleres) || 0;
-        campoCupo.dataset.minimo =
-          String(Number(resultado && resultado.cupoMinimo) || 0);
-        campoCupo.min = campoCupo.dataset.minimo;
-        campoCupo.max = '50';
+        campoCupo.value=Number(resultado && resultado.cupoTalleres)||0;
+        campoCupo.dataset.minimo=String(Number(resultado && resultado.cupoMinimo)||0);
+        campoCupo.min=campoCupo.dataset.minimo;
+        campoCupo.max='50';
       }
 
       const campoFecha =
@@ -5189,13 +5500,9 @@ function cargarTalleresInscripcionAdmin() {
 
           boton.appendChild(nombre);
           boton.appendChild(tallerista);
-
-          const cupo = document.createElement('span');
-          cupo.className = 'cupoTallerInfo';
-          cupo.textContent =
-            'Cupo: ' + Number(taller.cupoTaller || 0) +
-            ' · Inscritos: ' + Number(taller.inscritos || 0) +
-            ' · Disponibles: ' + Number(taller.disponibles || 0);
+          const cupo=document.createElement('span');
+          cupo.className='cupoTallerInfo';
+          cupo.textContent='Cupo: '+Number(taller.cupoTaller||0)+' · Inscritos: '+Number(taller.inscritos||0)+' · Disponibles: '+Number(taller.disponibles||0);
           boton.appendChild(cupo);
 
           boton.onclick =
