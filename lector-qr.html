@@ -11654,10 +11654,8 @@ function guardarUsuarioAdmin() {
 
     function mostrarSeccion(id) {
 
-      // La navegación lateral permanece visible en los módulos
-      // de Gestión (opciones 4 a 7) y en Administración.
-      // En los flujos de Registro se conserva el comportamiento
-      // original de ocultarla para trabajar con el lector QR.
+      // La navegación lateral permanece visible en Gestión,
+      // Consultar, Configuración y Administración.
       const seccionesConNavegacion = new Set([
         'seccionTalleresAdmin',
         'seccionFormularioTaller',
@@ -11687,147 +11685,52 @@ function guardarUsuarioAdmin() {
       const menuPrincipal =
         document.getElementById('menuPrincipal');
 
-      if (
-        id === 'menuPrincipal' ||
-        seccionesConNavegacion.has(id)
-      ) {
-        menuPrincipal.classList.remove('oculto');
-      } else {
-        menuPrincipal.classList.add('oculto');
+      if (menuPrincipal) {
+        if (
+          id === 'menuPrincipal' ||
+          seccionesConNavegacion.has(id)
+        ) {
+          menuPrincipal.classList.remove('oculto');
+        } else {
+          menuPrincipal.classList.add('oculto');
+        }
       }
 
-      document
-        .getElementById('seccionTaller')
-        .classList.add('oculto');
+      [
+        'seccionTaller',
+        'seccionLector',
+        'seccionAdministracion',
+        'seccionConsultar',
+        'seccionConfiguracion',
+        'seccionUsuarios',
+        'seccionTalleresAdmin',
+        'seccionInscripcionTalleresAdmin',
+        'seccionFormularioInscripcionTaller',
+        'seccionTrabajosAdmin',
+        'seccionFormularioTrabajo',
+        'seccionCartelesAdmin',
+        'seccionFormularioCartel',
+        'seccionDetalleCartelAdmin',
+        'seccionFormularioPonenteCartel',
+        'seccionQrCartel',
+        'seccionFormularioTaller',
+        'seccionConversatoriosAdmin',
+        'seccionFormularioConversatorio',
+        'seccionConversatorioTrabajosAdmin',
+        'seccionFormularioConversatorioTrabajo',
+        'seccionPonentes',
+        'seccionFormularioUsuario',
+        'seccionFormularioPonente',
+        'seccionQrPonente'
+      ].forEach(function(idSeccion) {
+        const seccion =
+          document.getElementById(idSeccion);
 
-      document
-        .getElementById('seccionLector')
-        .classList.add('oculto');
+        if (seccion) {
+          seccion.classList.add('oculto');
+        }
+      });
 
-      document
-        .getElementById('seccionAdministracion')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionConsultar')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionConfiguracion')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionUsuarios')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionTalleresAdmin')
-        .classList.add('oculto');
-
-      document
-        .getElementById(
-          'seccionInscripcionTalleresAdmin'
-        )
-        .classList.add('oculto');
-
-      document
-        .getElementById(
-          'seccionFormularioInscripcionTaller'
-        )
-        .classList.add('oculto');
-
-      document
-      .getElementById(
-        'seccionTrabajosAdmin'
-      )
-      .classList.add(
-        'oculto'
-      );
-
-      document
-      .getElementById(
-        'seccionFormularioTrabajo'
-      )
-      .classList.add(
-        'oculto'
-      );
-
-      document
-        .getElementById('seccionCartelesAdmin')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionFormularioCartel')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionDetalleCartelAdmin')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionFormularioPonenteCartel')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionQrCartel')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionFormularioTaller')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionConversatoriosAdmin')
-        .classList.add('oculto');
-
-      document
-        .getElementById('seccionFormularioConversatorio')
-        .classList.add('oculto');
-
-      document
-      .getElementById(
-        'seccionConversatorioTrabajosAdmin'
-      )
-      .classList.add('oculto');
-
-      document
-        .getElementById(
-          'seccionFormularioConversatorioTrabajo'
-        )
-        .classList.add('oculto');
-
-      document
-        .getElementById(
-        'seccionPonentes'
-        )
-        .classList.add(
-          'oculto'
-      );
-
-      document
-        .getElementById(
-          'seccionFormularioUsuario'
-      )
-      .classList.add(
-        'oculto'
-      );
-
-      document
-        .getElementById(
-        'seccionFormularioPonente'
-      )
-      .classList.add(
-        'oculto'
-      );
-
-      document
-        .getElementById(
-          'seccionQrPonente'
-      )
-      .classList.add(
-        'oculto'
-      );
-      
       if (
         id === 'seccionInscripcionTalleresAdmin' ||
         id === 'seccionFormularioInscripcionTaller'
@@ -11865,9 +11768,12 @@ function guardarUsuarioAdmin() {
         marcarModuloVisual('');
       }
 
-      document
-        .getElementById(id)
-        .classList.remove('oculto');
+      const destino =
+        document.getElementById(id);
+
+      if (destino) {
+        destino.classList.remove('oculto');
+      }
 
     }
 
