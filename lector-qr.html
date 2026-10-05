@@ -11065,7 +11065,7 @@ function generarQrPonentesVaciosAdmin(
 
   if (
     !confirm(
-      'Se generará qrPonente únicamente para los Ponentes que tengan ese campo vacío. ¿Continuar?'
+      'Se generará qrPonente únicamente para los Ponentes que tengan ese campo vacío, incluyendo Talleres, Profesor Taller, Trabajos, Carteles, Conversatorios y registros relacionados. ¿Continuar?'
     )
   ) {
     return;
@@ -11087,7 +11087,7 @@ function actualizarTodosQrPonentesAdmin(
 
   if (
     !confirm(
-      'Se regenerará qrPonente de todos los Ponentes con la información actual de Talleres, Trabajos, Conversatorios y demás registros relacionados. ¿Continuar?'
+      'Se regenerará qrPonente de todos los Ponentes con la información actual de Talleres, Profesor Taller, Trabajos, Carteles, Conversatorios y demás registros relacionados. ¿Continuar?'
     )
   ) {
     return;
@@ -11122,7 +11122,7 @@ function actualizarQrPonenteIndividualAdmin(
         ponente.NomPonente ||
         ponente.idPonente
       ) +
-      '" con todos sus registros relacionados. ¿Continuar?'
+      '" con Talleres, Profesor Taller, Trabajos, Carteles, Conversatorios y demás registros relacionados. ¿Continuar?'
     )
   ) {
     return;
