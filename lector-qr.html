@@ -1792,6 +1792,227 @@
       }
     }
 
+  
+    /* =====================================================
+       CONSULTAS · REPORTE ACADÉMICO
+       ===================================================== */
+    #seccionConsultar {
+      max-width: 1180px;
+    }
+
+    .consultaIntroduccion {
+      color: #647473;
+      margin-bottom: 12px;
+    }
+
+    #seccionConsultar .accionesConsultaAcademica {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 10px 0 18px;
+    }
+
+    #seccionConsultar .consultaTab {
+      width: auto;
+      min-width: 0;
+      border: 1px solid #DCE5E2;
+      border-radius: 7px;
+      background: #FFFFFF;
+      color: #397A73;
+      padding: 7px 11px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+
+    #seccionConsultar .consultaTab:hover {
+      background: #DCEDE9;
+      border-color: #397A73;
+    }
+
+    #seccionConsultar .consultaTab.activo {
+      background: #397A73;
+      border-color: #397A73;
+      color: #FFFFFF;
+    }
+
+    .consultaEncabezadoReporte {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 4px 0 10px;
+    }
+
+    .consultaEncabezadoReporte h3 {
+      margin: 0;
+      color: #243434;
+      font-size: 18px;
+    }
+
+    .consultaResumen {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .consultaDato {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 8px;
+      border: 1px solid #DCE5E2;
+      border-radius: 999px;
+      background: #FFFFFF;
+      color: #647473;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .consultaDato strong {
+      color: #243434;
+    }
+
+    .consultaTablaContenedor {
+      overflow-x: auto;
+      border: 1px solid #DCE5E2;
+      border-radius: 9px;
+      background: #FFFFFF;
+    }
+
+    .consultaTabla {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      color: #243434;
+      font-size: 13px;
+    }
+
+    .consultaTabla thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 10px 12px;
+      background: #183D3D;
+      color: #FFFFFF;
+      text-align: left;
+      font-size: 12px;
+      letter-spacing: .02em;
+      border-right: 1px solid rgba(255,255,255,.12);
+    }
+
+    .consultaTabla tbody td {
+      padding: 9px 12px;
+      vertical-align: top;
+      border-bottom: 1px solid #DCE5E2;
+    }
+
+    .consultaTabla tbody tr:nth-child(even) td {
+      background: #F4F7F6;
+    }
+
+    .consultaTabla tbody tr:hover td {
+      background: #DCEDE9;
+    }
+
+    .consultaTabla .celdaGrupo {
+      font-weight: 700;
+      color: #183D3D;
+    }
+
+    .consultaTabla .celdaSecundaria {
+      color: #647473;
+    }
+
+    .consultaBloqueConversatorio {
+      margin: 0 0 18px;
+      border: 1px solid #DCE5E2;
+      border-radius: 9px;
+      overflow: hidden;
+      background: #FFFFFF;
+    }
+
+    .consultaBloqueTitulo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 13px;
+      background: #E5EFF2;
+      color: #3F626B;
+    }
+
+    .consultaBloqueTitulo strong {
+      color: #243434;
+      font-size: 14px;
+    }
+
+    .consultaBloqueMeta {
+      font-size: 12px;
+      color: #647473;
+      text-align: right;
+    }
+
+    .estadoAsistencia {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .estadoAsistencia.si {
+      background: #E3F1E8;
+      color: #356448;
+    }
+
+    .estadoAsistencia.no {
+      background: #F5E7E5;
+      color: #8A4D49;
+    }
+
+    .otrosAsistentesConsulta {
+      padding: 10px 13px 12px;
+      border-top: 1px solid #DCE5E2;
+      background: #F4F7F6;
+      color: #647473;
+      font-size: 12px;
+    }
+
+    .otrosAsistentesConsulta strong {
+      color: #243434;
+    }
+
+    .consultaSinDatos {
+      padding: 18px;
+      border: 1px solid #DCE5E2;
+      border-radius: 9px;
+      background: #FFFFFF;
+      color: #647473;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .consultaEncabezadoReporte {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .consultaResumen {
+        justify-content: flex-start;
+      }
+
+      #seccionConsultar .consultaTab {
+        font-size: 12px;
+        padding: 7px 9px;
+      }
+    }
+
   </style>
 
 </head>
@@ -1995,13 +2216,17 @@
          ===================================================== -->
     <div id="seccionConsultar" class="oculto">
       <h2>Consultar</h2>
-      <p>Seleccione la consulta que desea visualizar.</p>
-      <div class="accionesConsulta">
-        <button class="opcion" type="button" onclick="cargarConsultaSomece('inscripcionTalleres')">Consulta de Inscripción Talleres</button>
-        <button class="opcion" type="button" onclick="cargarConsultaSomece('registroTalleres')">Consulta Registro de Talleres</button>
-        <button class="opcion" type="button" onclick="cargarConsultaSomece('conversatorioTrabajo')">Consulta Conversatorio-Trabajo</button>
-        <button class="opcion" type="button" onclick="cargarConsultaSomece('registroConversatorios')">Consulta Registro de Conversatorios</button>
+      <p class="consultaIntroduccion">
+        Reportes académicos de inscripción, asistencia y participación.
+      </p>
+
+      <div class="accionesConsulta accionesConsultaAcademica" role="tablist" aria-label="Consultas académicas">
+        <button id="consultaTabInscripcionTalleres" class="consultaTab" type="button" onclick="cargarConsultaSomece('inscripcionTalleres', this)">Inscripción a Talleres</button>
+        <button id="consultaTabRegistroTalleres" class="consultaTab" type="button" onclick="cargarConsultaSomece('registroTalleres', this)">Asistencia a Talleres</button>
+        <button id="consultaTabConversatorioTrabajo" class="consultaTab" type="button" onclick="cargarConsultaSomece('conversatorioTrabajo', this)">Conversatorio–Trabajos</button>
+        <button id="consultaTabRegistroConversatorios" class="consultaTab" type="button" onclick="cargarConsultaSomece('registroConversatorios', this)">Asistencia a Conversatorios</button>
       </div>
+
       <div id="resultadoConsultaSomece" class="resultadoConsultaSomece"></div>
     </div>
 
@@ -5117,77 +5342,306 @@ let secuenciaCupoTalleresAdmin = 0;
 
 function abrirConsultar() {
   if (rolSesion !== 'Administrador') return;
+
   mostrarSeccion('seccionConsultar');
-  const resultado=document.getElementById('resultadoConsultaSomece');
-  if (resultado) resultado.innerHTML='<p>Seleccione una consulta.</p>';
+
+  const resultado =
+    document.getElementById('resultadoConsultaSomece');
+
+  if (resultado) {
+    resultado.innerHTML =
+      '<div class="consultaSinDatos">Seleccione una consulta académica.</div>';
+  }
+
+  document
+    .querySelectorAll('#seccionConsultar .consultaTab')
+    .forEach(function(boton) {
+      boton.classList.remove('activo');
+    });
 }
 
-function cargarConsultaSomece(tipo) {
-  const contenedor=document.getElementById('resultadoConsultaSomece');
+function escaparHtmlConsulta(valor) {
+  return String(valor == null ? '' : valor)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function marcarConsultaActiva(botonActivo) {
+  document
+    .querySelectorAll('#seccionConsultar .consultaTab')
+    .forEach(function(boton) {
+      boton.classList.toggle(
+        'activo',
+        boton === botonActivo
+      );
+    });
+}
+
+function renderResumenConsulta(resultado) {
+  const resumen = resultado.resumen || {};
+  const datos = [];
+
+  if (Number.isFinite(Number(resumen.talleres))) {
+    datos.push(
+      '<span class="consultaDato"><strong>' +
+      escaparHtmlConsulta(resumen.talleres) +
+      '</strong> Talleres</span>'
+    );
+  }
+
+  if (Number.isFinite(Number(resumen.conversatorios))) {
+    datos.push(
+      '<span class="consultaDato"><strong>' +
+      escaparHtmlConsulta(resumen.conversatorios) +
+      '</strong> Conversatorios</span>'
+    );
+  }
+
+  if (Number.isFinite(Number(resumen.registros))) {
+    datos.push(
+      '<span class="consultaDato"><strong>' +
+      escaparHtmlConsulta(resumen.registros) +
+      '</strong> ' +
+      escaparHtmlConsulta(
+        resumen.etiquetaRegistros || 'Registros'
+      ) +
+      '</span>'
+    );
+  }
+
+  return (
+    '<div class="consultaEncabezadoReporte">' +
+      '<h3>' + escaparHtmlConsulta(resultado.titulo || 'Consulta') + '</h3>' +
+      '<div class="consultaResumen">' + datos.join('') + '</div>' +
+    '</div>'
+  );
+}
+
+function renderTablaConsulta(resultado) {
+  const columnas = Array.isArray(resultado.columnas)
+    ? resultado.columnas
+    : [];
+
+  const filas = Array.isArray(resultado.filas)
+    ? resultado.filas
+    : [];
+
+  let html = renderResumenConsulta(resultado);
+
+  if (!columnas.length) {
+    return html +
+      '<div class="consultaSinDatos">No hay columnas disponibles para esta consulta.</div>';
+  }
+
+  html +=
+    '<div class="consultaTablaContenedor">' +
+    '<table class="consultaTabla">' +
+    '<thead><tr>';
+
+  columnas.forEach(function(columna) {
+    html +=
+      '<th>' +
+      escaparHtmlConsulta(columna.titulo || '') +
+      '</th>';
+  });
+
+  html += '</tr></thead><tbody>';
+
+  filas.forEach(function(fila) {
+    html += '<tr>';
+
+    columnas.forEach(function(columna, indice) {
+      const valor = fila[columna.clave];
+      const clase =
+        indice === 0
+          ? 'celdaGrupo'
+          : (
+              columna.clave === 'instructores' ||
+              columna.clave === 'autores'
+                ? 'celdaSecundaria'
+                : ''
+            );
+
+      html +=
+        '<td class="' + clase + '">' +
+        escaparHtmlConsulta(valor || '—') +
+        '</td>';
+    });
+
+    html += '</tr>';
+  });
+
+  if (!filas.length) {
+    html +=
+      '<tr><td colspan="' +
+      columnas.length +
+      '" class="consultaSinDatos">Sin registros.</td></tr>';
+  }
+
+  html += '</tbody></table></div>';
+
+  return html;
+}
+
+function renderRegistroConversatorios(resultado) {
+  const bloques = Array.isArray(resultado.bloques)
+    ? resultado.bloques
+    : [];
+
+  let html = renderResumenConsulta(resultado);
+
+  bloques.forEach(function(bloque) {
+    html +=
+      '<section class="consultaBloqueConversatorio">' +
+        '<div class="consultaBloqueTitulo">' +
+          '<strong>' +
+            escaparHtmlConsulta(bloque.conversatorio || 'Conversatorio') +
+          '</strong>' +
+          '<div class="consultaBloqueMeta">' +
+            escaparHtmlConsulta(bloque.totalTrabajos || 0) + ' trabajos · ' +
+            escaparHtmlConsulta(bloque.totalAutores || 0) + ' autores · ' +
+            escaparHtmlConsulta(bloque.totalAsistencias || 0) + ' asistencias' +
+          '</div>' +
+        '</div>' +
+        '<div class="consultaTablaContenedor">' +
+          '<table class="consultaTabla">' +
+            '<thead><tr>' +
+              '<th>Trabajo</th>' +
+              '<th>Autor</th>' +
+              '<th>Asistencia</th>' +
+            '</tr></thead><tbody>';
+
+    const filas = Array.isArray(bloque.filas)
+      ? bloque.filas
+      : [];
+
+    if (!filas.length) {
+      html +=
+        '<tr>' +
+          '<td colspan="3" class="consultaSinDatos">' +
+            'Sin trabajos o autores registrados.' +
+          '</td>' +
+        '</tr>';
+    } else {
+      let trabajoAnterior = null;
+
+      filas.forEach(function(fila) {
+        const trabajo = String(fila.trabajo || '');
+
+        html += '<tr>';
+
+        html +=
+          '<td class="celdaGrupo">' +
+          (
+            trabajo !== trabajoAnterior
+              ? escaparHtmlConsulta(trabajo || '—')
+              : ''
+          ) +
+          '</td>';
+
+        html +=
+          '<td>' +
+          escaparHtmlConsulta(fila.autor || '—') +
+          '</td>';
+
+        html +=
+          '<td>' +
+            '<span class="estadoAsistencia ' +
+              (fila.asistencia ? 'si' : 'no') +
+            '">' +
+              (fila.asistencia ? '✓ Registrada' : '— Sin registro') +
+            '</span>' +
+          '</td>';
+
+        html += '</tr>';
+
+        trabajoAnterior = trabajo;
+      });
+    }
+
+    html += '</tbody></table></div>';
+
+    const otros = Array.isArray(bloque.otrosAsistentes)
+      ? bloque.otrosAsistentes
+      : [];
+
+    if (otros.length) {
+      html +=
+        '<div class="otrosAsistentesConsulta">' +
+          '<strong>Otros asistentes registrados:</strong> ' +
+          otros.map(escaparHtmlConsulta).join(' · ') +
+        '</div>';
+    }
+
+    html += '</section>';
+  });
+
+  if (!bloques.length) {
+    html +=
+      '<div class="consultaSinDatos">Sin Conversatorios registrados.</div>';
+  }
+
+  return html;
+}
+
+function cargarConsultaSomece(tipo, botonActivo) {
+  const contenedor =
+    document.getElementById('resultadoConsultaSomece');
+
   if (!contenedor) return;
-  contenedor.innerHTML='<p>Cargando consulta...</p>';
 
-  const callback='callbackConsultaSomece_'+Date.now();
+  marcarConsultaActiva(botonActivo);
 
-  window[callback]=function(resultado) {
+  contenedor.innerHTML =
+    '<div class="consultaSinDatos">Cargando consulta...</div>';
+
+  const callback =
+    'callbackConsultaSomece_' + Date.now();
+
+  window[callback] = function(resultado) {
     delete window[callback];
 
     if (!resultado || !resultado.ok) {
-      contenedor.textContent=(resultado && resultado.mensaje)
-        ? resultado.mensaje
-        : 'No fue posible cargar la consulta.';
+      contenedor.innerHTML =
+        '<div class="consultaSinDatos">' +
+        escaparHtmlConsulta(
+          (resultado && resultado.mensaje) ||
+          'No fue posible cargar la consulta.'
+        ) +
+        '</div>';
       return;
     }
 
-    contenedor.innerHTML='';
-
-    (resultado.grupos || []).forEach(function(grupo) {
-      const tarjeta=document.createElement('div');
-      tarjeta.className='consultaGrupo';
-
-      const titulo=document.createElement('h3');
-      titulo.textContent=grupo.nombre || 'Sin nombre';
-      tarjeta.appendChild(titulo);
-
-      if (grupo.subtitulo) {
-        const subtitulo=document.createElement('div');
-        subtitulo.className='consultaSubtitulo';
-        subtitulo.textContent='Talleristas: '+grupo.subtitulo;
-        tarjeta.appendChild(subtitulo);
-      }
-
-      const elementos=Array.isArray(grupo.elementos) ? grupo.elementos : [];
-
-      if (!elementos.length) {
-        const vacio=document.createElement('div');
-        vacio.className='consultaVacio';
-        vacio.textContent='Sin registros.';
-        tarjeta.appendChild(vacio);
-      } else {
-        elementos.forEach(function(elemento) {
-          const fila=document.createElement('div');
-          fila.className='consultaElemento';
-          fila.textContent=elemento.detalle
-            ? elemento.nombre+' — Autores: '+elemento.detalle
-            : elemento.nombre;
-          tarjeta.appendChild(fila);
-        });
-      }
-
-      contenedor.appendChild(tarjeta);
-    });
+    if (resultado.tipo === 'registroConversatorios') {
+      contenedor.innerHTML =
+        renderRegistroConversatorios(resultado);
+    } else {
+      contenedor.innerHTML =
+        renderTablaConsulta(resultado);
+    }
   };
 
-  const script=document.createElement('script');
-  script.src=URL_WEB_APP+
-    '?pagina=consultaSomece'+
-    '&tipo='+encodeURIComponent(tipo)+
-    '&token='+encodeURIComponent(tokenSesion)+
-    '&callback='+encodeURIComponent(callback)+
-    '&_='+Date.now();
+  const script =
+    document.createElement('script');
+
+  script.src =
+    URL_WEB_APP +
+    '?pagina=consultaSomece' +
+    '&tipo=' + encodeURIComponent(tipo) +
+    '&token=' + encodeURIComponent(tokenSesion) +
+    '&callback=' + encodeURIComponent(callback) +
+    '&_=' + Date.now();
+
+  script.onload = function() {
+    script.remove();
+  };
 
   document.body.appendChild(script);
 }
+
 
 function abrirConfiguracion() {
   if (rolSesion !== 'Administrador') return;
