@@ -1740,6 +1740,58 @@
       border-top:1px solid var(--borde);
       font-size:13px;
     }
+  
+    /* Configuración: filas compactas y controles alineados */
+    #seccionConfiguracion .configCupoTalleres {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 18px;
+      row-gap: 4px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    #seccionConfiguracion .configCupoTalleres .textoConfigMaxTalleres {
+      min-width: 0;
+    }
+
+    #seccionConfiguracion .configCupoTalleres .selectorCupoTalleres {
+      justify-self: end;
+      margin: 0;
+    }
+
+    #seccionConfiguracion .configCupoTalleres #mensajeCupoTalleresAdmin {
+      grid-column: 1 / -1;
+      margin-top: 2px;
+    }
+
+    #seccionConfiguracion .accionesConfiguracionQrCompactas {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    #seccionConfiguracion .accionesConfiguracionQrCompactas button {
+      width: auto !important;
+      min-width: 0 !important;
+      flex: 0 0 auto !important;
+      padding: 8px 14px !important;
+      margin: 0 !important;
+    }
+
+    @media (max-width: 700px) {
+      #seccionConfiguracion .configCupoTalleres {
+        grid-template-columns: 1fr;
+      }
+
+      #seccionConfiguracion .configCupoTalleres .selectorCupoTalleres {
+        justify-self: start;
+      }
+    }
+
   </style>
 
 </head>
@@ -1998,15 +2050,15 @@
       class="oculto"
     ></div>
 
-    <div class="configFechaLimiteTalleres">
+    <div class="configFechaLimiteTalleres configCupoTalleres">
       <div class="textoConfigMaxTalleres">
         <strong>Cupo máximo de participantes por Taller</strong>
         <span>Aplica a todos los Talleres. Máximo 50; el mínimo depende de las inscripciones actuales.</span>
       </div>
-      <div class="selectorMaxTalleres">
-        <button type="button" class="opcion secundario" onclick="cambiarCupoTalleresAdmin(-1)">−</button>
+      <div class="selectorMaxTalleres selectorCupoTalleres">
+        <button id="btnMenosCupoTalleres" type="button" class="opcion secundario" onclick="cambiarCupoTalleresAdmin(-1)">−</button>
         <input id="cupoTalleresAdmin" type="number" min="0" max="50" step="1" value="0" onchange="guardarCupoTalleresAdmin()">
-        <button type="button" class="botonContinuar" onclick="cambiarCupoTalleresAdmin(1)">+</button>
+        <button id="btnMasCupoTalleres" type="button" class="botonContinuar" onclick="cambiarCupoTalleresAdmin(1)">+</button>
       </div>
       <div id="mensajeCupoTalleresAdmin" class="oculto"></div>
     </div>
@@ -2053,7 +2105,7 @@
           <strong>Herramientas de qrPonentes</strong>
           <span>Acciones globales para los códigos QR de Ponentes.</span>
         </div>
-        <div class="accionesConfiguracionQr">
+        <div class="accionesConfiguracionQr accionesConfiguracionQrCompactas">
 <button
       class="opcion botonQrPonente"
       type="button"
@@ -5058,6 +5110,11 @@ function guardarTrabajoAdmin() {
 // CONSULTAR Y CONFIGURACIÓN
 // =====================================================
 
+let guardandoCupoTalleresAdmin = false;
+let cupoTalleresPendienteAdmin = null;
+let secuenciaCupoTalleresAdmin = 0;
+
+
 function abrirConsultar() {
   if (rolSesion !== 'Administrador') return;
   mostrarSeccion('seccionConsultar');
@@ -5144,9 +5201,24 @@ function cambiarCupoTalleresAdmin(cambio) {
 
   const minimo=Number(campo.dataset.minimo || 0);
   const actual=Math.floor(Number(campo.value) || 0);
+  const nuevo=Math.min(50,Math.max(minimo,actual+cambio));
 
-  campo.value=Math.min(50,Math.max(minimo,actual+cambio));
+  campo.value=nuevo;
+  cupoTalleresPendienteAdmin=nuevo;
+
   guardarCupoTalleresAdmin();
+}
+
+function actualizarEstadoControlesCupoTalleresAdmin(bloqueado) {
+  [
+    document.getElementById('btnMenosCupoTalleres'),
+    document.getElementById('btnMasCupoTalleres')
+  ].forEach(function(boton) {
+    if (boton) boton.disabled=bloqueado;
+  });
+
+  const campo=document.getElementById('cupoTalleresAdmin');
+  if (campo) campo.disabled=bloqueado;
 }
 
 function guardarCupoTalleresAdmin() {
@@ -5163,26 +5235,57 @@ function guardarCupoTalleresAdmin() {
     return;
   }
 
-  campo.disabled=true;
-  const callback='callbackGuardarCupoTalleres_'+Date.now();
+  if (guardandoCupoTalleresAdmin) {
+    cupoTalleresPendienteAdmin=valor;
+    return;
+  }
+
+  guardandoCupoTalleresAdmin=true;
+  cupoTalleresPendienteAdmin=null;
+  actualizarEstadoControlesCupoTalleresAdmin(true);
+
+  const secuencia=++secuenciaCupoTalleresAdmin;
+  const callback='callbackGuardarCupoTalleres_'+Date.now()+'_'+secuencia;
 
   window[callback]=function(resultado) {
     delete window[callback];
-    campo.disabled=false;
+
+    if (secuencia!==secuenciaCupoTalleresAdmin) {
+      return;
+    }
+
+    guardandoCupoTalleresAdmin=false;
+    actualizarEstadoControlesCupoTalleresAdmin(false);
 
     if (!resultado || !resultado.ok) {
       mensaje.textContent=(resultado && resultado.mensaje)
         ? resultado.mensaje
         : 'No fue posible guardar el cupo.';
       mensaje.className='error';
+
+      cargarConfigMaxTalleresAdmin();
       return;
     }
 
-    campo.value=resultado.cupoTalleres;
-    campo.dataset.minimo=String(resultado.cupoMinimo || 0);
+    const guardado=Number(resultado.cupoTalleres);
+    campo.value=guardado;
+    campo.dataset.minimo=String(Number(resultado.cupoMinimo) || 0);
     campo.min=campo.dataset.minimo;
-    mensaje.textContent='Cupo máximo actualizado a '+resultado.cupoTalleres+' participantes por Taller.';
+
+    mensaje.textContent=
+      'Cupo máximo actualizado a '+guardado+' participantes por Taller.';
     mensaje.className='exito';
+
+    const pendiente=cupoTalleresPendienteAdmin;
+    cupoTalleresPendienteAdmin=null;
+
+    if (
+      Number.isInteger(pendiente) &&
+      pendiente!==guardado
+    ) {
+      campo.value=pendiente;
+      guardarCupoTalleresAdmin();
+    }
   };
 
   const script=document.createElement('script');
@@ -5193,8 +5296,13 @@ function guardarCupoTalleresAdmin() {
     '&callback='+encodeURIComponent(callback)+
     '&_='+Date.now();
 
+  script.onload=function() {
+    script.remove();
+  };
+
   document.body.appendChild(script);
 }
+
 
 // =====================================================
 // INSCRIPCIÓN A TALLERES · MAESTRO / DETALLE
