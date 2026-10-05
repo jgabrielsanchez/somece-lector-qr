@@ -207,6 +207,18 @@
 
 
       <div
+        id="seccionProfesor"
+        class="tarjeta"
+      >
+
+        <h2>Profesor</h2>
+
+        <div id="listaProfesor"></div>
+
+      </div>
+
+
+      <div
         id="seccionTalleres"
         class="tarjeta"
       >
@@ -214,6 +226,18 @@
         <h2>Talleres</h2>
 
         <div id="listaTalleres"></div>
+
+      </div>
+
+
+      <div
+        id="seccionCarteles"
+        class="tarjeta"
+      >
+
+        <h2>Carteles</h2>
+
+        <div id="listaCarteles"></div>
 
       </div>
 
@@ -494,6 +518,60 @@
 
       }
 
+    }
+
+
+    // =====================================================
+    // MOSTRAR TALLERES COMO PROFESOR / TALLERISTA
+    // =====================================================
+
+    function mostrarProfesor(talleres) {
+
+      const contenedor =
+        document.getElementById('listaProfesor');
+
+      if (!Array.isArray(talleres) || talleres.length === 0) {
+        contenedor.innerHTML =
+          htmlVacio('No imparte Talleres registrados.');
+        return;
+      }
+
+      contenedor.innerHTML = talleres.map(function(taller) {
+        return (
+          '<div class="elemento">' +
+          '<strong>' + escaparHtml(taller.NomTaller || '') + '</strong>' +
+          (taller.Fecha ? '<div>Fecha: ' + escaparHtml(taller.Fecha) + '</div>' : '') +
+          (taller.Hora ? '<div>Hora: ' + escaparHtml(taller.Hora) + '</div>' : '') +
+          (taller.Modalidad ? '<div>Modalidad: ' + escaparHtml(taller.Modalidad) + '</div>' : '') +
+          '</div>'
+        );
+      }).join('');
+    }
+
+
+    // =====================================================
+    // MOSTRAR CARTELES COMO AUTOR
+    // =====================================================
+
+    function mostrarCarteles(carteles) {
+
+      const contenedor =
+        document.getElementById('listaCarteles');
+
+      if (!Array.isArray(carteles) || carteles.length === 0) {
+        contenedor.innerHTML =
+          htmlVacio('No hay Carteles registrados.');
+        return;
+      }
+
+      contenedor.innerHTML = carteles.map(function(cartel) {
+        return (
+          '<div class="elemento">' +
+          '<strong>' + escaparHtml(cartel.NomCartel || '') + '</strong>' +
+          (cartel.Fecha ? '<div>Fecha: ' + escaparHtml(cartel.Fecha) + '</div>' : '') +
+          '</div>'
+        );
+      }).join('');
     }
 
 
@@ -908,8 +986,16 @@
         datos
       );
 
+      mostrarProfesor(
+        datos.TalleresProfesor
+      );
+
       mostrarTalleres(
         datos.Talleres
+      );
+
+      mostrarCarteles(
+        datos.Carteles
       );
 
       mostrarTrabajos(
