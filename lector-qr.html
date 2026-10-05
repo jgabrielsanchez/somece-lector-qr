@@ -294,27 +294,18 @@
       transform: translateX(2px);
     }
 
-    #menuPrincipal #btnTalleresAdmin {
-      margin-top: 30px;
-    }
-
-    #menuPrincipal #btnTalleresAdmin::before {
-      content: 'GESTIÓN';
-      position: absolute;
-      margin-top: -29px;
-      color: #9fc0bb;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .13em;
-      pointer-events: none;
-    }
-
+    #menuPrincipal #btnPonentesGestion,
+    #menuPrincipal #btnConsultar,
+    #menuPrincipal #btnConfiguracion,
     #menuPrincipal #btnAdministracion {
-      margin-top: 30px;
+      margin-top: 34px;
+      position: relative;
     }
 
+    #menuPrincipal #btnPonentesGestion::before,
+    #menuPrincipal #btnConsultar::before,
+    #menuPrincipal #btnConfiguracion::before,
     #menuPrincipal #btnAdministracion::before {
-      content: 'SISTEMA';
       position: absolute;
       margin-top: -29px;
       color: #9fc0bb;
@@ -323,6 +314,11 @@
       letter-spacing: .13em;
       pointer-events: none;
     }
+
+    #menuPrincipal #btnPonentesGestion::before { content: 'GESTIÓN'; }
+    #menuPrincipal #btnConsultar::before { content: 'CONSULTAR'; }
+    #menuPrincipal #btnConfiguracion::before { content: 'CONFIGURACIÓN'; }
+    #menuPrincipal #btnAdministracion::before { content: 'ADMINISTRACIÓN'; }
 
     #menuPrincipal .botonSalir {
       margin-top: 22px;
@@ -1719,255 +1715,21 @@
       font-size: 13px;
     }
 
-  </style>
+      #seccionConfiguracion, #seccionConsultar { max-width:1040px; }
+    .accionesConsulta, .accionesConfiguracionQr { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 18px; }
+    .accionesConsulta .opcion, .accionesConfiguracionQr .opcion { margin:0; }
+    .resultadoConsultaSomece { display:grid; gap:10px; }
+    .consultaGrupo { border:1px solid var(--borde); border-radius:9px; background:var(--superficie); padding:12px 14px; }
+    .consultaGrupo h3 { margin:0 0 4px; font-size:15px; }
+    .consultaSubtitulo, .consultaVacio, .cupoTallerInfo { color:var(--texto-secundario); font-size:13px; }
+    .consultaElemento { padding:6px 0; border-top:1px solid var(--borde); font-size:13px; }
+</style>
 
 </head>
 
 
 <body>
 
-  <button id="btnMenuMovil" type="button" aria-label="Abrir navegación" onclick="alternarMenuMovil()">☰</button>
-
-  <div class="contenedor">
-
-    <h1>SOMECE 2026</h1>
-
-    <div class="subtitulo">
-      Lector QR
-    </div>
-
-<!-- =====================================================
-  INICIO DE SESIÓN
-    ===================================================== -->
-
-    <div id="seccionLogin">
-
-      <h2>
-        Inicio de sesión
-      </h2>
-
-      <p>
-        Ingrese sus credenciales para utilizar el lector QR.
-      </p>
-
-      <label for="usuarioLogin">
-        Usuario:
-      </label>
-
-      <input
-        type="text"
-        id="usuarioLogin"
-        autocomplete="username"
-      >
-
-      <label for="contrasenaLogin">
-        Contraseña:
-      </label>
-
-      <input
-        type="password"
-        id="contrasenaLogin"
-        autocomplete="current-password"
-      >
-
-      <button
-        id="btnIniciarSesion"
-        class="botonContinuar"
-        type="button"
-        onclick="iniciarSesionLector()"
-      >
-        Iniciar sesión
-      </button>
-
-      <div
-        id="mensajeLogin"
-        class="oculto"
-      ></div>
-
-    </div>
-
-
-    <!-- =====================================================
-         MENÚ PRINCIPAL
-         ===================================================== -->
-
-    <div
-      id="menuPrincipal"
-      class="oculto"
-    >
-
-      <p>
-        Seleccione el tipo de registro:
-      </p>
-
-      <div class="menu">
-
-        <button
-          class="opcion"
-          onclick="seleccionarCongreso()"
-        >
-          Registro Congreso
-        </button>
-
-        <button
-          class="opcion"
-          onclick="seleccionarTaller()"
-        >
-          Registro Taller
-        </button>
-
-        <button
-          class="opcion"
-          onclick="seleccionarConversatorio()"
-        >
-          Registro Conversatorio
-        </button>
-
-        <button
-          id="btnTalleresAdmin"
-          class="opcion oculto"
-          onclick="administrarTalleres()"
-        >
-          Talleres
-        </button>
-
-        <button
-          id="btnInscripcionTalleresAdmin"
-          class="opcion oculto"
-          onclick="administrarInscripcionTalleres()"
-        >
-          Inscripción Talleres
-        </button>
-
-        <button
-          id="btnTrabajosAdmin"
-          class="opcion oculto"
-          onclick="administrarTrabajos()"
-        >
-          Trabajos
-        </button>
-
-        <button
-          id="btnCartelesAdmin"
-          class="opcion oculto"
-          onclick="administrarCarteles()"
-        >
-          Carteles
-        </button>
-
-        <button
-          id="btnConversatoriosAdmin"
-          class="opcion oculto"
-          onclick="administrarConversatorios()"
-        >
-          Conversatorios
-        </button>
-
-        <button
-          id="btnConversatorioTrabajosAdmin"
-          class="opcion oculto"
-          onclick="administrarConversatorioTrabajos()"
-        >
-          Conversatorio-Trabajos
-        </button>
-
-        <button
-          id="btnAdministracion"
-          class="opcion oculto"
-          onclick="abrirAdministracion()"
-        >
-          Administración
-        </button>
-
-        <button
-          id="btnSalir"
-          class="opcion botonSalir"
-          type="button"
-          onclick="salirLector()"
-        >
-          Salir
-        </button>
-
-      </div>
-
-    </div>
-
-    <!-- =====================================================
-     SECCIÓN ADMINISTRACIÓN
-     ===================================================== -->
-
-    <div
-      id="seccionAdministracion"
-      class="oculto"
-    >
-
-      <h2>
-        Administración
-      </h2>
-
-      <p>
-        Seleccione el catálogo que desea administrar:
-      </p>
-
-      <div class="accionesAdministracion">
-
-        <button
-          class="botonContinuar"
-          type="button"
-          onclick="administrarUsuarios()"
-        >
-          Usuarios
-        </button>
-
-        <button
-          class="botonContinuar"
-          type="button"
-          onclick="administrarPonentes()"
-        >
-          Ponentes
-        </button>
-
-        <button
-          class="opcion secundario"
-          type="button"
-          onclick="volverMenu()"
-        >
-          Regresar al menú
-        </button>
-
-      </div>
-
-    </div>
-
-    <!-- =====================================================
-     ADMINISTRACIÓN DE USUARIOS
-     ===================================================== -->
-
-<div
-  id="seccionUsuarios"
-  class="oculto"
->
-
-  <h2>
-    Usuarios
-  </h2>
-
-  <p>
-    Administración de usuarios del sistema.
-  </p>
-
-  <div id="listaUsuarios"></div>
-
-  <div class="accionesUsuariosAdmin">
-
-    <button
-      class="botonContinuar"
-      type="button"
-      onclick="nuevoUsuario()"
-    >
-      Nuevo Usuario
-    </button>
-
     <button
       class="opcion secundario"
       type="button"
@@ -1977,68 +1739,6 @@
     </button>
 
   </div>
-
-</div>
-
-  <!-- =====================================================
-     ADMINISTRACIÓN DE PONENTES
-     ===================================================== -->
-
-<div
-  id="seccionPonentes"
-  class="oculto"
->
-
-  <h2>
-    Ponentes
-  </h2>
-
-  <p>
-    Administración de Ponentes del Congreso.
-  </p>
-
-  <div id="listaPonentes"></div>
-
-  <div class="accionesPonentesAdmin">
-
-    <button
-      class="botonContinuar"
-      type="button"
-      onclick="nuevoPonente()"
-    >
-      Nuevo Ponente
-    </button>
-
-    <button
-      class="opcion botonQrPonente"
-      type="button"
-      onclick="generarQrPonentesVaciosAdmin(this)"
-    >
-      qrPonentes Vacíos
-    </button>
-
-    <button
-      class="opcion botonActualizarQrPonente"
-      type="button"
-      onclick="actualizarTodosQrPonentesAdmin(this)"
-    >
-      Actualizar qrPonentes
-    </button>
-
-    <button
-      class="opcion secundario"
-      type="button"
-      onclick="volverMenu()"
-    >
-      Regresar al menú
-    </button>
-
-  </div>
-
-  <div
-    id="mensajeQrPonentesAdmin"
-    class="mensajeQrPonentesAdmin"
-  ></div>
 
 </div>
 
@@ -2399,82 +2099,6 @@
     Administración de Ponentes inscritos en Talleres.
   </p>
 
-  <div
-    id="configMaxTalleresAdmin"
-    class="configMaxTalleresAdmin"
-  >
-    <div class="textoConfigMaxTalleres">
-      <strong>Máximo de Talleres por Ponente</strong>
-      <span>
-        Aplica a todos los Ponentes y Talleres.
-      </span>
-    </div>
-
-    <div class="selectorMaxTalleres">
-      <button
-        type="button"
-        class="opcion secundario"
-        onclick="cambiarMaxTalleresAdmin(-1)"
-      >−</button>
-
-      <input
-        id="maxTalleresAdmin"
-        type="number"
-        min="1"
-        step="1"
-        value="1"
-        onchange="guardarMaxTalleresAdmin()"
-      >
-
-      <button
-        type="button"
-        class="botonContinuar"
-        onclick="cambiarMaxTalleresAdmin(1)"
-      >+</button>
-    </div>
-
-    <div
-      id="mensajeMaxTalleresAdmin"
-      class="oculto"
-    ></div>
-
-    <div class="configFechaLimiteTalleres">
-      <div class="textoConfigMaxTalleres">
-        <strong>Fecha límite de inscripción externa</strong>
-        <span>
-          Inclusiva. Vacía = sin fecha límite. Sólo aplica a la liga externa.
-        </span>
-      </div>
-
-      <div class="filaFechaLimiteTalleres">
-        <input
-          id="fechaLimiteInscripcionTalleresAdmin"
-          type="date"
-        >
-
-        <button
-          type="button"
-          class="botonContinuar"
-          onclick="guardarFechaLimiteInscripcionTalleresAdmin()"
-        >
-          Guardar fecha
-        </button>
-
-        <button
-          type="button"
-          class="opcion secundario"
-          onclick="quitarFechaLimiteInscripcionTalleresAdmin()"
-        >
-          Sin límite
-        </button>
-      </div>
-
-      <div
-        id="mensajeFechaLimiteInscripcionTalleresAdmin"
-        class="oculto"
-      ></div>
-    </div>
-  </div>
 
   <div id="vistaTalleresInscripcionAdmin">
     <div
@@ -3683,6 +3307,21 @@
   // =====================================================
 
   function actualizarMenuPorRol() {
+
+  [
+    'btnPonentesGestion',
+    'btnConsultar',
+    'btnConfiguracion'
+  ].forEach(function(idBoton) {
+    const boton = document.getElementById(idBoton);
+    if (boton) {
+      boton.classList.toggle(
+        'oculto',
+        rolSesion !== 'Administrador'
+      );
+    }
+  });
+
 
   const botonAdministracion =
     document.getElementById(
@@ -4957,6 +4596,153 @@ function guardarTrabajoAdmin() {
 }
 
 
+
+// =====================================================
+// CONSULTAR Y CONFIGURACIÓN
+// =====================================================
+
+function abrirConsultar() {
+  if (rolSesion !== 'Administrador') return;
+  mostrarSeccion('seccionConsultar');
+  document.getElementById('resultadoConsultaSomece').innerHTML =
+    '<p>Seleccione una consulta.</p>';
+}
+
+function cargarConsultaSomece(tipo) {
+  const contenedor = document.getElementById('resultadoConsultaSomece');
+  contenedor.innerHTML = '<p>Cargando consulta...</p>';
+
+  const callback = 'callbackConsultaSomece_' + Date.now();
+
+  window[callback] = function(resultado) {
+    delete window[callback];
+
+    if (!resultado || !resultado.ok) {
+      contenedor.textContent =
+        (resultado && resultado.mensaje) ||
+        'No fue posible cargar la consulta.';
+      return;
+    }
+
+    contenedor.innerHTML = '';
+
+    (resultado.grupos || []).forEach(function(grupo) {
+      const tarjeta = document.createElement('div');
+      tarjeta.className = 'consultaGrupo';
+
+      const titulo = document.createElement('h3');
+      titulo.textContent = grupo.nombre || 'Sin nombre';
+      tarjeta.appendChild(titulo);
+
+      if (grupo.subtitulo) {
+        const subtitulo = document.createElement('div');
+        subtitulo.className = 'consultaSubtitulo';
+        subtitulo.textContent = 'Talleristas: ' + grupo.subtitulo;
+        tarjeta.appendChild(subtitulo);
+      }
+
+      const elementos = Array.isArray(grupo.elementos)
+        ? grupo.elementos
+        : [];
+
+      if (!elementos.length) {
+        const vacio = document.createElement('div');
+        vacio.className = 'consultaVacio';
+        vacio.textContent = 'Sin registros.';
+        tarjeta.appendChild(vacio);
+      } else {
+        elementos.forEach(function(elemento) {
+          const fila = document.createElement('div');
+          fila.className = 'consultaElemento';
+          fila.textContent = elemento.detalle
+            ? elemento.nombre + ' — Autores: ' + elemento.detalle
+            : elemento.nombre;
+          tarjeta.appendChild(fila);
+        });
+      }
+
+      contenedor.appendChild(tarjeta);
+    });
+  };
+
+  const script = document.createElement('script');
+  script.src =
+    URL_WEB_APP +
+    '?pagina=consultaSomece' +
+    '&tipo=' + encodeURIComponent(tipo) +
+    '&token=' + encodeURIComponent(tokenSesion) +
+    '&callback=' + encodeURIComponent(callback) +
+    '&_=' + Date.now();
+  document.body.appendChild(script);
+}
+
+function abrirConfiguracion() {
+  if (rolSesion !== 'Administrador') return;
+  mostrarSeccion('seccionConfiguracion');
+  cargarConfigMaxTalleresAdmin();
+}
+
+function cambiarCupoTalleresAdmin(cambio) {
+  const campo = document.getElementById('cupoTalleresAdmin');
+  if (!campo) return;
+
+  const minimo = Number(campo.dataset.minimo || 0);
+  const actual = Math.floor(Number(campo.value) || 0);
+
+  campo.value = Math.min(50, Math.max(minimo, actual + cambio));
+  guardarCupoTalleresAdmin();
+}
+
+function guardarCupoTalleresAdmin() {
+  const campo = document.getElementById('cupoTalleresAdmin');
+  const mensaje = document.getElementById('mensajeCupoTalleresAdmin');
+  const minimo = Number(campo.dataset.minimo || 0);
+  const valor = Math.floor(Number(campo.value));
+
+  if (!Number.isFinite(valor) || valor < minimo || valor > 50) {
+    campo.value = Math.max(minimo, Math.min(50, Number(campo.value) || minimo));
+    mensaje.textContent = 'El cupo permitido actualmente es de ' + minimo + ' a 50.';
+    mensaje.className = 'error';
+    return;
+  }
+
+  campo.disabled = true;
+  const callback = 'callbackGuardarCupoTalleres_' + Date.now();
+
+  window[callback] = function(resultado) {
+    delete window[callback];
+    campo.disabled = false;
+
+    if (!resultado || !resultado.ok) {
+      mensaje.textContent =
+        (resultado && resultado.mensaje) ||
+        'No fue posible guardar el cupo.';
+      mensaje.className = 'error';
+      cargarConfigMaxTalleresAdmin();
+      return;
+    }
+
+    campo.value = resultado.cupoTalleres;
+    campo.dataset.minimo = String(resultado.cupoMinimo || 0);
+    mensaje.textContent =
+      'Cupo máximo actualizado a ' +
+      resultado.cupoTalleres +
+      ' participantes por Taller.';
+    mensaje.className = 'exito';
+  };
+
+  const script = document.createElement('script');
+  script.src =
+    URL_WEB_APP +
+    '?pagina=guardarCupoTalleres' +
+    '&token=' + encodeURIComponent(tokenSesion) +
+    '&cupoTalleres=' + encodeURIComponent(valor) +
+    '&callback=' + encodeURIComponent(callback) +
+    '&_=' + Date.now();
+  document.body.appendChild(script);
+}
+
+
 // =====================================================
 // INSCRIPCIÓN A TALLERES · MAESTRO / DETALLE
 // =====================================================
@@ -4983,7 +4769,6 @@ function administrarInscripcionTalleres() {
   );
 
   mostrarVistaListaTalleresInscripcion();
-  cargarConfigMaxTalleresAdmin();
   cargarTalleresInscripcionAdmin();
 
 }
@@ -5024,6 +4809,18 @@ function cargarConfigMaxTalleresAdmin() {
 
       campo.value =
         maxTalleresInscripcionAdmin;
+
+      const campoCupo =
+        document.getElementById('cupoTalleresAdmin');
+
+      if (campoCupo) {
+        campoCupo.value =
+          Number(resultado && resultado.cupoTalleres) || 0;
+        campoCupo.dataset.minimo =
+          String(Number(resultado && resultado.cupoMinimo) || 0);
+        campoCupo.min = campoCupo.dataset.minimo;
+        campoCupo.max = '50';
+      }
 
       const campoFecha =
         document.getElementById(
@@ -5393,6 +5190,14 @@ function cargarTalleresInscripcionAdmin() {
           boton.appendChild(nombre);
           boton.appendChild(tallerista);
 
+          const cupo = document.createElement('span');
+          cupo.className = 'cupoTallerInfo';
+          cupo.textContent =
+            'Cupo: ' + Number(taller.cupoTaller || 0) +
+            ' · Inscritos: ' + Number(taller.inscritos || 0) +
+            ' · Disponibles: ' + Number(taller.disponibles || 0);
+          boton.appendChild(cupo);
+
           boton.onclick =
             function() {
               abrirDetalleTallerInscripcion(
@@ -5416,7 +5221,7 @@ function cargarTalleresInscripcionAdmin() {
 
   script.src =
     URL_WEB_APP +
-    '?pagina=buscarTalleresWeb' +
+    '?pagina=buscarTalleresConCupo' +
     '&token=' +
     encodeURIComponent(
       tokenSesion
@@ -11874,7 +11679,9 @@ function guardarUsuarioAdmin() {
         'seccionFormularioUsuario',
         'seccionPonentes',
         'seccionFormularioPonente',
-        'seccionQrPonente'
+        'seccionQrPonente',
+        'seccionConsultar',
+        'seccionConfiguracion'
       ]);
 
       const menuPrincipal =
@@ -11899,6 +11706,14 @@ function guardarUsuarioAdmin() {
 
       document
         .getElementById('seccionAdministracion')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionConsultar')
+        .classList.add('oculto');
+
+      document
+        .getElementById('seccionConfiguracion')
         .classList.add('oculto');
 
       document
