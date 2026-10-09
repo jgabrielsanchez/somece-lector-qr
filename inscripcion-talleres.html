@@ -429,10 +429,12 @@
       const temporizador = setTimeout(function() {
         if (terminado) return;
         terminado = true;
-        delete window[nombre];
+        // Mantener un callback inocuo: Apps Script puede responder
+        // después del tiempo de espera. Evita ReferenceError tardío.
+        window[nombre] = function() {};
         if (script.parentNode) script.parentNode.removeChild(script);
         errorCallback('El servidor tardó demasiado en responder.');
-      }, 15000);
+      }, 30000);
 
       document.body.appendChild(script);
     }
